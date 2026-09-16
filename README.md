@@ -10,8 +10,6 @@
       --bg-color: #f0f4f8;
       --card-time-bg: #fff9db; /* 暖黃 - 現實導向區 */
       --card-time-border: #f59f00;
-      --card-clock-bg: #e0f2fe; /* 淡天空藍 - 標準大時鐘 (淺色底) */
-      --card-clock-border: #0284c7;
       --card-weather-bg: #e7f5ff; /* 天空藍 - 即時天氣 */
       --card-weather-border: #1c7ed6;
       --card-care-bg: #ebfbee; /* 草綠 - 關懷提示 */
@@ -32,7 +30,6 @@
     body.large-font-mode .ro-label { font-size: 35px; }
     body.large-font-mode .ro-value-main { font-size: 46px; }
     body.large-font-mode .ro-value-time { font-size: 52px; }
-    body.large-font-mode .big-time-digits { font-size: 92px; }
     body.large-font-mode .temp-display { font-size: 64px; }
     body.large-font-mode .weather-info-text { font-size: 30px; }
     body.large-font-mode .care-message-box { font-size: 34px; }
@@ -123,6 +120,7 @@
       background-color: #ffffff;
     }
 
+    /* */
     /* ==================== 一、黃色部份：現實導向區 (Reality Orientation) ==================== */
     .ro-card {
       background-color: var(--card-time-bg);
@@ -193,6 +191,7 @@
       gap: 14px;
     }
 
+    /* 小儲存格統一標題樣式（字體放大25%：由20px提升至25px） */
     .ro-label {
       font-size: 25px;
       font-weight: 800;
@@ -204,6 +203,7 @@
       width: 100%;
     }
 
+    /* 儲存格統一採用白色做底色 */
     .ro-block {
       text-align: center;
       padding: 14px 10px;
@@ -218,16 +218,12 @@
       min-height: 125px;
     }
 
+    /* 網格欄位寬度定義 */
+    .col-loc   { grid-column: span 12; }
     .col-loc-1 { grid-column: span 6; }
     .col-loc-2 { grid-column: span 6; }
     .col-year  { grid-column: span 3; }
     .col-month { grid-column: span 3; }
-    .col-day   { grid-column: span 3; }
-    .col-week  { grid-column: span 3; }
-    .col-clock { grid-column: span 3; }
-    .col-lunar { grid-column: span 3; }
-    .col-season{ grid-column: span 3; }
-    .col-festi { grid-column: span 3; }
 
     .loc-field-group {
       display: flex;
@@ -245,6 +241,19 @@
       color: #d9480f;
       border: 2px solid #f59f00;
       display: inline-block;
+    }
+
+    .location-input {
+      font-size: 20px;
+      font-weight: bold;
+      padding: 8px 14px;
+      border-radius: 12px;
+      border: 2px solid #f59f00;
+      background-color: #ffffff;
+      color: #121212;
+      outline: none;
+      min-width: 200px;
+      flex: 1;
     }
 
     .ro-value-main {
@@ -275,185 +284,7 @@
       margin-top: 4px;
     }
 
-    /* ==================== 插入：香港標準時間大時鐘卡片 (淺色主題) ==================== */
-    .standard-clock-card {
-      background: linear-gradient(135deg, #e0f2fe 0%, #f0f9ff 100%);
-      border-color: var(--card-clock-border);
-      color: #0f172a;
-      text-align: center;
-      box-shadow: 0 6px 18px rgba(2, 132, 199, 0.12);
-      display: flex;
-      flex-direction: column;
-      gap: 14px;
-    }
-
-    .clock-top-bar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      border-bottom: 2px solid rgba(2, 132, 199, 0.25);
-      padding-bottom: 10px;
-      flex-wrap: wrap;
-      gap: 10px;
-    }
-
-    .clock-top-title {
-      font-size: 26px;
-      font-weight: 900;
-      color: #0369a1;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .clock-ref-badge {
-      background-color: rgba(2, 132, 199, 0.1);
-      color: #0369a1;
-      border: 2px solid #0284c7;
-      padding: 6px 14px;
-      border-radius: 50px;
-      font-size: 18px;
-      font-weight: 800;
-      letter-spacing: 0.5px;
-    }
-
-    /* 傳統圓形鐘錶面容器 */
-    .big-clock-container {
-      background-color: #ffffff;
-      border: 3px solid #7dd3fc;
-      border-radius: 20px;
-      padding: 24px 16px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 18px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-    }
-
-    .analog-clock-wrapper {
-      position: relative;
-      width: 290px;
-      height: 290px;
-      margin: 0 auto;
-    }
-
-    .analog-clock-face {
-      width: 100%;
-      height: 100%;
-      border-radius: 50%;
-      background: radial-gradient(circle, #ffffff 68%, #e2e8f0 100%);
-      border: 10px solid #38bdf8;
-      box-shadow: 0 0 25px rgba(56, 189, 248, 0.6), inset 0 0 15px rgba(0, 0, 0, 0.2);
-      position: relative;
-    }
-
-    /* 錶面數字 1-12 */
-    .clock-number {
-      position: absolute;
-      width: 44px;
-      height: 44px;
-      text-align: center;
-      line-height: 44px;
-      font-size: 28px;
-      font-weight: 900;
-      color: #0f172a;
-    }
-
-    /* 指針通用設定 */
-    .clock-hand {
-      position: absolute;
-      bottom: 50%;
-      left: 50%;
-      transform-origin: bottom center;
-      border-radius: 10px;
-    }
-
-    /* 時針 (深色粗短) */
-    .hour-hand {
-      width: 10px;
-      height: 72px;
-      margin-left: -5px;
-      background-color: #0f172a;
-      z-index: 3;
-    }
-
-    /* 分針 (藍色較長) */
-    .minute-hand {
-      width: 6px;
-      height: 100px;
-      margin-left: -3px;
-      background-color: #0284c7;
-      z-index: 4;
-    }
-
-    /* 秒針 (鮮紅細長) */
-    .second-hand {
-      width: 3px;
-      height: 115px;
-      margin-left: -1.5px;
-      background-color: #e03131;
-      z-index: 5;
-    }
-
-    /* 錶面中心點 */
-    .clock-center-pin {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      width: 20px;
-      height: 20px;
-      margin-top: -10px;
-      margin-left: -10px;
-      background-color: #e03131;
-      border: 3.5px solid #ffffff;
-      border-radius: 50%;
-      z-index: 6;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.4);
-    }
-
-    /* 輔助時間與上午/下午顯示列 */
-    .digital-sub-display {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 12px;
-      background: #f0f9ff;
-      padding: 10px 28px;
-      border-radius: 30px;
-      border: 2.5px solid #0284c7;
-    }
-
-    .big-time-text {
-      font-family: 'Courier New', Consolas, Monaco, monospace;
-      font-size: 36px;
-      font-weight: 900;
-      color: #0c4a6e;
-      letter-spacing: 2px;
-    }
-
-    .big-ampm-tag {
-      font-size: 22px;
-      font-weight: 900;
-      background-color: #d9480f;
-      color: #ffffff;
-      padding: 4px 14px;
-      border-radius: 10px;
-      letter-spacing: 1px;
-    }
-
-    /* 特大字體模式下適應大時鐘 */
-    body.large-font-mode .analog-clock-wrapper {
-      width: 330px;
-      height: 330px;
-    }
-    body.large-font-mode .clock-number {
-      font-size: 32px;
-    }
-    body.large-font-mode .hour-hand { height: 85px; }
-    body.large-font-mode .minute-hand { height: 118px; }
-    body.large-font-mode .second-hand { height: 135px; }
-
+    /* */
     /* ==================== 二、即時天氣區 (HKO Weather) ==================== */
     .weather-card {
       background-color: var(--card-weather-bg);
@@ -679,10 +510,15 @@
       line-height: 1.6;
     }
 
+    /* */
     /* ==================== 四、流動裝置響應式設計 (Mobile Responsive) ==================== */
     @media (max-width: 1024px) {
-      .col-year, .col-month, .col-day, .col-week { grid-column: span 6; }
-      .col-clock, .col-lunar, .col-season, .col-festi { grid-column: span 6; }
+      .col-year, .col-month, .col-day, .col-week {
+        grid-column: span 6;
+      }
+      .col-clock, .col-lunar, .col-season, .col-festi {
+        grid-column: span 6;
+      }
     }
 
     @media (max-width: 768px) {
@@ -698,13 +534,17 @@
 
       .ro-grid { gap: 10px; }
       
-      .col-loc-1, .col-loc-2 { grid-column: span 6; }
-      .col-year, .col-month, .col-day, .col-week { grid-column: span 6; }
-      .col-clock, .col-lunar, .col-season, .col-festi { grid-column: span 12; }
+      .col-loc-1, .col-loc-2 {
+        grid-column: span 6;
+      }
 
-      .big-time-digits { font-size: 56px; letter-spacing: 2px; }
-      .big-ampm-tag { font-size: 24px; padding: 4px 12px; }
-      .big-date-banner { font-size: 20px; }
+      .col-year, .col-month, .col-day, .col-week {
+        grid-column: span 6;
+      }
+      /* 手機畫面上：時鐘與其他欄位佔滿整欄 */
+      .col-clock, .col-lunar, .col-season, .col-festi {
+        grid-column: span 12;
+      }
 
       .ro-label { font-size: 19px; }
       .ro-value-main { font-size: 32px; }
@@ -719,15 +559,12 @@
     }
 
     @media (max-width: 480px) {
-      .col-loc-1, .col-loc-2 { grid-column: span 12; }
-      .col-year, .col-month, .col-day, .col-week { grid-column: span 6; }
-      .analog-clock-wrapper { width: 230px; height: 230px; }
-      .clock-number { font-size: 22px; width: 34px; height: 34px; line-height: 34px; }
-      .hour-hand { height: 55px; width: 8px; margin-left: -4px; }
-      .minute-hand { height: 78px; width: 5px; margin-left: -2.5px; }
-      .second-hand { height: 90px; }
-      .big-time-text { font-size: 24px; }
-      .big-ampm-tag { font-size: 18px; }
+      .col-loc-1, .col-loc-2 {
+        grid-column: span 12;
+      }
+      .col-year, .col-month, .col-day, .col-week {
+        grid-column: span 6; /* 2x2 排列 */
+      }
       .ro-value-main { font-size: 28px; }
       .ro-value-time { font-size: 30px; }
       .temp-display { font-size: 40px; }
@@ -742,7 +579,7 @@
       <h1>職業治療關懷 — 每日天氣生活板</h1>
       <div class="action-bar">
         <button class="action-btn" id="refresh-btn" onclick="refreshData()">
-          <span id="refresh-icon" style="display:inline-flex;align-items:center;justify-content:center;">🔄</span> <span>條目更新</span>
+          <span id="refresh-icon" style="display:inline-flex;align-items:center;justify-content:center;">🔄</span> <span>立即更新</span>
         </button>
         <button class="action-btn" id="zoom-btn" onclick="toggleFontSize()">
           <span style="display:inline-flex;align-items:center;justify-content:center;">🔍</span> <span id="zoom-text">特大字體</span>
@@ -757,6 +594,7 @@
           <span>🧠</span>
           <span>現實導向資訊 (Reality Orientation)</span>
         </div>
+        <!-- 分開兩格：地區與地點 -->
         <div class="location-setting-box">
           <div class="loc-field-group">
             <label>📍 地區：</label>
@@ -770,6 +608,7 @@
       </div>
 
       <div class="ro-grid">
+        <!-- 0. 現在地方顯示欄 (分開兩格顯示) -->
         <!-- 第1格：地區 -->
         <div class="ro-block col-loc-1">
           <div class="ro-label"><span>📍</span><span>地區</span></div>
@@ -782,33 +621,33 @@
           <div class="ro-value-main" id="ro-display-detail" style="color: #c92a2a;">社區中心 3樓大堂</div>
         </div>
 
-        <!-- 年份 -->
+        <!-- 1) 日期分開：年份 -->
         <div class="ro-block col-year">
           <div class="ro-label"><span>📅</span><span>年份</span></div>
           <div class="ro-value-main" id="ro-year">----年</div>
         </div>
 
-        <!-- 月份 -->
+        <!-- 1) 日期分開：月份 -->
         <div class="ro-block col-month">
           <div class="ro-label"><span>📆</span><span>月份</span></div>
           <div class="ro-value-main" id="ro-month">--月</div>
         </div>
 
-        <!-- 日期 -->
+        <!-- 1) 日期分開：日期 -->
         <div class="ro-block col-day">
           <div class="ro-label"><span>☀️</span><span>日期</span></div>
           <div class="ro-value-main ro-value-highlight" id="ro-date-num">--日</div>
         </div>
 
-        <!-- 星期 -->
+        <!-- 1) 日期分開：星期 -->
         <div class="ro-block col-week">
           <div class="ro-label"><span>🗓️</span><span>星期</span></div>
           <div class="ro-value-main" id="ro-day-of-week" style="color: #1864ab;">星期-</div>
         </div>
 
-        <!-- 當前時間簡示 -->
+        <!-- 2) 時鐘欄位 -->
         <div class="ro-block col-clock">
-          <div class="ro-label"><span>🕒</span><span>簡要時間</span></div>
+          <div class="ro-label"><span>🕒</span><span>時間</span></div>
           <div class="ro-value-time" id="clock-time">--:--</div>
           <div class="ro-value-sub" id="clock-ampm">上午/下午</div>
         </div>
@@ -820,9 +659,9 @@
           <div class="ro-value-sub" id="ro-solar-term" style="color: #d9480f;">節氣：--</div>
         </div>
 
-        <!-- 當前季節 -->
+        <!-- 季節 -->
         <div class="ro-block col-season">
-          <div class="ro-label"><span>🍂</span><span>當前季節</span></div>
+          <div class="ro-label"><span>🍂</span><span>季節</span></div>
           <div style="display:flex; align-items:center; justify-content:center; gap:8px; margin: auto 0;">
             <span id="season-icon" style="font-size: 40px; line-height: 1;">🌱</span>
             <span class="ro-value-main" id="season-text" style="color: #2b8a3e;">--</span>
@@ -838,42 +677,12 @@
       </div>
     </section>
 
-    <!-- ==================== 新增：香港標準時間大時鐘 (HKO Standard Big Clock) ==================== -->
-    <section class="card standard-clock-card" aria-label="香港標準時間大時鐘">
-      <div class="clock-top-bar">
-        <div class="clock-top-title">
-          <span>⏱️</span>
-          <span>香港標準時間大時鐘 (Hong Kong Standard Time)</span>
-        </div>
-        <div class="clock-ref-badge">
-          🌐 參考香港天文台傳統鐘錶
-        </div>
-      </div>
-
-      <div class="big-clock-container">
-        <!-- 傳統圓形鐘錶面 -->
-        <div class="analog-clock-wrapper">
-          <div class="analog-clock-face" id="analog-clock-face">
-            <div class="clock-hand hour-hand" id="analog-hour-hand"></div>
-            <div class="clock-hand minute-hand" id="analog-minute-hand"></div>
-            <div class="clock-hand second-hand" id="analog-second-hand"></div>
-            <div class="clock-center-pin"></div>
-          </div>
-        </div>
-
-        <!-- 輔助數碼與上午/下午對照 (只顯示時分) -->
-        <div class="digital-sub-display">
-          <div class="big-ampm-tag" id="standard-big-ampm">上午</div>
-          <div class="big-time-text" id="standard-big-clock">00:00</div>
-        </div>
-      </div>
-    </section>
-
-    <!-- 二、香港天文台即時天氣與預測區 (藍色部份) -->
+    <!-- 二、香港天文台即時天氣與預測區 -->
     <section class="card weather-card" aria-label="即時天氣">
       <div class="weather-header">
         <div class="district-select-container">
           <label for="district-select"><span>📍</span><span>選擇天氣分區：</span></label>
+          <!-- 3) 新增地區：深水埗 設為選項目之一 -->
           <select id="district-select" class="district-select" onchange="updateDistrictTemperature()">
             <option value="深水埗" selected>深水埗</option>
             <option value="沙田">沙田</option>
@@ -963,65 +772,18 @@
   </div>
 
   <script>
-    /* ==================== 1. 即時時鐘與日期邏輯 (含傳統鐘錶面) ==================== */
-    function renderClockNumbers() {
-      const clockFace = document.getElementById('analog-clock-face');
-      if (!clockFace || clockFace.querySelector('.clock-number')) return;
-
-      const radius = 115; // 數字環半徑
-      const centerX = 145; // 中心 X (基於 290px 寬)
-      const centerY = 145; // 中心 Y
-
-      for (let i = 1; i <= 12; i++) {
-        const numElem = document.createElement('div');
-        numElem.className = 'clock-number';
-        numElem.textContent = i;
-
-        // 計算 1-12 數字在圓周上的角度 (以12點鐘方向為起點)
-        const angle = (i * 30 - 90) * (Math.PI / 180);
-        const x = centerX + radius * Math.cos(angle) - 22;
-        const y = centerY + radius * Math.sin(angle) - 22;
-
-        numElem.style.left = `${x}px`;
-        numElem.style.top = `${y}px`;
-
-        clockFace.appendChild(numElem);
-      }
-    }
-
+    /* ==================== 1. 即時時鐘與日期分離邏輯 ==================== */
     function updateClockAndDate() {
       const now = new Date();
       
-      // 時間數據
+      // 時鐘數據 (只顯示時與分)
       let hoursInt = now.getHours();
-      const minutesInt = now.getMinutes();
-      const secondsInt = now.getSeconds();
-
       const ampm = hoursInt >= 12 ? '下午' : '上午';
       const hoursStr = String(hoursInt).padStart(2, '0');
-      const minutesStr = String(minutesInt).padStart(2, '0');
-      const secondsStr = String(secondsInt).padStart(2, '0');
+      const minutesStr = String(now.getMinutes()).padStart(2, '0');
       
-      // 更新現實導向卡片內的小時鐘
       document.getElementById('clock-time').textContent = `${hoursStr}:${minutesStr}`;
       document.getElementById('clock-ampm').textContent = `${ampm}`;
-
-      // 旋轉傳統鐘錶指針 (計算旋轉角度)
-      const secondsDeg = (secondsInt / 60) * 360;
-      const minutesDeg = ((minutesInt + secondsInt / 60) / 60) * 360;
-      const hoursDeg = (((hoursInt % 12) + minutesInt / 60 + secondsInt / 3600) / 12) * 360;
-
-      const hourHand = document.getElementById('analog-hour-hand');
-      const minuteHand = document.getElementById('analog-minute-hand');
-      const secondHand = document.getElementById('analog-second-hand');
-
-      if (hourHand) hourHand.style.transform = `rotate(${hoursDeg}deg)`;
-      if (minuteHand) minuteHand.style.transform = `rotate(${minutesDeg}deg)`;
-      if (secondHand) secondHand.style.transform = `rotate(${secondsDeg}deg)`;
-
-      // 更新下方輔助數碼時間 (不顯示秒數)
-      document.getElementById('standard-big-clock').textContent = `${hoursStr}:${minutesStr}`;
-      document.getElementById('standard-big-ampm').textContent = ampm;
 
       // 日期數據 - 分開顯示：年、月、日、星期
       const year = now.getFullYear();
@@ -1443,7 +1205,7 @@
 
       let tips = [];
 
-      tips.push(`老友記好，歡迎來到 ${fullLocation}！`);
+      tips.push(`老人家好，歡迎來到 ${fullLocation}！`);
 
       if (temp >= 30) {
         tips.push(`今日 ${districtName} 天氣酷熱，氣溫達到 ${temp} 度！記得留在室內，定時補充水分，避免戶外劇烈運動。`);
@@ -1546,9 +1308,8 @@
 
     /* ==================== 初始化執行 ==================== */
     window.addEventListener('DOMContentLoaded', () => {
-      renderClockNumbers();
       updateClockAndDate();
-      setInterval(updateClockAndDate, 1000); // 每一秒精確更新大時鐘指針與秒數
+      setInterval(updateClockAndDate, 1000);
       updateCurrentLocationDisplay();
       fetchHKOData();
     });
