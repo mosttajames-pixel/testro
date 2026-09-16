@@ -2,14 +2,16 @@
 <html lang="zh-HK">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
   <title>職業治療關懷 — 每日天氣生活板</title>
   <style>
     /* ==================== 基礎與高對比色彩設定 ==================== */
     :root {
       --bg-color: #f0f4f8;
-      --card-time-bg: #fff9db; /* 暖黃 - 時間與現實導向 */
+      --card-time-bg: #fff9db; /* 暖黃 - 現實導向區 */
       --card-time-border: #f59f00;
+      --card-clock-bg: #e0f2fe; /* 淡天空藍 - 標準大時鐘 (淺色底) */
+      --card-clock-border: #0284c7;
       --card-weather-bg: #e7f5ff; /* 天空藍 - 即時天氣 */
       --card-weather-border: #1c7ed6;
       --card-care-bg: #ebfbee; /* 草綠 - 關懷提示 */
@@ -27,11 +29,11 @@
     body.large-font-mode {
       font-size: 120%;
     }
-    body.large-font-mode .ro-label { font-size: 34px; }
-    body.large-font-mode .ro-value-time { font-size: 56px; }
-    body.large-font-mode .ro-value-date { font-size: 40px; }
-    body.large-font-mode .ro-value-lunar { font-size: 32px; }
-    body.large-font-mode .temp-display { font-size: 60px; }
+    body.large-font-mode .ro-label { font-size: 35px; }
+    body.large-font-mode .ro-value-main { font-size: 46px; }
+    body.large-font-mode .ro-value-time { font-size: 52px; }
+    body.large-font-mode .big-time-digits { font-size: 92px; }
+    body.large-font-mode .temp-display { font-size: 64px; }
     body.large-font-mode .weather-info-text { font-size: 30px; }
     body.large-font-mode .care-message-box { font-size: 34px; }
 
@@ -45,8 +47,9 @@
     body {
       background-color: var(--bg-color);
       color: var(--text-main);
-      padding: 20px;
+      padding: 16px;
       line-height: 1.5;
+      -webkit-text-size-adjust: 100%;
     }
 
     .container {
@@ -54,7 +57,7 @@
       margin: 0 auto;
       display: flex;
       flex-direction: column;
-      gap: 24px;
+      gap: 20px;
     }
 
     /* 頂部主標題 */
@@ -62,15 +65,15 @@
       text-align: center;
       background-color: #1a365d;
       color: #ffffff;
-      padding: 20px;
+      padding: 20px 16px;
       border-radius: 20px;
       box-shadow: 0 4px 12px rgba(0,0,0,0.15);
     }
 
     header h1 {
-      font-size: 38px;
+      font-size: 32px;
       font-weight: 800;
-      letter-spacing: 2px;
+      letter-spacing: 1px;
     }
 
     /* 頂部快捷功能按鈕區 */
@@ -78,7 +81,7 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      gap: 16px;
+      gap: 12px;
       flex-wrap: wrap;
       margin-top: 14px;
     }
@@ -87,8 +90,8 @@
       background-color: #ffffff;
       color: #1a365d;
       border: 3px solid #ffffff;
-      padding: 10px 22px;
-      font-size: 22px;
+      padding: 10px 20px;
+      font-size: 20px;
       font-weight: 800;
       border-radius: 50px;
       cursor: pointer;
@@ -98,6 +101,8 @@
       gap: 8px;
       box-shadow: 0 4px 10px rgba(0,0,0,0.15);
       transition: all 0.2s ease;
+      min-height: 48px;
+      touch-action: manipulation;
     }
 
     .action-btn:hover {
@@ -109,167 +114,345 @@
       transform: translateY(0);
     }
 
-    .action-btn.active {
-      background-color: #ff2d55;
-      color: #ffffff;
-      border-color: #ff2d55;
-    }
-
     /* 通用卡片樣式 */
     .card {
       border-radius: 24px;
-      padding: 24px;
+      padding: 20px;
       border: 4px solid;
       box-shadow: 0 6px 16px rgba(0,0,0,0.08);
       background-color: #ffffff;
     }
 
-    /* ==================== 一、現實導向區 (Reality Orientation) ==================== */
+    /* ==================== 一、黃色部份：現實導向區 (Reality Orientation) ==================== */
     .ro-card {
       background-color: var(--card-time-bg);
       border-color: var(--card-time-border);
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .ro-header-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+      background: rgba(255, 255, 255, 0.85);
+      padding: 12px 18px;
+      border-radius: 16px;
+      border: 2px solid var(--card-time-border);
+    }
+
+    .ro-title {
+      font-size: 26px;
+      font-weight: 800;
+      color: #d9480f;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* 手動輸入「現在地方」設定區 */
+    .location-setting-box {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .location-setting-box label {
+      font-size: 20px;
+      font-weight: 800;
+      color: #2b8a3e;
+      white-space: nowrap;
+    }
+
+    .location-input {
+      font-size: 20px;
+      font-weight: bold;
+      padding: 8px 14px;
+      border-radius: 12px;
+      border: 2px solid #f59f00;
+      background-color: #ffffff;
+      color: #121212;
+      outline: none;
+      min-width: 200px;
+      flex: 1;
+    }
+
+    .location-input:focus {
+      border-color: #d9480f;
+      box-shadow: 0 0 0 3px rgba(217, 72, 15, 0.2);
+    }
+
+    /* 現實導向網格 - 多欄響應式佈局 */
+    .ro-grid {
       display: grid;
-      grid-template-columns: repeat(6, 1fr);
-      gap: 20px;
-      align-items: stretch;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 14px;
+    }
+
+    .ro-label {
+      font-size: 25px;
+      font-weight: 800;
+      color: #333333;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      width: 100%;
     }
 
     .ro-block {
       text-align: center;
-      padding: 16px 12px;
-      background: rgba(255, 255, 255, 0.7);
+      padding: 14px 10px;
+      background-color: #ffffff;
       border-radius: 16px;
-      border: 2px solid rgba(0, 0, 0, 0.05);
+      border: 2px solid rgba(245, 159, 0, 0.5);
       display: flex;
       flex-direction: column;
-      justify-content: flex-start; /* 確保內容自頂部開始排列 */
+      justify-content: space-between;
       align-items: center;
       height: 100%;
+      min-height: 125px;
     }
 
-    .ro-block-half {
-      grid-column: span 3;
-    }
+    .col-loc-1 { grid-column: span 6; }
+    .col-loc-2 { grid-column: span 6; }
+    .col-year  { grid-column: span 3; }
+    .col-month { grid-column: span 3; }
+    .col-day   { grid-column: span 3; }
+    .col-week  { grid-column: span 3; }
+    .col-clock { grid-column: span 3; }
+    .col-lunar { grid-column: span 3; }
+    .col-season{ grid-column: span 3; }
+    .col-festi { grid-column: span 3; }
 
-    .ro-block-third {
-      grid-column: span 2;
-    }
-
-    .ro-label {
-      font-size: 30px;
-      font-weight: 700;
-      color: #2b8a3e;
-      margin-top: 0;
-      margin-bottom: 12px;
-      text-align: center;
-      width: 100%;
+    .loc-field-group {
       display: flex;
       align-items: center;
-      justify-content: center; /* 置中對齊 */
       gap: 6px;
-      align-self: flex-start; /* 確保固定在卡片最頂部 */
+      flex-wrap: wrap;
+    }
+
+    .fixed-district-badge {
+      font-size: 20px;
+      font-weight: 900;
+      padding: 8px 16px;
+      border-radius: 12px;
+      background-color: #ffe8cc;
+      color: #d9480f;
+      border: 2px solid #f59f00;
+      display: inline-block;
+    }
+
+    .ro-value-main {
+      font-size: 38px;
+      font-weight: 900;
+      color: #121212;
+      margin: auto 0;
+      line-height: 1.1;
+    }
+
+    .ro-value-highlight {
+      color: #d9480f;
     }
 
     .ro-value-time {
-      font-size: 48px;
+      font-size: 42px;
       font-weight: 900;
-      color: #d9480f;
-      font-family: monospace;
-      margin: auto 0;
-      text-align: center;
-    }
-
-    .ro-value-date {
-      font-size: 34px;
-      font-weight: 800;
       color: #121212;
-      text-align: center;
+      font-family: 'Courier New', Courier, monospace;
+      margin: auto 0;
+      letter-spacing: 1px;
     }
 
-    .ro-value-lunar {
-      font-size: 28px;
-      font-weight: 700;
-      color: #862e9c;
-      text-align: center;
-    }
-
-    .ro-value-season {
-      font-size: 30px;
+    .ro-value-sub {
+      font-size: 22px;
       font-weight: 800;
-      color: #2b8a3e;
+      color: #495057;
+      margin-top: 4px;
+    }
+
+    /* ==================== 插入：香港標準時間大時鐘卡片 (淺色主題) ==================== */
+    .standard-clock-card {
+      background: linear-gradient(135deg, #e0f2fe 0%, #f0f9ff 100%);
+      border-color: var(--card-clock-border);
+      color: #0f172a;
+      text-align: center;
+      box-shadow: 0 6px 18px rgba(2, 132, 199, 0.12);
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .clock-top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 2px solid rgba(2, 132, 199, 0.25);
+      padding-bottom: 10px;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .clock-top-title {
+      font-size: 26px;
+      font-weight: 900;
+      color: #0369a1;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .clock-ref-badge {
+      background-color: rgba(2, 132, 199, 0.1);
+      color: #0369a1;
+      border: 2px solid #0284c7;
+      padding: 6px 14px;
+      border-radius: 50px;
+      font-size: 18px;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+    }
+
+    /* 傳統圓形鐘錶面容器 */
+    .big-clock-container {
+      background-color: #ffffff;
+      border: 3px solid #7dd3fc;
+      border-radius: 20px;
+      padding: 24px 16px;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      gap: 6px;
-      width: 100%;
-      margin: auto 0;
+      gap: 18px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
     }
 
-    .ro-block-half {
-      grid-column: span 3;
-    }
-
-    .ro-block-third {
-      grid-column: span 2;
-    }
-
-    .ro-label {
-      font-size: 30px;
-      font-weight: 700;
-      color: #2b8a3e;
-      margin-bottom: 8px;
-      text-align: center;
-      width: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 6px;
-    }
-
-    .ro-value-time {
-      font-size: 48px;
-      font-weight: 900;
-      color: #d9480f;
-      font-family: monospace;
-      margin: auto 0;
-      text-align: center;
-    }
-
-    .ro-value-date {
-      font-size: 34px;
-      font-weight: 800;
-      color: #121212;
-      text-align: center;
-    }
-
-    .ro-value-lunar {
-      font-size: 28px;
-      font-weight: 700;
-      color: #862e9c;
-      text-align: center;
-    }
-
-    .ro-value-season {
-      font-size: 30px;
-      font-weight: 800;
-      color: #2b8a3e;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 6px;
-      width: 100%;
-    }
-
-    .season-icon-large {
-      font-size: 56px;
-      line-height: 1;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+    .analog-clock-wrapper {
+      position: relative;
+      width: 290px;
+      height: 290px;
       margin: 0 auto;
     }
+
+    .analog-clock-face {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      background: radial-gradient(circle, #ffffff 68%, #e2e8f0 100%);
+      border: 10px solid #38bdf8;
+      box-shadow: 0 0 25px rgba(56, 189, 248, 0.6), inset 0 0 15px rgba(0, 0, 0, 0.2);
+      position: relative;
+    }
+
+    /* 錶面數字 1-12 */
+    .clock-number {
+      position: absolute;
+      width: 44px;
+      height: 44px;
+      text-align: center;
+      line-height: 44px;
+      font-size: 28px;
+      font-weight: 900;
+      color: #0f172a;
+    }
+
+    /* 指針通用設定 */
+    .clock-hand {
+      position: absolute;
+      bottom: 50%;
+      left: 50%;
+      transform-origin: bottom center;
+      border-radius: 10px;
+    }
+
+    /* 時針 (深色粗短) */
+    .hour-hand {
+      width: 10px;
+      height: 72px;
+      margin-left: -5px;
+      background-color: #0f172a;
+      z-index: 3;
+    }
+
+    /* 分針 (藍色較長) */
+    .minute-hand {
+      width: 6px;
+      height: 100px;
+      margin-left: -3px;
+      background-color: #0284c7;
+      z-index: 4;
+    }
+
+    /* 秒針 (鮮紅細長) */
+    .second-hand {
+      width: 3px;
+      height: 115px;
+      margin-left: -1.5px;
+      background-color: #e03131;
+      z-index: 5;
+    }
+
+    /* 錶面中心點 */
+    .clock-center-pin {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 20px;
+      height: 20px;
+      margin-top: -10px;
+      margin-left: -10px;
+      background-color: #e03131;
+      border: 3.5px solid #ffffff;
+      border-radius: 50%;
+      z-index: 6;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.4);
+    }
+
+    /* 輔助時間與上午/下午顯示列 */
+    .digital-sub-display {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      background: #f0f9ff;
+      padding: 10px 28px;
+      border-radius: 30px;
+      border: 2.5px solid #0284c7;
+    }
+
+    .big-time-text {
+      font-family: 'Courier New', Consolas, Monaco, monospace;
+      font-size: 36px;
+      font-weight: 900;
+      color: #0c4a6e;
+      letter-spacing: 2px;
+    }
+
+    .big-ampm-tag {
+      font-size: 22px;
+      font-weight: 900;
+      background-color: #d9480f;
+      color: #ffffff;
+      padding: 4px 14px;
+      border-radius: 10px;
+      letter-spacing: 1px;
+    }
+
+    /* 特大字體模式下適應大時鐘 */
+    body.large-font-mode .analog-clock-wrapper {
+      width: 330px;
+      height: 330px;
+    }
+    body.large-font-mode .clock-number {
+      font-size: 32px;
+    }
+    body.large-font-mode .hour-hand { height: 85px; }
+    body.large-font-mode .minute-hand { height: 118px; }
+    body.large-font-mode .second-hand { height: 135px; }
 
     /* ==================== 二、即時天氣區 (HKO Weather) ==================== */
     .weather-card {
@@ -282,20 +465,21 @@
       justify-content: space-between;
       align-items: center;
       flex-wrap: wrap;
-      gap: 16px;
-      margin-bottom: 20px;
+      gap: 14px;
+      margin-bottom: 16px;
       border-bottom: 3px solid var(--card-weather-border);
-      padding-bottom: 16px;
+      padding-bottom: 14px;
     }
 
     .district-select-container {
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 10px;
+      flex-wrap: wrap;
     }
 
     .district-select-container label {
-      font-size: 26px;
+      font-size: 24px;
       font-weight: 800;
       display: flex;
       align-items: center;
@@ -303,20 +487,22 @@
     }
 
     select.district-select {
-      font-size: 26px;
+      font-size: 22px;
       font-weight: bold;
-      padding: 10px 20px;
-      border-radius: 16px;
+      padding: 8px 16px;
+      border-radius: 14px;
       border: 3px solid var(--card-weather-border);
       background-color: #ffffff;
       color: #121212;
       cursor: pointer;
+      outline: none;
+      min-height: 48px;
     }
 
     .weather-main-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
-      gap: 20px;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
       text-align: center;
     }
 
@@ -328,104 +514,58 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: center;
+      justify-content: space-between;
       text-align: center;
-      min-height: 190px;
-      width: 100%;
-      margin: 0 auto;
-    }
-
-    /* 統一圖示容器置中設定 */
-    .weather-icon-container {
-      display: flex;
-      flex-direction: row;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      gap: 12px;
-      margin: 8px auto;
-      width: 100%;
+      min-height: 180px;
     }
 
     .weather-emoji-large {
-      font-size: 64px;
+      font-size: 58px;
       line-height: 1;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-      margin: 0 auto;
-    }
-
-    .weather-icon-large {
-      width: 90px;
-      height: 90px;
-      object-fit: contain;
-      display: block;
-      flex-shrink: 0;
-      margin: 0 auto;
+      margin: 6px auto;
     }
 
     .temp-display {
-      font-size: 52px;
+      font-size: 48px;
       font-weight: 900;
       color: #c92a2a;
       margin: auto 0;
-      text-align: center;
     }
 
     .weather-info-text {
-      font-size: 26px;
+      font-size: 22px;
       font-weight: 700;
-      margin-top: 6px;
-      text-align: center;
-    }
-
-    .warning-icon-large {
-      font-size: 52px;
-      line-height: 1;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin: auto auto;
+      margin-top: 4px;
     }
 
     .alert-container {
-      margin-top: 20px;
-      padding: 16px 24px;
+      margin-top: 16px;
+      padding: 14px 20px;
       background-color: var(--alert-bg);
       border: 3px solid var(--alert-border);
       border-radius: 16px;
       display: none;
       align-items: center;
       justify-content: center;
-      gap: 16px;
+      gap: 12px;
     }
 
     .alert-container.active {
       display: flex;
     }
 
-    .alert-icon {
-      font-size: 40px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
+    .alert-icon { font-size: 32px; }
     .alert-text {
-      font-size: 26px;
+      font-size: 22px;
       font-weight: 800;
       color: var(--alert-text);
       text-align: center;
     }
 
-    .forecast-section {
-      margin-top: 24px;
-    }
+    .forecast-section { margin-top: 20px; }
 
     .forecast-title {
-      font-size: 28px;
+      font-size: 26px;
       font-weight: 800;
       margin-bottom: 12px;
       color: #3b5bdb;
@@ -436,15 +576,15 @@
 
     .forecast-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-      gap: 14px;
+      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+      gap: 12px;
     }
 
     .forecast-card {
       background-color: var(--card-forecast-bg);
       border: 3px solid var(--card-forecast-border);
       border-radius: 16px;
-      padding: 14px 10px;
+      padding: 12px 8px;
       text-align: center;
       display: flex;
       flex-direction: column;
@@ -452,29 +592,17 @@
       justify-content: space-between;
     }
 
-    .forecast-icon-wrapper {
-      margin: 8px auto;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 4px;
-      width: 100%;
-    }
-
     .forecast-date {
-      font-size: 22px;
+      font-size: 20px;
       font-weight: 800;
       color: #3b5bdb;
-      text-align: center;
     }
 
     .forecast-temp {
-      font-size: 24px;
+      font-size: 22px;
       font-weight: 800;
       color: #e03131;
-      margin-top: 6px;
-      text-align: center;
+      margin-top: 4px;
     }
 
     /* ==================== 三、關懷提示與語音朗讀區 ==================== */
@@ -483,7 +611,7 @@
       border-color: var(--card-care-border);
       display: flex;
       flex-direction: column;
-      gap: 20px;
+      gap: 16px;
     }
 
     .care-header {
@@ -491,33 +619,35 @@
       justify-content: space-between;
       align-items: center;
       flex-wrap: wrap;
-      gap: 16px;
+      gap: 14px;
     }
 
     .care-title {
-      font-size: 32px;
+      font-size: 28px;
       font-weight: 800;
       color: #2b8a3e;
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 10px;
     }
 
     .tts-btn {
       background-color: #2f9e44;
       color: #ffffff;
       border: none;
-      padding: 16px 32px;
-      font-size: 28px;
+      padding: 14px 28px;
+      font-size: 24px;
       font-weight: 900;
       border-radius: 50px;
       cursor: pointer;
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      gap: 12px;
-      box-shadow: 0 6px 12px rgba(47, 158, 68, 0.3);
+      gap: 10px;
+      box-shadow: 0 4px 12px rgba(47, 158, 68, 0.3);
       transition: transform 0.1s, background-color 0.2s;
+      min-height: 52px;
+      touch-action: manipulation;
     }
 
     .tts-btn:hover {
@@ -525,9 +655,7 @@
       transform: scale(1.02);
     }
 
-    .tts-btn:active {
-      transform: scale(0.98);
-    }
+    .tts-btn:active { transform: scale(0.98); }
 
     .tts-btn.speaking {
       background-color: #e03131;
@@ -542,24 +670,68 @@
 
     .care-message-box {
       background-color: #ffffff;
-      padding: 24px;
-      border-radius: 20px;
+      padding: 20px;
+      border-radius: 18px;
       border: 3px dashed var(--card-care-border);
-      font-size: 30px;
+      font-size: 26px;
       font-weight: 800;
       color: #212529;
       line-height: 1.6;
     }
 
+    /* ==================== 四、流動裝置響應式設計 (Mobile Responsive) ==================== */
+    @media (max-width: 1024px) {
+      .col-year, .col-month, .col-day, .col-week { grid-column: span 6; }
+      .col-clock, .col-lunar, .col-season, .col-festi { grid-column: span 6; }
+    }
+
     @media (max-width: 768px) {
-      header h1 { font-size: 28px; }
-      .ro-card { grid-template-columns: 1fr; }
-      .ro-block-half, .ro-block-third { grid-column: span 1; }
-      .ro-value-time { font-size: 38px; }
-      .ro-value-date { font-size: 26px; }
+      body { padding: 10px; }
+      header { padding: 16px 12px; }
+      header h1 { font-size: 24px; }
+      
+      .action-btn { font-size: 18px; padding: 8px 16px; }
+      
+      .ro-header-bar { flex-direction: column; align-items: flex-start; }
+      .location-setting-box { width: 100%; }
+      .location-input { width: 100%; min-width: 0; }
+
+      .ro-grid { gap: 10px; }
+      
+      .col-loc-1, .col-loc-2 { grid-column: span 6; }
+      .col-year, .col-month, .col-day, .col-week { grid-column: span 6; }
+      .col-clock, .col-lunar, .col-season, .col-festi { grid-column: span 12; }
+
+      .big-time-digits { font-size: 56px; letter-spacing: 2px; }
+      .big-ampm-tag { font-size: 24px; padding: 4px 12px; }
+      .big-date-banner { font-size: 20px; }
+
+      .ro-label { font-size: 19px; }
+      .ro-value-main { font-size: 32px; }
+      .ro-value-time { font-size: 36px; }
+
+      .district-select-container { width: 100%; }
+      select.district-select { width: 100%; font-size: 20px; }
+
+      .care-title { font-size: 24px; }
+      .care-message-box { font-size: 22px; padding: 16px; }
+      .tts-btn { font-size: 20px; width: 100%; }
+    }
+
+    @media (max-width: 480px) {
+      .col-loc-1, .col-loc-2 { grid-column: span 12; }
+      .col-year, .col-month, .col-day, .col-week { grid-column: span 6; }
+      .analog-clock-wrapper { width: 230px; height: 230px; }
+      .clock-number { font-size: 22px; width: 34px; height: 34px; line-height: 34px; }
+      .hour-hand { height: 55px; width: 8px; margin-left: -4px; }
+      .minute-hand { height: 78px; width: 5px; margin-left: -2.5px; }
+      .second-hand { height: 90px; }
+      .big-time-text { font-size: 24px; }
+      .big-ampm-tag { font-size: 18px; }
+      .ro-value-main { font-size: 28px; }
+      .ro-value-time { font-size: 30px; }
       .temp-display { font-size: 40px; }
-      .care-message-box { font-size: 22px; }
-      .tts-btn { font-size: 22px; width: 100%; justify-content: center; }
+      .forecast-grid { grid-template-columns: repeat(2, 1fr); }
     }
   </style>
 </head>
@@ -570,7 +742,7 @@
       <h1>職業治療關懷 — 每日天氣生活板</h1>
       <div class="action-bar">
         <button class="action-btn" id="refresh-btn" onclick="refreshData()">
-          <span id="refresh-icon" style="display:inline-flex;align-items:center;justify-content:center;">🔄</span> <span>立即更新</span>
+          <span id="refresh-icon" style="display:inline-flex;align-items:center;justify-content:center;">🔄</span> <span>條目更新</span>
         </button>
         <button class="action-btn" id="zoom-btn" onclick="toggleFontSize()">
           <span style="display:inline-flex;align-items:center;justify-content:center;">🔍</span> <span id="zoom-text">特大字體</span>
@@ -578,53 +750,138 @@
       </div>
     </header>
 
-    <!-- 一、現實導向區 (Reality Orientation) -->
+    <!-- 一、黃色部份：現實導向區 (Reality Orientation) -->
     <section class="card ro-card" aria-label="現實導向資訊">
-      <div class="ro-block ro-block-half">
-        <div class="ro-label"><span>📅</span><span>西曆日期</span></div>
-        <div class="ro-value-date" id="ro-date">----年--月--日</div>
-        <div class="ro-value-date" id="ro-day" style="color: #1864ab; margin-top: 6px;">星期-</div>
-      </div>
-
-      <div class="ro-block ro-block-half">
-        <div class="ro-label"><span>🕒</span><span>當前時間</span></div>
-        <div class="ro-value-time" id="clock-time">--:--:--</div>
-      </div>
-
-      <div class="ro-block ro-block-third">
-        <div class="ro-label"><span>🌾</span><span>農曆與節氣</span></div>
-        <div class="ro-value-lunar" id="ro-lunar">農曆 --月--</div>
-        <div class="ro-value-lunar" id="ro-solar-term" style="color: #d9480f; margin-top: 6px;">節氣：--</div>
-      </div>
-
-      <div class="ro-block ro-block-third">
-        <div class="ro-label"><span>🍂</span><span>當前季節</span></div>
-        <div class="ro-value-season" id="ro-season">
-          <span id="season-icon" class="season-icon-large">🌱</span>
-          <span id="season-text">--</span>
+      <div class="ro-header-bar">
+        <div class="ro-title">
+          <span>🧠</span>
+          <span>現實導向資訊 (Reality Orientation)</span>
+        </div>
+        <div class="location-setting-box">
+          <div class="loc-field-group">
+            <label>📍 地區：</label>
+            <span class="fixed-district-badge">深水埗</span>
+          </div>
+          <div class="loc-field-group" style="flex: 1; min-width: 240px;">
+            <label for="location-detail-input">🏢 地點：</label>
+            <input type="text" id="location-detail-input" class="location-input" value="社區中心 3樓大堂" placeholder="例如：敬老院 / 3樓大堂" oninput="updateCurrentLocationDisplay()">
+          </div>
         </div>
       </div>
 
-      <div class="ro-block ro-block-third">
-        <div class="ro-label"><span>🎉</span><span>將到節日</span></div>
-        <div class="ro-value-lunar" id="ro-festival-name" style="color: #c92a2a; font-size: 30px; font-weight: 900;">--</div>
-        <div id="ro-festival-countdown" style="font-size: 22px; font-weight: 800; color: #495057; margin-top: 6px; text-align: center;">--</div>
+      <div class="ro-grid">
+        <!-- 第1格：地區 -->
+        <div class="ro-block col-loc-1">
+          <div class="ro-label"><span>📍</span><span>地區</span></div>
+          <div class="ro-value-main ro-value-highlight" id="ro-display-district">深水埗</div>
+        </div>
+
+        <!-- 第2格：地點 -->
+        <div class="ro-block col-loc-2">
+          <div class="ro-label"><span>🏢</span><span>地點</span></div>
+          <div class="ro-value-main" id="ro-display-detail" style="color: #c92a2a;">社區中心 3樓大堂</div>
+        </div>
+
+        <!-- 年份 -->
+        <div class="ro-block col-year">
+          <div class="ro-label"><span>📅</span><span>年份</span></div>
+          <div class="ro-value-main" id="ro-year">----年</div>
+        </div>
+
+        <!-- 月份 -->
+        <div class="ro-block col-month">
+          <div class="ro-label"><span>📆</span><span>月份</span></div>
+          <div class="ro-value-main" id="ro-month">--月</div>
+        </div>
+
+        <!-- 日期 -->
+        <div class="ro-block col-day">
+          <div class="ro-label"><span>☀️</span><span>日期</span></div>
+          <div class="ro-value-main ro-value-highlight" id="ro-date-num">--日</div>
+        </div>
+
+        <!-- 星期 -->
+        <div class="ro-block col-week">
+          <div class="ro-label"><span>🗓️</span><span>星期</span></div>
+          <div class="ro-value-main" id="ro-day-of-week" style="color: #1864ab;">星期-</div>
+        </div>
+
+        <!-- 當前時間簡示 -->
+        <div class="ro-block col-clock">
+          <div class="ro-label"><span>🕒</span><span>簡要時間</span></div>
+          <div class="ro-value-time" id="clock-time">--:--</div>
+          <div class="ro-value-sub" id="clock-ampm">上午/下午</div>
+        </div>
+
+        <!-- 農曆與節氣 -->
+        <div class="ro-block col-lunar">
+          <div class="ro-label"><span>🌾</span><span>農曆與節氣</span></div>
+          <div class="ro-value-main" id="ro-lunar" style="font-size: 28px;">農曆 --月--</div>
+          <div class="ro-value-sub" id="ro-solar-term" style="color: #d9480f;">節氣：--</div>
+        </div>
+
+        <!-- 當前季節 -->
+        <div class="ro-block col-season">
+          <div class="ro-label"><span>🍂</span><span>當前季節</span></div>
+          <div style="display:flex; align-items:center; justify-content:center; gap:8px; margin: auto 0;">
+            <span id="season-icon" style="font-size: 40px; line-height: 1;">🌱</span>
+            <span class="ro-value-main" id="season-text" style="color: #2b8a3e;">--</span>
+          </div>
+        </div>
+
+        <!-- 將到節日 -->
+        <div class="ro-block col-festi">
+          <div class="ro-label"><span>🎉</span><span>將到節日</span></div>
+          <div class="ro-value-main" id="ro-festival-name" style="color: #c92a2a; font-size: 28px;">--</div>
+          <div class="ro-value-sub" id="ro-festival-countdown">--</div>
+        </div>
       </div>
     </section>
 
-    <!-- 二、香港天文台即時天氣與預測區 -->
+    <!-- ==================== 新增：香港標準時間大時鐘 (HKO Standard Big Clock) ==================== -->
+    <section class="card standard-clock-card" aria-label="香港標準時間大時鐘">
+      <div class="clock-top-bar">
+        <div class="clock-top-title">
+          <span>⏱️</span>
+          <span>香港標準時間大時鐘 (Hong Kong Standard Time)</span>
+        </div>
+        <div class="clock-ref-badge">
+          🌐 參考香港天文台傳統鐘錶
+        </div>
+      </div>
+
+      <div class="big-clock-container">
+        <!-- 傳統圓形鐘錶面 -->
+        <div class="analog-clock-wrapper">
+          <div class="analog-clock-face" id="analog-clock-face">
+            <div class="clock-hand hour-hand" id="analog-hour-hand"></div>
+            <div class="clock-hand minute-hand" id="analog-minute-hand"></div>
+            <div class="clock-hand second-hand" id="analog-second-hand"></div>
+            <div class="clock-center-pin"></div>
+          </div>
+        </div>
+
+        <!-- 輔助數碼與上午/下午對照 (只顯示時分) -->
+        <div class="digital-sub-display">
+          <div class="big-ampm-tag" id="standard-big-ampm">上午</div>
+          <div class="big-time-text" id="standard-big-clock">00:00</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 二、香港天文台即時天氣與預測區 (藍色部份) -->
     <section class="card weather-card" aria-label="即時天氣">
       <div class="weather-header">
         <div class="district-select-container">
-          <label for="district-select"><span>📍</span><span>選擇分區：</span></label>
+          <label for="district-select"><span>📍</span><span>選擇天氣分區：</span></label>
           <select id="district-select" class="district-select" onchange="updateDistrictTemperature()">
+            <option value="深水埗" selected>深水埗</option>
             <option value="沙田">沙田</option>
-            <option value="香港天文台" selected>尖沙咀 (天文台)</option>
+            <option value="香港天文台">尖沙咀 (天文台)</option>
             <option value="觀塘">觀塘</option>
             <option value="中赤鱲角">機場 (赤鱲角)</option>
             <option value="九龍城">九龍城</option>
             <option value="黃大仙">黃大仙</option>
-            <option value="深水埗">深水埗</option>
             <option value="荃灣">荃灣</option>
             <option value="屯門">屯門</option>
             <option value="元朗">元朗</option>
@@ -638,7 +895,7 @@
             <option value="將軍澳">將軍澳</option>
           </select>
         </div>
-        <div style="font-size: 20px; color: var(--text-muted); font-weight: bold;">
+        <div style="font-size: 18px; color: var(--text-muted); font-weight: bold;">
           數據來源：香港天文台 API
         </div>
       </div>
@@ -646,9 +903,7 @@
       <div class="weather-main-grid">
         <div class="weather-box">
           <div class="ro-label"><span>☁️</span><span>天氣狀況</span></div>
-          <div class="weather-icon-container">
-            <span id="weather-emoji" class="weather-emoji-large">⛅</span>
-          </div>
+          <div class="weather-emoji-large" id="weather-emoji">⛅</div>
           <div class="weather-info-text" id="weather-desc">多雲</div>
         </div>
 
@@ -672,8 +927,8 @@
 
         <div class="weather-box" id="warning-weather-box" style="border-color: #f03e3e;">
           <div class="ro-label"><span>🚨</span><span>極端天氣警告</span></div>
-          <div id="warning-box-icon" class="warning-icon-large">✅</div>
-          <div class="weather-info-text" id="warning-box-desc" style="color: #2b8a3e; font-size: 22px;">現時無極端天氣警告</div>
+          <div id="warning-box-icon" style="font-size: 40px; margin: auto 0;">✅</div>
+          <div class="weather-info-text" id="warning-box-desc" style="color: #2b8a3e; font-size: 20px;">現時無極端天氣警告</div>
         </div>
       </div>
 
@@ -697,7 +952,7 @@
           <span>💖 每日溫馨提示</span>
         </div>
         <button id="tts-btn" class="tts-btn" onclick="speakROAndWeather()">
-          <span>🔊 聽語音（粵語）</span>
+          <span>🔊 聽語音（粵語朗讀）</span>
         </button>
       </div>
 
@@ -708,24 +963,79 @@
   </div>
 
   <script>
-    /* ==================== 1. 即時時鐘與日期邏輯 ==================== */
-    function updateClock() {
+    /* ==================== 1. 即時時鐘與日期邏輯 (含傳統鐘錶面) ==================== */
+    function renderClockNumbers() {
+      const clockFace = document.getElementById('analog-clock-face');
+      if (!clockFace || clockFace.querySelector('.clock-number')) return;
+
+      const radius = 115; // 數字環半徑
+      const centerX = 145; // 中心 X (基於 290px 寬)
+      const centerY = 145; // 中心 Y
+
+      for (let i = 1; i <= 12; i++) {
+        const numElem = document.createElement('div');
+        numElem.className = 'clock-number';
+        numElem.textContent = i;
+
+        // 計算 1-12 數字在圓周上的角度 (以12點鐘方向為起點)
+        const angle = (i * 30 - 90) * (Math.PI / 180);
+        const x = centerX + radius * Math.cos(angle) - 22;
+        const y = centerY + radius * Math.sin(angle) - 22;
+
+        numElem.style.left = `${x}px`;
+        numElem.style.top = `${y}px`;
+
+        clockFace.appendChild(numElem);
+      }
+    }
+
+    function updateClockAndDate() {
       const now = new Date();
       
-      const hours = String(now.getHours()).padStart(2, '0');
-      const minutes = String(now.getMinutes()).padStart(2, '0');
-      const seconds = String(now.getSeconds()).padStart(2, '0');
-      document.getElementById('clock-time').textContent = `${hours}:${minutes}:${seconds}`;
+      // 時間數據
+      let hoursInt = now.getHours();
+      const minutesInt = now.getMinutes();
+      const secondsInt = now.getSeconds();
 
+      const ampm = hoursInt >= 12 ? '下午' : '上午';
+      const hoursStr = String(hoursInt).padStart(2, '0');
+      const minutesStr = String(minutesInt).padStart(2, '0');
+      const secondsStr = String(secondsInt).padStart(2, '0');
+      
+      // 更新現實導向卡片內的小時鐘
+      document.getElementById('clock-time').textContent = `${hoursStr}:${minutesStr}`;
+      document.getElementById('clock-ampm').textContent = `${ampm}`;
+
+      // 旋轉傳統鐘錶指針 (計算旋轉角度)
+      const secondsDeg = (secondsInt / 60) * 360;
+      const minutesDeg = ((minutesInt + secondsInt / 60) / 60) * 360;
+      const hoursDeg = (((hoursInt % 12) + minutesInt / 60 + secondsInt / 3600) / 12) * 360;
+
+      const hourHand = document.getElementById('analog-hour-hand');
+      const minuteHand = document.getElementById('analog-minute-hand');
+      const secondHand = document.getElementById('analog-second-hand');
+
+      if (hourHand) hourHand.style.transform = `rotate(${hoursDeg}deg)`;
+      if (minuteHand) minuteHand.style.transform = `rotate(${minutesDeg}deg)`;
+      if (secondHand) secondHand.style.transform = `rotate(${secondsDeg}deg)`;
+
+      // 更新下方輔助數碼時間 (不顯示秒數)
+      document.getElementById('standard-big-clock').textContent = `${hoursStr}:${minutesStr}`;
+      document.getElementById('standard-big-ampm').textContent = ampm;
+
+      // 日期數據 - 分開顯示：年、月、日、星期
       const year = now.getFullYear();
       const month = now.getMonth() + 1;
       const date = now.getDate();
-      document.getElementById('ro-date').textContent = `${year} 年 ${month} 月 ${date} 日`;
-
       const days = ['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六'];
       const dayName = days[now.getDay()];
-      document.getElementById('ro-day').textContent = dayName;
 
+      document.getElementById('ro-year').textContent = `${year}年`;
+      document.getElementById('ro-month').textContent = `${month}月`;
+      document.getElementById('ro-date-num').textContent = `${date}日`;
+      document.getElementById('ro-day-of-week').textContent = dayName;
+
+      // 季節判斷
       let season = '';
       let seasonIcon = '';
       if (month >= 3 && month <= 5) {
@@ -740,11 +1050,23 @@
       document.getElementById('season-icon').textContent = seasonIcon;
       document.getElementById('season-text').textContent = season;
 
+      // 農曆與節氣 (每日更新一次)
       if (!window.lunarUpdatedDate || window.lunarUpdatedDate !== date) {
         updateLunarAndSolarTerm(now);
         updateUpcomingFestivals(now);
         window.lunarUpdatedDate = date;
       }
+    }
+
+    /* 更新「現在地方」雙格動態顯示 */
+    function updateCurrentLocationDisplay() {
+      const districtVal = "深水埗";
+      const detailVal = document.getElementById('location-detail-input').value.trim();
+      
+      document.getElementById('ro-display-district').textContent = districtVal;
+      document.getElementById('ro-display-detail').textContent = detailVal || "未輸入地點";
+      
+      generateCareMessage();
     }
 
     /* ==================== 2. 農曆與二十四節氣演算法 ==================== */
@@ -906,13 +1228,13 @@
     let forecastData = null;
 
     const districtNameMap = {
+      "深水埗": ["深水埗", "九龍城"],
       "沙田": ["沙田"],
       "香港天文台": ["香港天文台", "九龍城"],
       "觀塘": ["觀塘"],
       "中赤鱲角": ["赤鱲角", "香港國際機場"],
       "九龍城": ["九龍城"],
       "黃大仙": ["黃大仙"],
-      "深水埗": ["深水埗"],
       "荃灣": ["荃灣"],
       "屯門": ["屯門"],
       "元朗": ["元朗", "濕地公園"],
@@ -953,6 +1275,7 @@
       currentWeatherData = {
         temperature: {
           data: [
+            { place: "深水埗", value: 28 },
             { place: "沙田", value: 28 },
             { place: "香港天文台", value: 29 },
             { place: "觀塘", value: 28 },
@@ -1008,10 +1331,6 @@
       document.getElementById('uv-desc').textContent = `強度：${uvDesc}`;
 
       const iconCode = currentWeatherData.icon?.[0] || 60;
-      const weatherIconElem = document.getElementById('weather-icon');
-      if (weatherIconElem) {
-        weatherIconElem.src = `https://www.hko.gov.hk/images/HKOWEATHER_ICO/pic${iconCode}.png`;
-      }
       document.getElementById('weather-desc').textContent = getWeatherDescByIcon(iconCode);
       document.getElementById('weather-emoji').textContent = getWeatherEmojiByIcon(iconCode);
 
@@ -1081,11 +1400,8 @@
         card.className = 'forecast-card';
         card.innerHTML = `
           <div class="forecast-date">${formattedDate}</div>
-          <div style="font-size: 18px; font-weight: bold; color: #495057; text-align: center;">${item.week}</div>
-          <div class="forecast-icon-wrapper">
-            <span style="font-size: 42px; line-height: 1; display: inline-flex; align-items: center; justify-content: center;">${forecastEmoji}</span>
-            <img src="https://www.hko.gov.hk/images/HKOWEATHER_ICO/pic${icon}.png" style="width:68px;height:68px;object-fit:contain;margin:0 auto;display:block;" alt="預測天氣" onerror="this.style.display='none'">
-          </div>
+          <div style="font-size: 16px; font-weight: bold; color: #495057;">${item.week}</div>
+          <div style="font-size: 36px; margin: 4px 0;">${forecastEmoji}</div>
           <div class="forecast-temp">${minTemp}°C - ${maxTemp}°C</div>
         `;
         grid.appendChild(card);
@@ -1118,33 +1434,40 @@
       const humidity = parseInt(document.getElementById('humidity').textContent) || 70;
       const warnings = currentWeatherData?.warningMessage || [];
       const districtName = document.getElementById('district-select').value;
+      
+      const districtStr = document.getElementById('ro-display-district').textContent;
+      const detailStr = document.getElementById('ro-display-detail').textContent;
+      const fullLocation = (detailStr && detailStr !== "未輸入地點") ? `${districtStr} ${detailStr}` : districtStr;
+      
       const festivalName = document.getElementById('ro-festival-name').textContent;
 
       let tips = [];
 
+      tips.push(`老友記好，歡迎來到 ${fullLocation}！`);
+
       if (temp >= 30) {
-        tips.push(`今日${districtName}天氣酷熱，氣溫達到 ${temp} 度！長者記得要在室內開冷氣，定時補充水分，避免戶外劇烈運動。`);
+        tips.push(`今日 ${districtName} 天氣酷熱，氣溫達到 ${temp} 度！記得留在室內，定時補充水分，避免戶外劇烈運動。`);
       } else if (temp <= 16) {
-        tips.push(`今日天氣較為寒冷，${districtName}只有 ${temp} 度。外出請穿著足夠保暖衣物，注意頭部與頸部保暖。`);
+        tips.push(`今日天氣較為寒冷，${districtName} 氣溫只有 ${temp} 度。外出請穿著足夠保暖衣物，注意頭部與頸部保暖。`);
       } else {
-        tips.push(`今日${districtName}氣溫約 ${temp} 度，體感舒適適宜。`);
+        tips.push(`今日 ${districtName} 氣溫約 ${temp} 度，體感舒適宜人。`);
       }
 
       if (humidity > 85) {
-        tips.push(`相對濕度高達 ${humidity}%，地板可能較為濕滑，長者在家中行走請穿著防滑鞋，注意安全。`);
+        tips.push(`相對濕度高達 ${humidity}%，地板可能較為濕滑，行走請穿著防滑鞋，格外注意安全。`);
       } else if (humidity < 50) {
-        tips.push(`天氣較為乾燥，記得多喝溫水，並塗抹潤膚膏保持皮膚滋潤。`);
+        tips.push(`天氣較為乾燥，記得多喝溫水保持滋潤。`);
       }
 
       if (warnings.some(w => w.includes('暴雨') || w.includes('雷暴'))) {
-        tips.push(`目前有雨勢或雷暴警告，外出請務必帶傘，儘量留在安全室內。`);
+        tips.push(`目前有雷暴或雨勢警告，外出請務必帶傘，盡量留在安全室內。`);
       }
 
       if (festivalName && festivalName !== '--' && festivalName !== '平安健康') {
-        tips.push(`臨近${festivalName}，祝您身體健康，保持愉快的心情！`);
+        tips.push(`臨近 ${festivalName}，祝您身體健康，保持愉快心情！`);
       }
 
-      const finalMsg = tips.join(' ') || `各位老人家好，今日天氣良好，請記得適時喝水，保持規律作息與愉快的心情！`;
+      const finalMsg = tips.join(' ');
       document.getElementById('care-message').textContent = finalMsg;
     }
 
@@ -1160,20 +1483,26 @@
       if (window.speechSynthesis.speaking) {
         window.speechSynthesis.cancel();
         ttsBtn.classList.remove('speaking');
-        ttsBtn.querySelector('span').textContent = '🔊 聽語音（粵語）';
+        ttsBtn.querySelector('span').textContent = '🔊 聽語音（粵語朗讀）';
         return;
       }
 
-      const dateStr = document.getElementById('ro-date').textContent;
-      const dayStr = document.getElementById('ro-day').textContent;
+      const districtStr = document.getElementById('ro-display-district').textContent;
+      const detailStr = document.getElementById('ro-display-detail').textContent;
+      const locationSpeech = (detailStr && detailStr !== "未輸入地點") ? `${districtStr} ${detailStr}` : districtStr;
+
+      const yearStr = document.getElementById('ro-year').textContent;
+      const monthStr = document.getElementById('ro-month').textContent;
+      const dateStr = document.getElementById('ro-date-num').textContent;
+      const dayStr = document.getElementById('ro-day-of-week').textContent;
       const lunarStr = document.getElementById('ro-lunar').textContent;
       const careMsg = document.getElementById('care-message').textContent;
 
-      const fullSpeechText = `早晨！今天是${dateStr}，${dayStr}，${lunarStr}。 ${careMsg}`;
+      const fullSpeechText = `早晨！現在地點是${locationSpeech}。今天是${yearStr}${monthStr}${dateStr}，${dayStr}，${lunarStr}。 ${careMsg}`;
 
       const utterance = new SpeechSynthesisUtterance(fullSpeechText);
       utterance.lang = 'zh-HK';
-      utterance.rate = 0.85; // 專為長者設計的稍慢語速
+      utterance.rate = 0.85; // 適中偏慢，利於長者聆聽
 
       utterance.onstart = () => {
         ttsBtn.classList.add('speaking');
@@ -1182,12 +1511,12 @@
 
       utterance.onend = () => {
         ttsBtn.classList.remove('speaking');
-        ttsBtn.querySelector('span').textContent = '🔊 聽語音（粵語）';
+        ttsBtn.querySelector('span').textContent = '🔊 聽語音（粵語朗讀）';
       };
 
       utterance.onerror = () => {
         ttsBtn.classList.remove('speaking');
-        ttsBtn.querySelector('span').textContent = '🔊 聽語音（粵語）';
+        ttsBtn.querySelector('span').textContent = '🔊 聽語音（粵語朗讀）';
       };
 
       window.speechSynthesis.speak(utterance);
@@ -1217,8 +1546,10 @@
 
     /* ==================== 初始化執行 ==================== */
     window.addEventListener('DOMContentLoaded', () => {
-      updateClock();
-      setInterval(updateClock, 1000);
+      renderClockNumbers();
+      updateClockAndDate();
+      setInterval(updateClockAndDate, 1000); // 每一秒精確更新大時鐘指針與秒數
+      updateCurrentLocationDisplay();
       fetchHKOData();
     });
   </script>
