@@ -3,22 +3,22 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
-  <title>職業治療關懷 — 每日天氣生活板與現實導向練習</title>
-  
+  <title>職業治療關懷 — 每日天氣生活板與活力打地鼠</title>
+
   <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
   
-  <!-- Google Fonts for legibility -->
+  <!-- Google Fonts for senior legibility -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@500;700;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@500;700;800;900&display=swap" rel="stylesheet">
 
   <script>
     tailwind.config = {
       theme: {
         extend: {
           fontFamily: {
-            sans: ['"Noto Sans TC"', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
+            sans: ['"Noto Sans TC"', '-apple-system', 'sans-serif'],
           },
           colors: {
             board: {
@@ -35,7 +35,6 @@
   </script>
 
   <style>
-    /* ==================== 基礎與高對比色彩設定 ==================== */
     :root {
       --bg-color: #f0f4f8;
       --card-time-bg: #fff9db; /* 暖黃 - 現實導向區 */
@@ -46,6 +45,8 @@
       --card-care-border: #37b24d;
       --card-forecast-bg: #f3f0ff; /* 淡紫 - 未來預測 */
       --card-forecast-border: #748ffc;
+      --card-practice-bg: #fffbf0; /* 暖金 - 練習區 */
+      --card-practice-border: #d97706;
       --text-main: #121212;
       --text-muted: #333333;
       --alert-bg: #ffe3e3;
@@ -62,12 +63,15 @@
     body.large-font-mode .ro-value-time { font-size: 52px; }
     body.large-font-mode .temp-display { font-size: 64px; }
     body.large-font-mode .weather-info-text { font-size: 30px; }
+    body.large-font-mode .forecast-date { font-size: 30px; }
+    body.large-font-mode .forecast-temp { font-size: 48px; }
     body.large-font-mode .care-message-box { font-size: 34px; }
 
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
+      font-family: 'Noto Sans TC', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "PingFang HK", "Microsoft JhengHei", sans-serif;
     }
 
     body {
@@ -75,7 +79,6 @@
       color: var(--text-main);
       padding: 16px;
       line-height: 1.5;
-      font-family: 'Noto Sans TC', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       -webkit-text-size-adjust: 100%;
     }
 
@@ -87,8 +90,7 @@
       gap: 20px;
     }
 
-    /* 頂部主標題 */
-    header.main-header {
+    header {
       text-align: center;
       background-color: #1a365d;
       color: #ffffff;
@@ -97,13 +99,12 @@
       box-shadow: 0 4px 12px rgba(0,0,0,0.15);
     }
 
-    header.main-header h1 {
+    header h1 {
       font-size: 32px;
       font-weight: 800;
       letter-spacing: 1px;
     }
 
-    /* 頂部快捷功能按鈕區 */
     .action-bar {
       display: flex;
       justify-content: center;
@@ -141,7 +142,6 @@
       transform: translateY(0);
     }
 
-    /* 通用卡片樣式 */
     .card {
       border-radius: 24px;
       padding: 20px;
@@ -150,7 +150,7 @@
       background-color: #ffffff;
     }
 
-    /* ==================== 一、黃色部份：現實導向區 (Reality Orientation) ==================== */
+    /* 現實導向區 (Reality Orientation) */
     .ro-card {
       background-color: var(--card-time-bg);
       border-color: var(--card-time-border);
@@ -187,11 +187,29 @@
       flex-wrap: wrap;
     }
 
-    .location-setting-box label {
+    .loc-field-group {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .loc-field-group label {
       font-size: 20px;
       font-weight: 800;
       color: #2b8a3e;
       white-space: nowrap;
+    }
+
+    .fixed-district-badge {
+      font-size: 20px;
+      font-weight: 900;
+      padding: 8px 16px;
+      border-radius: 12px;
+      background-color: #ffe8cc;
+      color: #d9480f;
+      border: 2px solid #f59f00;
+      display: inline-block;
     }
 
     .location-input {
@@ -254,24 +272,6 @@
     .col-season{ grid-column: span 3; }
     .col-festi { grid-column: span 3; }
 
-    .loc-field-group {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      flex-wrap: wrap;
-    }
-
-    .fixed-district-badge {
-      font-size: 20px;
-      font-weight: 900;
-      padding: 8px 16px;
-      border-radius: 12px;
-      background-color: #ffe8cc;
-      color: #d9480f;
-      border: 2px solid #f59f00;
-      display: inline-block;
-    }
-
     .ro-value-main {
       font-size: 38px;
       font-weight: 900;
@@ -300,7 +300,6 @@
       margin-top: 4px;
     }
 
-    /* ==================== 二、即時天氣區 (HKO Weather) ==================== */
     .weather-card {
       background-color: var(--card-weather-bg);
       border-color: var(--card-weather-border);
@@ -422,36 +421,37 @@
 
     .forecast-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
-      gap: 12px;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
     }
 
     .forecast-card {
       background-color: var(--card-forecast-bg);
       border: 3px solid var(--card-forecast-border);
-      border-radius: 16px;
-      padding: 12px 8px;
+      border-radius: 20px;
+      padding: 16px 12px;
       text-align: center;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: space-between;
+      min-height: 180px;
     }
 
     .forecast-date {
-      font-size: 20px;
+      font-size: 25px;
       font-weight: 800;
-      color: #3b5bdb;
+      color: #1c7ed6;
     }
 
     .forecast-temp {
-      font-size: 22px;
-      font-weight: 800;
-      color: #e03131;
-      margin-top: 4px;
+      font-size: 38px;
+      font-weight: 900;
+      color: #c92a2a;
+      margin: auto 0;
+      line-height: 1.1;
     }
 
-    /* ==================== 三、關懷提示與語音朗讀區 ==================== */
     .care-card {
       background-color: var(--card-care-bg);
       border-color: var(--card-care-border);
@@ -508,24 +508,14 @@
       animation: pulse 1.2s infinite;
     }
 
-    @keyframes pulse {
-      0% { opacity: 1; }
-      50% { opacity: 0.7; }
-      100% { opacity: 1; }
+    .practice-card {
+      background-color: var(--card-practice-bg);
+      border-color: var(--card-practice-border);
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
     }
 
-    .care-message-box {
-      background-color: #ffffff;
-      padding: 20px;
-      border-radius: 18px;
-      border: 3px dashed var(--card-care-border);
-      font-size: 26px;
-      font-weight: 800;
-      color: #212529;
-      line-height: 1.6;
-    }
-
-    /* ==================== 四、現實導向練習版遊戲卡片樣式 ==================== */
     .card-shadow {
       box-shadow: 0 6px 0px #C8B896, 0 10px 15px rgba(0,0,0,0.15);
     }
@@ -549,6 +539,68 @@
       background-color: #EFF6FF !important;
     }
 
+    /* 打地鼠遊戲專用樣式 */
+    .hole-container {
+      position: relative;
+      overflow: hidden;
+      border-radius: 9999px;
+      background: linear-gradient(180deg, #3d2314 0%, #653819 70%, #854d27 100%);
+      box-shadow: inset 0 10px 15px rgba(0,0,0,0.6), 0 8px 0 #27150b;
+    }
+
+    .mole {
+      position: absolute;
+      left: 50%;
+      bottom: -130%;
+      transform: translateX(-50%) scale(0.9);
+      transition: bottom 0.22s cubic-bezier(0.175, 0.885, 0.32, 1.275), transform 0.22s ease;
+      cursor: pointer;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: clamp(4.5rem, 14vw, 8.5rem);
+      line-height: 1;
+      filter: drop-shadow(0 6px 8px rgba(0,0,0,0.45));
+      user-select: none;
+      -webkit-user-select: none;
+      touch-action: manipulation;
+    }
+
+    .mole.up {
+      bottom: 0%;
+      transform: translateX(-50%) scale(1.18);
+    }
+
+    .btn-3d {
+      transition: all 0.1s ease;
+      box-shadow: 0 6px 0 rgba(0,0,0,0.2);
+    }
+    .btn-3d:active {
+      transform: translateY(4px);
+      box-shadow: 0 2px 0 rgba(0,0,0,0.2);
+    }
+
+    @keyframes floatUp {
+      0% { opacity: 1; transform: translate(-50%, 0) scale(0.8); }
+      50% { transform: translate(-50%, -30px) scale(1.3); }
+      100% { opacity: 0; transform: translate(-50%, -60px) scale(1); }
+    }
+
+    .score-float {
+      position: absolute;
+      top: 20%;
+      left: 50%;
+      color: #f59e0b;
+      font-weight: 900;
+      font-size: 2.5rem;
+      text-shadow: 2px 2px 0 #ffffff, -2px -2px 0 #ffffff, 2px -2px 0 #ffffff, -2px 2px 0 #ffffff;
+      pointer-events: none;
+      animation: floatUp 0.8s ease-out forwards;
+      z-index: 50;
+    }
+
     #confetti-canvas {
       position: fixed;
       top: 0;
@@ -559,25 +611,40 @@
       z-index: 100;
     }
 
-    /* 流動裝置響應式設計 (Mobile Responsive) */
-    @media (max-width: 1024px) {
-      .col-year, .col-month, .col-day, .col-week { grid-column: span 6; }
-      .col-clock, .col-lunar, .col-season, .col-festi { grid-column: span 6; }
+    @keyframes pulse {
+      0% { opacity: 1; }
+      50% { opacity: 0.7; }
+      100% { opacity: 1; }
+    }
+
+    .care-message-box {
+      background-color: #ffffff;
+      padding: 20px;
+      border-radius: 18px;
+      border: 3px dashed var(--card-care-border);
+      font-size: 26px;
+      font-weight: 800;
+      color: #212529;
+      line-height: 1.6;
+    }
+
+    @media (max-width: 992px) {
+      .col-year, .col-month, .col-day, .col-week,
+      .col-clock, .col-lunar, .col-season, .col-festi {
+        grid-column: span 6;
+      }
     }
 
     @media (max-width: 768px) {
       body { padding: 10px; }
-      header.main-header { padding: 16px 12px; }
-      header.main-header h1 { font-size: 24px; }
+      header { padding: 16px 12px; }
+      header h1 { font-size: 24px; }
       
       .action-btn { font-size: 18px; padding: 8px 16px; }
-      
       .ro-header-bar { flex-direction: column; align-items: flex-start; }
       .location-setting-box { width: 100%; }
       .location-input { width: 100%; min-width: 0; }
 
-      .ro-grid { gap: 10px; }
-      
       .col-loc-1, .col-loc-2 { grid-column: span 12; }
       .col-year, .col-month, .col-day, .col-week { grid-column: span 6; }
       .col-clock, .col-lunar { grid-column: span 12; }
@@ -593,6 +660,7 @@
       .care-title { font-size: 24px; }
       .care-message-box { font-size: 22px; padding: 16px; }
       .tts-btn { font-size: 20px; width: 100%; }
+      .forecast-grid { grid-template-columns: repeat(1, 1fr); }
     }
 
     @media (max-width: 480px) {
@@ -602,7 +670,6 @@
       .ro-value-main { font-size: 28px; }
       .ro-value-time { font-size: 30px; }
       .temp-display { font-size: 40px; }
-      .forecast-grid { grid-template-columns: repeat(2, 1fr); }
     }
   </style>
 </head>
@@ -611,11 +678,11 @@
   <canvas id="confetti-canvas"></canvas>
 
   <div class="container">
-    <header class="main-header">
+    <header>
       <h1>職業治療關懷 — 每日天氣生活板</h1>
       <div class="action-bar">
         <button class="action-btn" id="refresh-btn" onclick="refreshData()">
-          <span id="refresh-icon" style="display:inline-flex;align-items:center;justify-content:center;">🔄</span> <span>立即更新</span>
+          <span id="refresh-icon" style="display:inline-flex;align-items:center;justify-content:center;">🔄</span> <span>開始/更新數據</span>
         </button>
         <button class="action-btn" id="zoom-btn" onclick="toggleFontSize()">
           <span style="display:inline-flex;align-items:center;justify-content:center;">🔍</span> <span id="zoom-text">特大字體</span>
@@ -623,7 +690,7 @@
       </div>
     </header>
 
-    <!-- 一、黃色部份：現實導向區 (Reality Orientation) -->
+    <!-- 現實導向資訊區 -->
     <section class="card ro-card" aria-label="現實導向資訊">
       <div class="ro-header-bar">
         <div class="ro-title">
@@ -633,7 +700,7 @@
         <div class="location-setting-box">
           <div class="loc-field-group">
             <label>📍 地區：</label>
-            <span class="fixed-district-badge">深水埗</span>
+            <span class="fixed-district-badge" id="fixed-district-label">深水埗</span>
           </div>
           <div class="loc-field-group" style="flex: 1; min-width: 240px;">
             <label for="location-detail-input">🏢 地點：</label>
@@ -701,12 +768,12 @@
       </div>
     </section>
 
-    <!-- 二、香港天文台即時天氣與預測區 -->
+    <!-- 即時天氣區 -->
     <section class="card weather-card" aria-label="即時天氣">
       <div class="weather-header">
         <div class="district-select-container">
           <label for="district-select"><span>📍</span><span>選擇天氣分區：</span></label>
-          <select id="district-select" class="district-select" onchange="updateDistrictTemperature()">
+          <select id="district-select" class="district-select" onchange="onDistrictChange()">
             <option value="深水埗" selected>深水埗</option>
             <option value="沙田">沙田</option>
             <option value="香港天文台">尖沙咀 (天文台)</option>
@@ -757,7 +824,7 @@
           <div class="weather-info-text" id="uv-desc">--</div>
         </div>
 
-        <div class="weather-box" id="warning-weather-box" style="border-color: #f03e3e;">
+        <div class="weather-box" id="warning-weather-box" style="border-color: #2b8a3e;">
           <div class="ro-label"><span>🚨</span><span>極端天氣警告</span></div>
           <div id="warning-box-icon" style="font-size: 40px; margin: auto 0;">✅</div>
           <div class="weather-info-text" id="warning-box-desc" style="color: #2b8a3e; font-size: 20px;">現時無極端天氣警告</div>
@@ -770,14 +837,14 @@
       </div>
 
       <div class="forecast-section">
-        <div class="forecast-title"><span>🔮</span><span>未來一星期天氣預測</span></div>
+        <div class="forecast-title"><span>🔮</span><span>未來3日天氣預測</span></div>
         <div class="forecast-grid" id="forecast-grid">
           <div class="forecast-card">載入中...</div>
         </div>
       </div>
     </section>
 
-    <!-- 三、長者關懷提示與語音朗讀 -->
+    <!-- 關懷提示區 -->
     <section class="card care-card" aria-label="長者關懷提示">
       <div class="care-header">
         <div class="care-title">
@@ -793,12 +860,10 @@
       </div>
     </section>
 
-    <!-- 四、現實導向練習區 (複製新增於最底) -->
-    <section class="bg-board-bg rounded-3xl p-4 sm:p-6 shadow-xl border-4 border-amber-800/40 my-4 flex flex-col gap-4">
-      
-      <!-- 練習頭部導航列 -->
-      <header class="bg-board-darkwood text-white shadow-md p-3 sm:p-4 rounded-2xl">
-        <div class="max-w-4xl mx-auto flex flex-wrap items-center justify-between gap-2">
+    <!-- 現實導向練習區 -->
+    <section class="card practice-card" aria-label="現實導向練習區">
+      <header class="bg-board-darkwood text-white rounded-2xl p-3 sm:p-4 shadow-md">
+        <div class="flex flex-wrap items-center justify-between gap-2">
           <div class="flex items-center space-x-2">
             <span class="text-3xl sm:text-4xl">🗓️</span>
             <div>
@@ -807,15 +872,11 @@
             </div>
           </div>
 
-          <!-- Controls: Mode Switch & Speech Toggle -->
-          <div class="flex items-center space-x-2 sm:space-x-3 text-sm flex-wrap">
-            <button id="btn-today-target" onclick="setMode('today')" class="bg-amber-600 hover:bg-amber-500 active:bg-amber-700 text-white font-bold px-3 py-2 rounded-xl text-sm sm:text-base flex items-center space-x-1 shadow transition">
-              <span>🎯 今日現實</span>
-            </button>
-            <button id="btn-random-target" onclick="setMode('random')" class="bg-amber-700/80 hover:bg-amber-600 text-amber-100 font-bold px-3 py-2 rounded-xl text-sm sm:text-base flex items-center space-x-1 shadow transition">
-              <span>🎲 隨機題目</span>
-            </button>
-            <button id="btn-audio-toggle" onclick="toggleAudio()" class="bg-emerald-700 hover:bg-emerald-600 text-white font-bold px-3 py-2 rounded-xl text-sm sm:text-base flex items-center space-x-1 shadow transition">
+          <div class="flex items-center space-x-2 sm:space-x-3 text-sm">
+            <div class="bg-amber-700/80 text-amber-100 font-bold px-3 py-2 rounded-xl text-sm sm:text-base flex items-center space-x-1 shadow">
+              <span>📅 今日真實日期</span>
+            </div>
+            <button id="btn-audio-toggle" onclick="togglePracticeAudio()" class="bg-emerald-700 hover:bg-emerald-600 text-white font-bold px-3 py-2 rounded-xl text-sm sm:text-base flex items-center space-x-1 shadow transition">
               <span id="audio-icon">🔊</span>
               <span id="audio-label">聲音開</span>
             </button>
@@ -823,165 +884,229 @@
         </div>
       </header>
 
-      <!-- Progress Step Indicators -->
-      <section class="bg-white rounded-2xl p-3 shadow-md border-2 border-amber-200 flex flex-wrap sm:flex-nowrap justify-between items-center text-center gap-1.5 sm:gap-2">
-        <div id="step-tab-1" onclick="goToStep(1)" class="flex-1 py-2 px-1 rounded-xl cursor-pointer transition border-2 border-blue-500 bg-blue-50 min-w-[70px]">
-          <span class="text-xs font-bold text-blue-700 block">第一關</span>
-          <span class="text-sm sm:text-lg font-black text-blue-900">1. 月份</span>
-        </div>
+      <div class="w-full flex-grow flex flex-col gap-4 mt-2">
 
-        <div class="text-gray-300 font-bold hidden sm:block">➔</div>
+        <div class="bg-white rounded-2xl p-3 shadow-md border-2 border-amber-200 flex flex-wrap sm:flex-nowrap justify-between items-center text-center gap-1.5 sm:gap-2">
+          <div id="step-tab-1" onclick="goToStep(1)" class="flex-1 py-2 px-1 rounded-xl cursor-pointer transition border-2 border-blue-500 bg-blue-50 min-w-[70px]">
+            <span class="text-xs font-bold text-blue-700 block">第一關</span>
+            <span class="text-sm sm:text-lg font-black text-blue-900">1. 月份</span>
+          </div>
 
-        <div id="step-tab-2" onclick="goToStep(2)" class="flex-1 py-2 px-1 rounded-xl cursor-pointer transition border-2 border-gray-200 bg-gray-50 opacity-60 min-w-[70px]">
-          <span class="text-xs font-bold text-gray-500 block">第二關</span>
-          <span class="text-sm sm:text-lg font-black text-gray-700">2. 日期</span>
-        </div>
+          <div class="text-gray-300 font-bold hidden sm:block">➔</div>
 
-        <div class="text-gray-300 font-bold hidden sm:block">➔</div>
+          <div id="step-tab-2" onclick="goToStep(2)" class="flex-1 py-2 px-1 rounded-xl cursor-pointer transition border-2 border-gray-200 bg-gray-50 opacity-60 min-w-[70px]">
+            <span class="text-xs font-bold text-gray-500 block">第二關</span>
+            <span class="text-sm sm:text-lg font-black text-gray-700">2. 日期</span>
+          </div>
 
-        <div id="step-tab-3" onclick="goToStep(3)" class="flex-1 py-2 px-1 rounded-xl cursor-pointer transition border-2 border-gray-200 bg-gray-50 opacity-60 min-w-[70px]">
-          <span class="text-xs font-bold text-gray-500 block">第三關</span>
-          <span class="text-sm sm:text-lg font-black text-gray-700">3. 星期</span>
-        </div>
+          <div class="text-gray-300 font-bold hidden sm:block">➔</div>
 
-        <div class="text-gray-300 font-bold hidden sm:block">➔</div>
+          <div id="step-tab-3" onclick="goToStep(3)" class="flex-1 py-2 px-1 rounded-xl cursor-pointer transition border-2 border-gray-200 bg-gray-50 opacity-60 min-w-[70px]">
+            <span class="text-xs font-bold text-gray-500 block">第三關</span>
+            <span class="text-sm sm:text-lg font-black text-gray-700">3. 星期</span>
+          </div>
 
-        <div id="step-tab-4" onclick="goToStep(4)" class="flex-1 py-2 px-1 rounded-xl cursor-pointer transition border-2 border-gray-200 bg-gray-50 opacity-60 min-w-[70px]">
-          <span class="text-xs font-bold text-gray-500 block">第四關</span>
-          <span class="text-sm sm:text-lg font-black text-gray-700">4. 季節</span>
-        </div>
-      </section>
+          <div class="text-gray-300 font-bold hidden sm:block">➔</div>
 
-      <!-- Current Question Announcement Box -->
-      <section class="bg-amber-100 border-3 border-amber-300 rounded-2xl p-4 shadow-sm flex flex-col sm:flex-row items-center justify-between gap-3 text-center sm:text-left">
-        <div>
-          <span id="question-badge" class="bg-blue-600 text-white text-xs font-bold px-2.5 py-1 rounded-full uppercase tracking-wider inline-block mb-1">
-            第一題
-          </span>
-          <div id="question-text" class="text-2xl sm:text-3xl font-black text-amber-950">
-            現在是幾月？
+          <div id="step-tab-4" onclick="goToStep(4)" class="flex-1 py-2 px-1 rounded-xl cursor-pointer transition border-2 border-gray-200 bg-gray-50 opacity-60 min-w-[70px]">
+            <span class="text-xs font-bold text-gray-500 block">第四關</span>
+            <span class="text-sm sm:text-lg font-black text-gray-700">4. 季節</span>
           </div>
         </div>
+
+        <div class="bg-amber-100 border-3 border-amber-300 rounded-2xl p-4 shadow-sm flex flex-col sm:flex-row items-center justify-between gap-3 text-center sm:text-left">
+          <div>
+            <span id="question-badge" class="bg-blue-600 text-white text-xs font-bold px-2.5 py-1 rounded-full uppercase tracking-wider inline-block mb-1">
+              第一題
+            </span>
+            <div id="question-text" class="text-2xl sm:text-3xl font-black text-amber-950">
+              現在是幾月？
+            </div>
+          </div>
+          <div class="flex items-center gap-2">
+            <button onclick="readCurrentQuestionSpeech()" class="bg-blue-600 hover:bg-blue-700 active:scale-95 text-white font-bold px-4 py-2.5 rounded-xl text-base sm:text-lg flex items-center gap-1.5 shadow transition">
+              🔊 語音念題目
+            </button>
+          </div>
+        </div>
+
+        <div class="bg-board-felt border-8 border-board-wood rounded-3xl p-4 sm:p-6 shadow-2xl relative">
+          <div class="text-center mb-3">
+            <h3 id="board-instruction" class="text-amber-100 text-lg sm:text-xl font-bold tracking-wider">點選或拖曳卡片放到框框內</h3>
+          </div>
+
+          <div id="view-step-1" class="flex flex-col items-center justify-center py-4">
+            <div class="flex items-center gap-4 bg-board-darkwood/40 p-5 rounded-2xl border border-emerald-600/50 justify-center">
+              <div id="slot-month" 
+                   onclick="selectSlot('month')" 
+                   ondragover="allowDrop(event)" 
+                   ondrop="handleDrop(event, 'month')"
+                   class="w-28 h-32 sm:w-32 sm:h-36 bg-board-darkwood/80 border-4 border-dashed border-amber-300/70 rounded-2xl flex flex-col items-center justify-center cursor-pointer transition slot-shadow hover:border-amber-300 relative slot-highlight">
+                <span class="text-amber-200/40 text-base font-bold pointer-events-none">放月份卡</span>
+                <div id="slot-month-content" class="w-full h-full flex items-center justify-center"></div>
+              </div>
+              <span class="text-5xl sm:text-6xl font-black text-amber-100 drop-shadow">月</span>
+            </div>
+          </div>
+
+          <div id="view-step-2" class="hidden flex flex-col items-center justify-center py-4">
+            <div class="flex items-center gap-4 bg-board-darkwood/40 p-5 rounded-2xl border border-emerald-600/50 justify-center">
+              <div id="slot-day" 
+                   onclick="selectSlot('day')" 
+                   ondragover="allowDrop(event)" 
+                   ondrop="handleDrop(event, 'day')"
+                   class="w-28 h-32 sm:w-32 sm:h-36 bg-board-darkwood/80 border-4 border-dashed border-amber-300/70 rounded-2xl flex flex-col items-center justify-center cursor-pointer transition slot-shadow hover:border-amber-300 relative">
+                <span class="text-amber-200/40 text-base font-bold pointer-events-none">放日期卡</span>
+                <div id="slot-day-content" class="w-full h-full flex items-center justify-center"></div>
+              </div>
+              <span class="text-5xl sm:text-6xl font-black text-amber-100 drop-shadow">日</span>
+            </div>
+          </div>
+
+          <div id="view-step-3" class="hidden flex flex-col items-center justify-center py-4">
+            <div class="flex items-center gap-4 bg-board-darkwood/40 p-5 rounded-2xl border border-emerald-600/50 justify-center">
+              <div id="slot-weekday" 
+                   onclick="selectSlot('weekday')" 
+                   ondragover="allowDrop(event)" 
+                   ondrop="handleDrop(event, 'weekday')"
+                   class="w-36 h-32 sm:w-44 sm:h-36 bg-board-darkwood/80 border-4 border-dashed border-amber-300/70 rounded-2xl flex flex-col items-center justify-center cursor-pointer transition slot-shadow hover:border-amber-300 relative">
+                <span class="text-amber-200/40 text-base font-bold pointer-events-none">放星期卡</span>
+                <div id="slot-weekday-content" class="w-full h-full flex items-center justify-center"></div>
+              </div>
+            </div>
+          </div>
+
+          <div id="view-step-4" class="hidden flex flex-col items-center justify-center py-4">
+            <div class="flex items-center gap-4 bg-board-darkwood/40 p-5 rounded-2xl border border-emerald-600/50 justify-center">
+              <div id="slot-season" 
+                   onclick="selectSlot('season')" 
+                   ondragover="allowDrop(event)" 
+                   ondrop="handleDrop(event, 'season')"
+                   class="w-36 h-32 sm:w-44 sm:h-36 bg-board-darkwood/80 border-4 border-dashed border-amber-300/70 rounded-2xl flex flex-col items-center justify-center cursor-pointer transition slot-shadow hover:border-amber-300 relative">
+                <span class="text-amber-200/40 text-base font-bold pointer-events-none">放季節卡</span>
+                <div id="slot-season-content" class="w-full h-full flex items-center justify-center"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="mt-6 flex flex-wrap items-center justify-center gap-3">
+            <button onclick="checkCurrentStepAnswer()" class="bg-amber-400 hover:bg-amber-300 active:scale-95 text-amber-950 font-black text-xl sm:text-2xl px-8 py-3 rounded-2xl shadow-lg border-2 border-amber-200 flex items-center gap-2 transition">
+              <span>✅ 確認答案</span>
+            </button>
+            <button onclick="resetCurrentStep()" class="bg-red-800/80 hover:bg-red-700 active:scale-95 text-white font-bold text-base sm:text-lg px-4 py-3 rounded-2xl shadow border border-red-500/50 flex items-center gap-1 transition">
+              <span>🗑️ 重來</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="bg-board-cardBg border-2 border-amber-200 rounded-3xl p-4 sm:p-5 shadow-lg">
+          <div id="deck-header-title" class="text-lg sm:text-xl font-black text-gray-800 mb-3 flex items-center justify-between border-b border-amber-200 pb-2">
+            <span>請點選正確答案（三選一）：</span>
+            <span class="text-xs font-bold text-gray-500 hidden sm:inline">大字體適老簡化設計</span>
+          </div>
+
+          <div id="deck-options" class="grid grid-cols-3 gap-3 sm:gap-6 min-h-[120px]">
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- 老友記活力打地鼠區 -->
+    <section class="card mole-card bg-amber-50/60 border-amber-400" aria-label="老友記活力打地鼠">
+      <header class="bg-gradient-to-r from-amber-600 to-orange-600 text-white rounded-2xl p-3 sm:p-4 shadow-md flex items-center justify-between gap-2 mb-4">
         <div class="flex items-center gap-2">
-          <button onclick="readCurrentQuestionSpeech()" class="bg-blue-600 hover:bg-blue-700 active:scale-95 text-white font-bold px-4 py-2.5 rounded-xl text-base sm:text-lg flex items-center gap-1.5 shadow transition">
-            🔊 語音念題目
-          </button>
+          <span class="text-3xl sm:text-4xl">🌻</span>
+          <div>
+            <h2 class="text-2xl sm:text-3xl font-black text-amber-100 leading-tight">老友記活力打地鼠</h2>
+            <p class="text-xs sm:text-sm font-bold text-amber-200">放大版圖示，反應與專注力手眼協調訓練</p>
+          </div>
         </div>
-      </section>
+        <button id="openSettingsBtn" onclick="openMoleSettings()" class="bg-amber-100 hover:bg-amber-200 text-amber-900 px-3 py-2 rounded-xl border-2 border-amber-300 flex items-center gap-1.5 font-extrabold text-sm sm:text-base shadow transition">
+          <span>⚙️</span>
+          <span>遊戲設定</span>
+        </button>
+      </header>
 
-      <!-- REALITY BOARD (Interactive Slots Area) -->
-      <section class="bg-board-felt border-8 border-board-wood rounded-3xl p-4 sm:p-6 shadow-2xl relative">
-        <div class="text-center mb-3">
-          <h3 id="board-instruction" class="text-amber-100 text-lg sm:text-xl font-bold tracking-wider">點選或拖曳卡片放到框框內</h3>
+      <div class="grid grid-cols-3 gap-2 sm:gap-4 mb-3">
+        <div class="bg-gradient-to-br from-amber-400 to-orange-400 rounded-2xl p-2.5 sm:p-3 text-white text-center shadow-md border-b-4 border-orange-600">
+          <div class="text-xs sm:text-sm font-extrabold opacity-90">得分</div>
+          <div id="mole-scoreDisplay" class="text-3xl sm:text-4xl font-black tracking-wider drop-shadow">0</div>
         </div>
 
-        <!-- STEP 1: MONTH SLOT -->
-        <div id="view-step-1" class="flex flex-col items-center justify-center py-4">
-          <div class="flex items-center gap-4 bg-board-darkwood/40 p-5 rounded-2xl border border-emerald-600/50 justify-center">
-            <div id="slot-month" 
-                 onclick="selectSlot('month')" 
-                 ondragover="allowDrop(event)" 
-                 ondrop="handleDrop(event, 'month')"
-                 class="w-28 h-32 sm:w-32 sm:h-36 bg-board-darkwood/80 border-4 border-dashed border-amber-300/70 rounded-2xl flex flex-col items-center justify-center cursor-pointer transition slot-shadow hover:border-amber-300 relative slot-highlight">
-              <span class="text-amber-200/40 text-base font-bold pointer-events-none">放月份卡</span>
-              <div id="slot-month-content" class="w-full h-full flex items-center justify-center"></div>
-            </div>
-            <span class="text-5xl sm:text-6xl font-black text-amber-100 drop-shadow">月</span>
+        <div id="mole-targetCard" class="bg-white rounded-2xl p-2.5 sm:p-3 text-center shadow-md border-2 border-emerald-400 flex flex-col justify-center items-center">
+          <div class="text-xs sm:text-sm font-extrabold text-emerald-700">目標任務</div>
+          <div id="mole-targetText" class="text-base sm:text-xl font-black text-emerald-900 leading-tight">請打地鼠</div>
+        </div>
+
+        <div class="bg-gradient-to-br from-sky-400 to-blue-500 rounded-2xl p-2.5 sm:p-3 text-white text-center shadow-md border-b-4 border-blue-700">
+          <div class="text-xs sm:text-sm font-extrabold opacity-90">倒數時間</div>
+          <div id="mole-timerDisplay" class="text-3xl sm:text-4xl font-black tracking-wider drop-shadow">30s</div>
+        </div>
+      </div>
+
+      <div id="mole-feedbackBanner" class="bg-emerald-100 border-2 border-emerald-400 text-emerald-800 font-black text-center py-2 px-4 rounded-xl mb-4 text-sm sm:text-lg shadow-sm flex items-center justify-center gap-2 transition-all">
+        <span>✨ 動物圖示已放大填滿圓形，點擊「開始遊戲」即可開玩！</span>
+      </div>
+
+      <!-- 8個洞口佈局 3 - 2 - 3 -->
+      <div class="bg-emerald-700/20 backdrop-blur-sm p-3 sm:p-6 rounded-3xl border-4 border-emerald-500 shadow-inner my-auto flex flex-col gap-3 sm:gap-6 justify-center">
+        <!-- Row 1: 3 Holes -->
+        <div class="grid grid-cols-3 gap-2 sm:gap-6">
+          <div class="hole-container aspect-square relative">
+            <div class="mole" id="mole-0" onclick="handleMoleHit(0, event)" ontouchstart="handleMoleHit(0, event)">🐹</div>
+          </div>
+          <div class="hole-container aspect-square relative">
+            <div class="mole" id="mole-1" onclick="handleMoleHit(1, event)" ontouchstart="handleMoleHit(1, event)">🐹</div>
+          </div>
+          <div class="hole-container aspect-square relative">
+            <div class="mole" id="mole-2" onclick="handleMoleHit(2, event)" ontouchstart="handleMoleHit(2, event)">🐹</div>
           </div>
         </div>
 
-        <!-- STEP 2: DAY SLOTS (Tens & Units) -->
-        <div id="view-step-2" class="hidden flex flex-col items-center justify-center py-2">
-          <div class="flex items-center gap-3 sm:gap-4 bg-board-darkwood/40 p-4 sm:p-5 rounded-2xl border border-emerald-600/50 justify-center">
-            <div class="flex flex-col items-center">
-              <span class="text-xs text-amber-200 mb-1 font-bold">十位數字</span>
-              <div id="slot-day-tens" 
-                   onclick="selectSlot('day-tens')" 
-                   ondragover="allowDrop(event)" 
-                   ondrop="handleDrop(event, 'day-tens')"
-                   class="w-22 h-28 sm:w-28 sm:h-32 bg-board-darkwood/80 border-4 border-dashed border-amber-300/70 rounded-2xl flex flex-col items-center justify-center cursor-pointer transition slot-shadow hover:border-amber-300 relative">
-                <span class="text-amber-200/40 text-sm font-bold pointer-events-none">0-3</span>
-                <div id="slot-day-tens-content" class="w-full h-full flex items-center justify-center"></div>
-              </div>
-            </div>
-
-            <div class="flex flex-col items-center">
-              <span class="text-xs text-amber-200 mb-1 font-bold">個位數字</span>
-              <div id="slot-day-units" 
-                   onclick="selectSlot('day-units')" 
-                   ondragover="allowDrop(event)" 
-                   ondrop="handleDrop(event, 'day-units')"
-                   class="w-22 h-28 sm:w-28 sm:h-32 bg-board-darkwood/80 border-4 border-dashed border-amber-300/70 rounded-2xl flex flex-col items-center justify-center cursor-pointer transition slot-shadow hover:border-amber-300 relative">
-                <span class="text-amber-200/40 text-sm font-bold pointer-events-none">0-9</span>
-                <div id="slot-day-units-content" class="w-full h-full flex items-center justify-center"></div>
-              </div>
-            </div>
-
-            <span class="text-5xl sm:text-6xl font-black text-amber-100 drop-shadow ml-1">日</span>
+        <!-- Row 2: 2 Holes -->
+        <div class="flex justify-center gap-3 sm:gap-8 px-6 sm:px-16">
+          <div class="hole-container aspect-square w-1/3 relative">
+            <div class="mole" id="mole-3" onclick="handleMoleHit(3, event)" ontouchstart="handleMoleHit(3, event)">🐹</div>
+          </div>
+          <div class="hole-container aspect-square w-1/3 relative">
+            <div class="mole" id="mole-4" onclick="handleMoleHit(4, event)" ontouchstart="handleMoleHit(4, event)">🐹</div>
           </div>
         </div>
 
-        <!-- STEP 3: WEEKDAY SLOT -->
-        <div id="view-step-3" class="hidden flex flex-col items-center justify-center py-4">
-          <div class="flex items-center gap-4 bg-board-darkwood/40 p-5 rounded-2xl border border-emerald-600/50 justify-center">
-            <div id="slot-weekday" 
-                 onclick="selectSlot('weekday')" 
-                 ondragover="allowDrop(event)" 
-                 ondrop="handleDrop(event, 'weekday')"
-                 class="w-36 h-32 sm:w-44 sm:h-36 bg-board-darkwood/80 border-4 border-dashed border-amber-300/70 rounded-2xl flex flex-col items-center justify-center cursor-pointer transition slot-shadow hover:border-amber-300 relative">
-              <span class="text-amber-200/40 text-base font-bold pointer-events-none">放星期卡</span>
-              <div id="slot-weekday-content" class="w-full h-full flex items-center justify-center"></div>
-            </div>
+        <!-- Row 3: 3 Holes -->
+        <div class="grid grid-cols-3 gap-2 sm:gap-6">
+          <div class="hole-container aspect-square relative">
+            <div class="mole" id="mole-5" onclick="handleMoleHit(5, event)" ontouchstart="handleMoleHit(5, event)">🐹</div>
+          </div>
+          <div class="hole-container aspect-square relative">
+            <div class="mole" id="mole-6" onclick="handleMoleHit(6, event)" ontouchstart="handleMoleHit(6, event)">🐹</div>
+          </div>
+          <div class="hole-container aspect-square relative">
+            <div class="mole" id="mole-7" onclick="handleMoleHit(7, event)" ontouchstart="handleMoleHit(7, event)">🐹</div>
           </div>
         </div>
+      </div>
 
-        <!-- STEP 4: SEASON SLOT -->
-        <div id="view-step-4" class="hidden flex flex-col items-center justify-center py-4">
-          <div class="flex items-center gap-4 bg-board-darkwood/40 p-5 rounded-2xl border border-emerald-600/50 justify-center">
-            <div id="slot-season" 
-                 onclick="selectSlot('season')" 
-                 ondragover="allowDrop(event)" 
-                 ondrop="handleDrop(event, 'season')"
-                 class="w-36 h-32 sm:w-44 sm:h-36 bg-board-darkwood/80 border-4 border-dashed border-amber-300/70 rounded-2xl flex flex-col items-center justify-center cursor-pointer transition slot-shadow hover:border-amber-300 relative">
-              <span class="text-amber-200/40 text-base font-bold pointer-events-none">放季節卡</span>
-              <div id="slot-season-content" class="w-full h-full flex items-center justify-center"></div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Control Buttons -->
-        <div class="mt-6 flex flex-wrap items-center justify-center gap-3">
-          <button onclick="checkCurrentStepAnswer()" class="bg-amber-400 hover:bg-amber-300 active:scale-95 text-amber-950 font-black text-xl sm:text-2xl px-8 py-3 rounded-2xl shadow-lg border-2 border-amber-200 flex items-center gap-2 transition">
-            <span>✅ 確認答案</span>
-          </button>
-          <button onclick="resetCurrentStep()" class="bg-red-800/80 hover:bg-red-700 active:scale-95 text-white font-bold text-base sm:text-lg px-4 py-3 rounded-2xl shadow border border-red-500/50 flex items-center gap-1 transition">
-            <span>🗑️ 重來</span>
-          </button>
-        </div>
-      </section>
-
-      <!-- CARDS DECK SELECTION AREA -->
-      <section class="bg-board-cardBg border-2 border-amber-200 rounded-3xl p-4 sm:p-5 shadow-lg">
-        <div id="deck-header-title" class="text-lg sm:text-xl font-black text-gray-800 mb-3 flex items-center justify-between border-b border-amber-200 pb-2">
-          <span>選取月份卡（點擊或拖曳）：</span>
-          <span class="text-xs font-bold text-gray-500 hidden sm:inline">大字體適老設計</span>
-        </div>
-
-        <div id="deck-months" class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-3"></div>
-        <div id="deck-digits" class="hidden grid grid-cols-5 sm:grid-cols-5 md:grid-cols-10 gap-2 sm:gap-3"></div>
-        <div id="deck-weekdays" class="hidden grid grid-cols-2 sm:grid-cols-4 md:grid-cols-7 gap-2 sm:gap-3"></div>
-        <div id="deck-seasons" class="hidden grid grid-cols-2 sm:grid-cols-4 gap-3"></div>
-      </section>
+      <div class="mt-4 flex gap-3 justify-center">
+        <button id="mole-startBtn" onclick="toggleStartMoleGame()" class="btn-3d bg-emerald-500 hover:bg-emerald-600 text-white font-black text-xl sm:text-2xl py-3.5 px-8 rounded-2xl border-b-4 border-emerald-700 flex items-center gap-2 shadow-lg w-full sm:w-auto justify-center">
+          <span>▶️ 開始遊戲</span>
+        </button>
+        <button id="mole-speakPromptBtn" onclick="speakMolePrompt()" class="btn-3d bg-sky-500 hover:bg-sky-600 text-white font-black text-xl py-3.5 px-5 rounded-2xl border-b-4 border-sky-700 flex items-center justify-center gap-2 shadow-lg">
+          <span>🔊</span>
+          <span class="text-base hidden sm:inline">讀出提示</span>
+        </button>
+      </div>
     </section>
 
   </div>
 
-  <!-- MODAL FOR PRACTICE SUCCESS / FEEDBACK -->
+  <!-- 練習結果 Modal -->
   <div id="result-modal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
     <div class="bg-white border-4 border-amber-400 rounded-3xl max-w-md w-full p-6 text-center shadow-2xl transform transition-all scale-95 opacity-0" id="modal-content">
       <div id="modal-icon" class="text-6xl mb-2">🎉</div>
       <h3 id="modal-title" class="text-3xl font-black text-gray-800 mb-2">好棒！答對了！</h3>
-      <p id="modal-body" class="text-xl font-bold text-gray-600 mb-6">您答對了：<span id="modal-result-str" class="text-blue-700 underline">9月</span></p>
+      <p id="modal-body" class="text-xl font-bold text-gray-600 mb-6">您答對了：<span id="modal-result-str" class="text-blue-700 underline">--</span></p>
       
       <div class="flex flex-col gap-3">
         <button id="modal-next-btn" onclick="closeModalAndContinue()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-black text-xl py-3.5 rounded-2xl shadow-lg transition">
@@ -991,12 +1116,86 @@
     </div>
   </div>
 
-  <footer class="text-center text-xs text-gray-500 py-4">
-    職業治療關懷 • 每日天氣生活板 & 現實導向長者認知練習
-  </footer>
+  <!-- 打地鼠遊戲設定 Modal -->
+  <div id="moleSettingsModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-white rounded-3xl p-6 max-w-md w-full shadow-2xl border-4 border-amber-400 space-y-5">
+      <div class="flex justify-between items-center border-b pb-3 border-slate-200">
+        <h2 class="text-2xl font-black text-amber-800 flex items-center gap-2">
+          <span>⚙️</span> 打地鼠遊戲設定
+        </h2>
+        <button id="closeSettingsBtn" onclick="closeMoleSettings()" class="text-slate-400 hover:text-slate-600 text-2xl font-bold p-1">
+          ✕
+        </button>
+      </div>
+
+      <div>
+        <label class="block font-black text-slate-700 text-base mb-2">🎮 選擇主題：</label>
+        <div class="grid grid-cols-1 gap-2">
+          <button class="mode-select-btn p-3 rounded-xl border-2 border-amber-400 bg-amber-50 font-bold text-left text-amber-900 flex items-center gap-3 transition" data-mode="classic" onclick="selectMoleMode('classic')">
+            <span class="text-2xl">🐹</span>
+            <div>
+              <div>經典打地鼠</div>
+              <div class="text-xs text-slate-500 font-normal">練吓反應同眼手協調</div>
+            </div>
+          </button>
+          <button class="mode-select-btn p-3 rounded-xl border-2 border-slate-200 bg-white font-bold text-left text-slate-700 flex items-center gap-3 transition" data-mode="reality" onclick="selectMoleMode('reality')">
+            <span class="text-2xl">☀️</span>
+            <div>
+              <div>現實導向 (天氣與季節)</div>
+              <div class="text-xs text-slate-500 font-normal">跟指令搵出相應嘅天氣同季節</div>
+            </div>
+          </button>
+          <button class="mode-select-btn p-3 rounded-xl border-2 border-slate-200 bg-white font-bold text-left text-slate-700 flex items-center gap-3 transition" data-mode="fruit" onclick="selectMoleMode('fruit')">
+            <span class="text-2xl">🍎</span>
+            <div>
+              <div>開心水果派對</div>
+              <div class="text-xs text-slate-500 font-normal">認吓同點擊新鮮好食嘅水果</div>
+            </div>
+          </button>
+        </div>
+      </div>
+
+      <div>
+        <label class="block font-black text-slate-700 text-base mb-2">⚡ 速度 (地鼠停留時間)：</label>
+        <div class="grid grid-cols-3 gap-2">
+          <button class="speed-btn p-2.5 rounded-xl border-2 border-amber-400 bg-amber-100 font-bold text-amber-900 text-center" data-speed="slow" onclick="selectMoleSpeed('slow')">
+            慢速（輕鬆）
+          </button>
+          <button class="speed-btn p-2.5 rounded-xl border-2 border-slate-200 bg-white font-bold text-slate-700 text-center" data-speed="normal" onclick="selectMoleSpeed('normal')">
+            普通
+          </button>
+          <button class="speed-btn p-2.5 rounded-xl border-2 border-slate-200 bg-white font-bold text-slate-700 text-center" data-speed="fast" onclick="selectMoleSpeed('fast')">
+            快速
+          </button>
+        </div>
+      </div>
+
+      <div class="space-y-3 pt-2 border-t border-slate-200">
+        <div class="flex items-center justify-between">
+          <span class="font-bold text-slate-700">🎵 歡樂背景音樂：</span>
+          <input type="checkbox" id="mole-musicToggle" checked class="w-6 h-6 accent-amber-500 cursor-pointer">
+        </div>
+        <div class="flex items-center justify-between">
+          <span class="font-bold text-slate-700">🔊 遊戲點擊音效：</span>
+          <input type="checkbox" id="mole-soundToggle" checked class="w-6 h-6 accent-amber-500 cursor-pointer">
+        </div>
+        <div class="flex items-center justify-between">
+          <span class="font-bold text-slate-700">💬 廣東話朗讀同鼓勵：</span>
+          <input type="checkbox" id="mole-voiceToggle" checked class="w-6 h-6 accent-amber-500 cursor-pointer">
+        </div>
+      </div>
+
+      <button id="saveSettingsBtn" onclick="saveMoleSettings()" class="w-full bg-amber-500 hover:bg-amber-600 text-white font-black text-lg py-3 rounded-2xl border-b-4 border-amber-700 mt-2">
+        儲存並套用
+      </button>
+    </div>
+  </div>
 
   <script>
-    /* ==================== 1. 即時時鐘與日期分離邏輯 ==================== */
+    /* =========================================================
+       1. 現實導向與天文台數據 (Reality Orientation & HKO API)
+       ========================================================= */
+
     function updateClockAndDate() {
       const now = new Date();
       
@@ -1040,8 +1239,15 @@
       }
     }
 
+    function onDistrictChange() {
+      const selectedDistrict = document.getElementById('district-select').value;
+      document.getElementById('fixed-district-label').textContent = selectedDistrict;
+      document.getElementById('ro-display-district').textContent = selectedDistrict;
+      updateDistrictTemperature();
+    }
+
     function updateCurrentLocationDisplay() {
-      const districtVal = "深水埗";
+      const districtVal = document.getElementById('district-select').value;
       const detailVal = document.getElementById('location-detail-input').value.trim();
       
       document.getElementById('ro-display-district').textContent = districtVal;
@@ -1050,83 +1256,64 @@
       generateCareMessage();
     }
 
-    /* ==================== 2. 農曆與二十四節氣演算法 ==================== */
     function updateLunarAndSolarTerm(dateObj) {
-      const lunarInfo = [
-        0x04bd8,0x04ae0,0x0a570,0x054d5,0x0d260,0x0d950,0x16554,0x056a0,0x09ad0,0x055d2,
-        0x04ae0,0x0a5b6,0x0a4d0,0x0d250,0x1d255,0x0b540,0x0d6a0,0x0ada2,0x095b0,0x14977,
-        0x04970,0x0a4b0,0x0b4b5,0x06a50,0x06d40,0x1ab54,0x02b60,0x09570,0x052f2,0x04970,
-        0x06566,0x0d4a0,0x0ea50,0x06e95,0x05ad0,0x02b60,0x186e3,0x092e0,0x1c8d7,0x0c950,
-        0x0d4a0,0x1d8a6,0x0b550,0x056a0,0x0a5b4,0x025d0,0x092d0,0x0d2b2,0x0a950,0x0b557,
-        0x06ca0,0x0b550,0x15355,0x04da0,0x0a5d0,0x14d54,0x052d0,0x0a9b8,0x0a950,0x0b4a0,
-        0x0baa6,0x0ad50,0x055d0,0x0fb0b,0x04da0,0x0a5d0,0x145b0,0x0a2d0,0x0d2b2,0x0a950,
-        0x0e79e,0x06ca0,0x0b550,0x15b71,0x04570,0x0a2d0,0x1d258,0x0d950,0x0e540,0x1d4a6,
-        0x0a6b0,0x055a0,0x0a4c4,0x04b70,0x0b482,0x06a50,0x06d45,0x0ab50,0x09370,0x049f8,
-        0x04970,0x064b0,0x068a6,0x0ea50,0x06b20,0x1a6c4,0x0aaae,0x092e0,0x0d2e3,0x0c960
-      ];
+      let lunarStr = '';
 
-      const baseDate = new Date(1900, 0, 31);
-      let offset = Math.floor((dateObj - baseDate) / 86400000);
-
-      let i, temp = 0;
-      let year, month, day, isLeap = false;
-
-      for (i = 1900; i < 2100 && offset > 0; i++) {
-        temp = lYearDays(i);
-        offset -= temp;
-      }
-      if (offset < 0) {
-        offset += temp;
-        i--;
-      }
-      year = i;
-
-      let leap = leapMonth(i);
-      for (i = 1; i < 13 && offset > 0; i++) {
-        if (leap > 0 && i === (leap + 1) && !isLeap) {
-          --i;
-          isLeap = true;
-          temp = leapDays(year);
-        } else {
-          temp = monthDays(year, i);
+      try {
+        const formatter = new Intl.DateTimeFormat('zh-HK-u-ca-chinese', {
+          month: 'long',
+          day: 'numeric'
+        });
+        const parts = formatter.formatToParts(dateObj);
+        let mStr = '', dNum = 0;
+        
+        for (const p of parts) {
+          if (p.type === 'month') mStr = p.value;
+          if (p.type === 'day') dNum = parseInt(p.value, 10);
         }
-        if (isLeap && i === (leap + 1)) isLeap = false;
-        offset -= temp;
-      }
 
-      if (offset === 0 && leap > 0 && i === leap + 1) {
-        if (isLeap) {
-          isLeap = false;
-        } else {
-          isLeap = true;
-          --i;
+        const monthMap = {
+          '1': '正', '2': '二', '3': '三', '4': '四', '5': '五', '6': '六',
+          '7': '七', '8': '八', '9': '九', '10': '十', '11': '十一', '12': '臘'
+        };
+
+        let formattedMonth = mStr;
+        const cleanMStr = mStr.replace('月', '');
+        if (cleanMStr.startsWith('閏')) {
+          const num = cleanMStr.replace('閏', '');
+          formattedMonth = '閏' + (monthMap[num] || num) + '月';
+        } else if (monthMap[cleanMStr]) {
+          formattedMonth = monthMap[cleanMStr] + '月';
+        } else if (!formattedMonth.endsWith('月')) {
+          formattedMonth += '月';
         }
-      }
-      if (offset < 0) {
-        offset += temp;
-        --i;
-      }
 
-      month = i;
-      day = offset + 1;
+        const nStr1 = ['日', '一', '二', '三', '四', '五', '六', '七', '八', '九', '十'];
+        const nStr2 = ['初', '十', '廿', '卅'];
+        let formattedDay = '';
+        if (dNum === 10) formattedDay = '初十';
+        else if (dNum === 20) formattedDay = '二十';
+        else if (dNum === 30) formattedDay = '三十';
+        else if (dNum > 0 && dNum <= 30) {
+          formattedDay = nStr2[Math.floor(dNum / 10)] + nStr1[dNum % 10];
+        } else {
+          formattedDay = `${dNum}日`;
+        }
 
-      const nStr1 = ['日', '一', '二', '三', '四', '五', '六', '七', '八', '九', '十'];
-      const nStr2 = ['初', '十', '廿', '卅'];
-      const monthNames = ['正', '二', '三', '四', '五', '六', '七', '八', '九', '十', '十一', '臘'];
-
-      let lunarMonthStr = monthNames[month - 1] + '月';
-      if (isLeap) lunarMonthStr = '閏' + lunarMonthStr;
-
-      let lunarDayStr = '';
-      if (day === 10) lunarDayStr = '初十';
-      else if (day === 20) lunarDayStr = '二十';
-      else if (day === 30) lunarDayStr = '三十';
-      else {
-        lunarDayStr = nStr2[Math.floor(day / 10)] + nStr1[day % 10];
+        if (formattedMonth && formattedDay) {
+          lunarStr = `農曆 ${formattedMonth}${formattedDay}`;
+        }
+      } catch (err) {
+        lunarStr = '農曆 日期獲取中';
       }
 
-      document.getElementById('ro-lunar').textContent = `農曆 ${lunarMonthStr}${lunarDayStr}`;
+      document.getElementById('ro-lunar').textContent = lunarStr;
 
+      const currentTerm = getSolarTermForDate(dateObj);
+      document.getElementById('ro-solar-term').textContent = `節氣：${currentTerm}`;
+    }
+
+    function getSolarTermForDate(dateObj) {
       const solarTerms = [
         "小寒", "大寒", "立春", "雨水", "驚蟄", "春分",
         "清明", "穀雨", "立夏", "小滿", "芒種", "夏至",
@@ -1137,20 +1324,9 @@
       const m = dateObj.getMonth();
       const d = dateObj.getDate();
       let termIndex = m * 2;
-      if (d >= 6 && d < 21) termIndex += 0;
-      else if (d >= 21) termIndex += 1;
+      if (d >= 20) termIndex += 1;
       
-      const currentTerm = solarTerms[(termIndex) % 24];
-      document.getElementById('ro-solar-term').textContent = `節氣：${currentTerm}`;
-
-      function lYearDays(y) {
-        let sum = 348;
-        for (let i = 0x8000; i > 0x8; i >>= 1) sum += (lunarInfo[y - 1900] & i) ? 1 : 0;
-        return sum + leapDays(y);
-      }
-      function leapMonth(y) { return lunarInfo[y - 1900] & 0xf; }
-      function leapDays(y) { if (leapMonth(y)) return (lunarInfo[y - 1900] & 0x10000) ? 30 : 29; else return 0; }
-      function monthDays(y, m) { return (lunarInfo[y - 1900] & (0x10000 >> m)) ? 30 : 29; }
+      return solarTerms[termIndex % 24];
     }
 
     function updateUpcomingFestivals(now) {
@@ -1204,7 +1380,6 @@
       }
     }
 
-    /* ==================== 3. 香港天文台 API 串接與數據處理 ==================== */
     let currentWeatherData = null;
     let forecastData = null;
 
@@ -1247,7 +1422,6 @@
         renderWeatherUI();
         renderForecastUI();
       } catch (err) {
-        console.warn('天文台 API 連線失敗，啟動備援 (Mock) 資料:', err);
         loadMockData();
       }
     }
@@ -1273,7 +1447,7 @@
       const mockForecast = [];
       const today = new Date();
 
-      for (let i = 1; i <= 7; i++) {
+      for (let i = 1; i <= 3; i++) {
         const nextDay = new Date(today);
         nextDay.setDate(today.getDate() + i);
 
@@ -1299,41 +1473,56 @@
     function renderWeatherUI() {
       if (!currentWeatherData) return;
 
-      const humidityVal = currentWeatherData.humidity?.data?.[0]?.value || 75;
-      document.getElementById('humidity').textContent = humidityVal;
-      let humDesc = "舒適";
-      if (humidityVal > 80) humDesc = "相當潮濕";
-      else if (humidityVal < 50) humDesc = "乾燥";
-      document.getElementById('humidity-desc').textContent = humDesc;
+      if (currentWeatherData.humidity && currentWeatherData.humidity.data.length > 0) {
+        const humVal = currentWeatherData.humidity.data[0].value;
+        document.getElementById('humidity').textContent = humVal;
+        
+        let humDesc = '舒適';
+        if (humVal > 80) humDesc = '潮濕';
+        else if (humVal < 50) humDesc = '乾燥';
+        document.getElementById('humidity-desc').textContent = humDesc;
+      }
 
-      const uvVal = currentWeatherData.uvindex?.data?.[0]?.value ?? '--';
-      const uvDesc = currentWeatherData.uvindex?.data?.[0]?.desc || (uvVal > 5 ? "中等至高" : "低");
-      document.getElementById('uv-index').textContent = uvVal;
-      document.getElementById('uv-desc').textContent = `強度：${uvDesc}`;
+      if (currentWeatherData.uvindex && currentWeatherData.uvindex.data.length > 0) {
+        const uvVal = currentWeatherData.uvindex.data[0].value;
+        const uvDesc = currentWeatherData.uvindex.data[0].desc || '';
+        document.getElementById('uv-index').textContent = uvVal;
+        document.getElementById('uv-desc').textContent = uvDesc || '中等';
+      } else {
+        document.getElementById('uv-index').textContent = '0';
+        document.getElementById('uv-desc').textContent = '無';
+      }
 
-      const iconCode = currentWeatherData.icon?.[0] || 60;
-      document.getElementById('weather-desc').textContent = getWeatherDescByIcon(iconCode);
-      document.getElementById('weather-emoji').textContent = getWeatherEmojiByIcon(iconCode);
+      if (currentWeatherData.icon && currentWeatherData.icon.length > 0) {
+        const mainIcon = currentWeatherData.icon[0];
+        document.getElementById('weather-emoji').textContent = getWeatherEmojiByIcon(mainIcon);
+        document.getElementById('weather-desc').textContent = getWeatherDescByIcon(mainIcon);
+      }
 
       updateDistrictTemperature();
 
-      const warnings = currentWeatherData.warningMessage || [];
-      const alertContainer = document.getElementById('alert-container');
-      const alertText = document.getElementById('alert-text');
       const warningBoxIcon = document.getElementById('warning-box-icon');
       const warningBoxDesc = document.getElementById('warning-box-desc');
+      const warningBox = document.getElementById('warning-weather-box');
+      const alertContainer = document.getElementById('alert-container');
+      const alertText = document.getElementById('alert-text');
 
-      if (warnings.length > 0) {
-        alertContainer.classList.add('active');
-        alertText.textContent = `⚠️ 警告提示：${warnings.join(' | ')}`;
+      if (currentWeatherData.warningMessage && currentWeatherData.warningMessage.length > 0) {
+        const msgs = currentWeatherData.warningMessage.join('； ');
         warningBoxIcon.textContent = '⚠️';
-        warningBoxDesc.textContent = warnings[0];
+        warningBoxDesc.textContent = msgs;
         warningBoxDesc.style.color = '#c92a2a';
+        warningBox.style.borderColor = '#f03e3e';
+
+        alertContainer.classList.add('active');
+        alertText.textContent = `生效警告：${msgs}`;
       } else {
-        alertContainer.classList.remove('active');
         warningBoxIcon.textContent = '✅';
         warningBoxDesc.textContent = '現時無極端天氣警告';
         warningBoxDesc.style.color = '#2b8a3e';
+        warningBox.style.borderColor = '#2b8a3e';
+
+        alertContainer.classList.remove('active');
       }
 
       generateCareMessage();
@@ -1343,22 +1532,27 @@
       if (!currentWeatherData || !currentWeatherData.temperature) return;
 
       const selectedDistrict = document.getElementById('district-select').value;
-      const tempArray = currentWeatherData.temperature.data;
+      const tempDataList = currentWeatherData.temperature.data;
 
-      const avgTemp = Math.round(tempArray.reduce((acc, curr) => acc + curr.value, 0) / tempArray.length);
-      document.getElementById('hk-mean-temp').textContent = avgTemp;
+      let meanSum = 0;
+      tempDataList.forEach(t => meanSum += t.value);
+      const meanTemp = Math.round(meanSum / tempDataList.length);
+      document.getElementById('hk-mean-temp').textContent = meanTemp;
 
-      let matchedTemp = avgTemp;
-      const targetKeywords = districtNameMap[selectedDistrict] || [selectedDistrict];
+      const aliases = districtNameMap[selectedDistrict] || [selectedDistrict];
+      let foundTemp = null;
 
-      for (let item of tempArray) {
-        if (targetKeywords.some(kw => item.place.includes(kw))) {
-          matchedTemp = item.value;
+      for (const alias of aliases) {
+        const item = tempDataList.find(t => t.place.includes(alias));
+        if (item) {
+          foundTemp = item.value;
           break;
         }
       }
 
-      document.getElementById('district-temp').textContent = matchedTemp;
+      if (foundTemp === null) foundTemp = meanTemp;
+
+      document.getElementById('district-temp').textContent = foundTemp;
       generateCareMessage();
     }
 
@@ -1368,7 +1562,7 @@
       const grid = document.getElementById('forecast-grid');
       grid.innerHTML = '';
 
-      const list = forecastData.weatherForecast.slice(0, 7);
+      const list = forecastData.weatherForecast.slice(0, 3);
       list.forEach(item => {
         const rawDate = item.forecastDate;
         const formattedDate = `${parseInt(rawDate.substring(4,6))}月${parseInt(rawDate.substring(6,8))}日`;
@@ -1380,9 +1574,8 @@
         const card = document.createElement('div');
         card.className = 'forecast-card';
         card.innerHTML = `
-          <div class="forecast-date">${formattedDate}</div>
-          <div style="font-size: 16px; font-weight: bold; color: #495057;">${item.week}</div>
-          <div style="font-size: 36px; margin: 4px 0;">${forecastEmoji}</div>
+          <div class="ro-label forecast-date"><span>📅</span><span>${formattedDate} (${item.week})</span></div>
+          <div class="weather-emoji-large">${forecastEmoji}</div>
           <div class="forecast-temp">${minTemp}°C - ${maxTemp}°C</div>
         `;
         grid.appendChild(card);
@@ -1409,7 +1602,6 @@
       return iconMap[icon] || "多雲有時有陽光";
     }
 
-    /* ==================== 4. 自動生成關懷語句 ==================== */
     function generateCareMessage() {
       const temp = parseInt(document.getElementById('district-temp').textContent) || 25;
       const humidity = parseInt(document.getElementById('humidity').textContent) || 70;
@@ -1452,69 +1644,83 @@
       document.getElementById('care-message').textContent = finalMsg;
     }
 
-    /* ==================== 5. 語音朗讀與工具按鈕功能 ==================== */
     function speakROAndWeather() {
-      const btn = document.getElementById('tts-btn');
-      
-      if ('speechSynthesis' in window) {
-        if (window.speechSynthesis.speaking) {
-          window.speechSynthesis.cancel();
-          btn.classList.remove('speaking');
-          btn.querySelector('span').textContent = '🔊 聽語音（粵語朗讀）';
-          return;
-        }
-
-        const careText = document.getElementById('care-message').textContent;
-        const utterance = new SpeechSynthesisUtterance(careText);
-        utterance.lang = 'zh-HK';
-        utterance.rate = 0.85;
-
-        utterance.onstart = () => {
-          btn.classList.add('speaking');
-          btn.querySelector('span').textContent = '⏹️ 停止朗讀';
-        };
-
-        utterance.onend = () => {
-          btn.classList.remove('speaking');
-          btn.querySelector('span').textContent = '🔊 聽語音（粵語朗讀）';
-        };
-
-        utterance.onerror = () => {
-          btn.classList.remove('speaking');
-          btn.querySelector('span').textContent = '🔊 聽語音（粵語朗讀）';
-        };
-
-        window.speechSynthesis.speak(utterance);
-      } else {
+      if (!('speechSynthesis' in window)) {
         alert('您的瀏覽器不支援語音朗讀功能。');
+        return;
       }
-    }
 
-    function refreshData() {
-      const icon = document.getElementById('refresh-icon');
-      icon.style.transform = 'rotate(360deg)';
-      icon.style.transition = 'transform 0.5s ease';
+      const ttsBtn = document.getElementById('tts-btn');
 
-      updateClockAndDate();
-      fetchHKOData();
+      if (window.speechSynthesis.speaking) {
+        window.speechSynthesis.cancel();
+        ttsBtn.classList.remove('speaking');
+        ttsBtn.querySelector('span').textContent = '🔊 聽語音（粵語朗讀）';
+        return;
+      }
 
-      setTimeout(() => {
-        icon.style.transform = 'none';
-        icon.style.transition = 'none';
-      }, 500);
+      const districtStr = document.getElementById('ro-display-district').textContent;
+      const detailStr = document.getElementById('ro-display-detail').textContent;
+      const locationSpeech = (detailStr && detailStr !== "未輸入地點") ? `${districtStr} ${detailStr}` : districtStr;
+
+      const yearStr = document.getElementById('ro-year').textContent;
+      const monthStr = document.getElementById('ro-month').textContent;
+      const dateStr = document.getElementById('ro-date-num').textContent;
+      const dayStr = document.getElementById('ro-day-of-week').textContent;
+      const lunarStr = document.getElementById('ro-lunar').textContent;
+      const careMsg = document.getElementById('care-message').textContent;
+
+      const fullSpeechText = `早晨！現在地點是${locationSpeech}。今天是${yearStr}${monthStr}${dateStr}，${dayStr}，${lunarStr}。 ${careMsg}`;
+
+      const utterance = new SpeechSynthesisUtterance(fullSpeechText);
+      utterance.lang = 'zh-HK';
+      utterance.rate = 0.85;
+
+      utterance.onstart = () => {
+        ttsBtn.classList.add('speaking');
+        ttsBtn.querySelector('span').textContent = '⏹️ 停止朗讀';
+      };
+
+      utterance.onend = () => {
+        ttsBtn.classList.remove('speaking');
+        ttsBtn.querySelector('span').textContent = '🔊 聽語音（粵語朗讀）';
+      };
+
+      utterance.onerror = () => {
+        ttsBtn.classList.remove('speaking');
+        ttsBtn.querySelector('span').textContent = '🔊 聽語音（粵語朗讀）';
+      };
+
+      window.speechSynthesis.speak(utterance);
     }
 
     function toggleFontSize() {
       document.body.classList.toggle('large-font-mode');
       const zoomText = document.getElementById('zoom-text');
       if (document.body.classList.contains('large-font-mode')) {
-        zoomText.textContent = '標準字體';
+        zoomText.textContent = '還原字體';
       } else {
         zoomText.textContent = '特大字體';
       }
     }
 
-    /* ==================== 6. 現實導向練習版遊戲邏輯 ==================== */
+    function refreshData() {
+      const icon = document.getElementById('refresh-icon');
+      icon.style.transition = 'transform 0.5s';
+      icon.style.transform = 'rotate(360deg)';
+      
+      updateClockAndDate();
+      fetchHKOData();
+
+      setTimeout(() => {
+        icon.style.transform = 'rotate(0deg)';
+      }, 500);
+    }
+
+    /* =========================================================
+       2. 現實導向練習區 (Reality Orientation Practice)
+       ========================================================= */
+
     const WEEKDAYS_ZH = ["星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六"];
     const SEASONS_DATA = [
       { name: "春天", icon: "🌸", color: "bg-pink-100 border-pink-400 text-pink-900" },
@@ -1530,20 +1736,19 @@
       return 3;
     }
 
-    let gamePracticeState = {
-      mode: 'today',
+    let practiceState = {
       currentStep: 1,
       target: {
-        month: 9,
-        day: 17,
-        weekday: 4,
-        season: 2
+        month: 1,
+        day: 1,
+        weekday: 0,
+        season: 0
       },
+      currentStepOptions: [],
       selectedSlot: 'month',
       userAnswers: {
         month: null,
-        dayTens: null,
-        dayUnits: null,
+        day: null,
         weekday: null,
         season: null
       },
@@ -1557,10 +1762,13 @@
       if (!practiceAudioCtx) {
         practiceAudioCtx = new (window.AudioContext || window.webkitAudioContext)();
       }
+      if (practiceAudioCtx.state === 'suspended') {
+        practiceAudioCtx.resume();
+      }
     }
 
     function playPopSound() {
-      if (!gamePracticeState.audioEnabled) return;
+      if (!practiceState.audioEnabled) return;
       initPracticeAudioContext();
       try {
         const osc = practiceAudioCtx.createOscillator();
@@ -1578,7 +1786,7 @@
     }
 
     function playSuccessFanfare() {
-      if (!gamePracticeState.audioEnabled) return;
+      if (!practiceState.audioEnabled) return;
       initPracticeAudioContext();
       try {
         const notes = [523.25, 659.25, 783.99, 1046.50];
@@ -1598,7 +1806,7 @@
     }
 
     function playErrorSound() {
-      if (!gamePracticeState.audioEnabled) return;
+      if (!practiceState.audioEnabled) return;
       initPracticeAudioContext();
       try {
         const osc = practiceAudioCtx.createOscillator();
@@ -1615,8 +1823,8 @@
       } catch (e) {}
     }
 
-    function speakGameText(text) {
-      if (!gamePracticeState.audioEnabled || !gamePracticeState.speechSupported) return;
+    function speakPracticeText(text) {
+      if (!practiceState.audioEnabled || !practiceState.speechSupported) return;
       window.speechSynthesis.cancel();
       const utterance = new SpeechSynthesisUtterance(text);
       utterance.lang = 'zh-HK';
@@ -1625,45 +1833,22 @@
       window.speechSynthesis.speak(utterance);
     }
 
-    function setMode(mode, announce = true) {
-      gamePracticeState.mode = mode;
-      const todayBtn = document.getElementById('btn-today-target');
-      const randomBtn = document.getElementById('btn-random-target');
-
-      if (mode === 'today') {
-        const now = new Date();
-        gamePracticeState.target.month = now.getMonth() + 1;
-        gamePracticeState.target.day = now.getDate();
-        gamePracticeState.target.weekday = now.getDay();
-        gamePracticeState.target.season = getSeasonIndexByMonth(gamePracticeState.target.month);
-
-        todayBtn.className = "bg-amber-600 text-white font-bold px-3 py-2 rounded-xl text-sm sm:text-base shadow transition border-2 border-amber-300";
-        randomBtn.className = "bg-amber-800/60 text-amber-200 font-bold px-3 py-2 rounded-xl text-sm sm:text-base transition";
-        if (announce) speakGameText("已設定為今日真實日期練習");
-      } else {
-        gamePracticeState.target.month = Math.floor(Math.random() * 12) + 1;
-        const daysInMonth = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
-        gamePracticeState.target.day = Math.floor(Math.random() * daysInMonth[gamePracticeState.target.month - 1]) + 1;
-        gamePracticeState.target.weekday = Math.floor(Math.random() * 7);
-        gamePracticeState.target.season = getSeasonIndexByMonth(gamePracticeState.target.month);
-
-        randomBtn.className = "bg-amber-600 text-white font-bold px-3 py-2 rounded-xl text-sm sm:text-base shadow transition border-2 border-amber-300";
-        todayBtn.className = "bg-amber-800/60 text-amber-200 font-bold px-3 py-2 rounded-xl text-sm sm:text-base transition";
-        if (announce) speakGameText("已切換為隨機題目練習");
-      }
-
-      resetAllAnswers();
-      goToStep(1);
+    function initTodayTarget() {
+      const now = new Date();
+      practiceState.target.month = now.getMonth() + 1;
+      practiceState.target.day = now.getDate();
+      practiceState.target.weekday = now.getDay();
+      practiceState.target.season = getSeasonIndexByMonth(practiceState.target.month);
     }
 
-    function toggleAudio() {
-      gamePracticeState.audioEnabled = !gamePracticeState.audioEnabled;
+    function togglePracticeAudio() {
+      practiceState.audioEnabled = !practiceState.audioEnabled;
       const label = document.getElementById('audio-label');
       const icon = document.getElementById('audio-icon');
-      if (gamePracticeState.audioEnabled) {
+      if (practiceState.audioEnabled) {
         label.textContent = '聲音開';
         icon.textContent = '🔊';
-        speakGameText('聲音已開啟');
+        speakPracticeText('聲音已開啟');
       } else {
         label.textContent = '聲音關';
         icon.textContent = '🔇';
@@ -1672,7 +1857,7 @@
     }
 
     function goToStep(stepNum) {
-      gamePracticeState.currentStep = stepNum;
+      practiceState.currentStep = stepNum;
 
       for (let i = 1; i <= 4; i++) {
         const tab = document.getElementById(`step-tab-${i}`);
@@ -1685,427 +1870,683 @@
         }
       }
 
+      document.getElementById('view-step-1').classList.add('hidden');
+      document.getElementById('view-step-2').classList.add('hidden');
+      document.getElementById('view-step-3').classList.add('hidden');
+      document.getElementById('view-step-4').classList.add('hidden');
+
       const badge = document.getElementById('question-badge');
       const qText = document.getElementById('question-text');
-      const deckTitle = document.getElementById('deck-header-title');
-
-      const v1 = document.getElementById('view-step-1');
-      const v2 = document.getElementById('view-step-2');
-      const v3 = document.getElementById('view-step-3');
-      const v4 = document.getElementById('view-step-4');
-
-      const dMonths = document.getElementById('deck-months');
-      const dDigits = document.getElementById('deck-digits');
-      const dWeekdays = document.getElementById('deck-weekdays');
-      const dSeasons = document.getElementById('deck-seasons');
-
-      v1.classList.add('hidden');
-      v2.classList.add('hidden');
-      v3.classList.add('hidden');
-      v4.classList.add('hidden');
-
-      dMonths.classList.add('hidden');
-      dDigits.classList.add('hidden');
-      dWeekdays.classList.add('hidden');
-      dSeasons.classList.add('hidden');
 
       if (stepNum === 1) {
         badge.textContent = "第一題";
         qText.textContent = "現在是幾月？";
-        deckTitle.innerHTML = '<span>選取月份卡 (1-12月)：</span>';
-        v1.classList.remove('hidden');
-        dMonths.classList.remove('hidden');
+        document.getElementById('view-step-1').classList.remove('hidden');
         selectSlot('month');
-        speakGameText("第一題：現在是幾月？");
+        speakPracticeText("第一題：現在是幾月？");
       } else if (stepNum === 2) {
         badge.textContent = "第二題";
         qText.textContent = "現在是幾日？";
-        deckTitle.innerHTML = '<span>選取數字卡 (0-9)：</span>';
-        v2.classList.remove('hidden');
-        dDigits.classList.remove('hidden');
-        selectSlot('day-tens');
-        speakGameText("第二題：現在是幾日？");
+        document.getElementById('view-step-2').classList.remove('hidden');
+        selectSlot('day');
+        speakPracticeText("第二題：現在是幾日？");
       } else if (stepNum === 3) {
         badge.textContent = "第三題";
-        qText.textContent = "現在是星期幾？";
-        deckTitle.innerHTML = '<span>選取星期卡：</span>';
-        v3.classList.remove('hidden');
-        dWeekdays.classList.remove('hidden');
+        qText.textContent = "今天是星期幾？";
+        document.getElementById('view-step-3').classList.remove('hidden');
         selectSlot('weekday');
-        speakGameText("第三題：現在是星期幾？");
+        speakPracticeText("第三題：今天是星期幾？");
       } else if (stepNum === 4) {
         badge.textContent = "第四題";
         qText.textContent = "現在是什麼季節？";
-        deckTitle.innerHTML = '<span>選取季節卡：</span>';
-        v4.classList.remove('hidden');
-        dSeasons.classList.remove('hidden');
+        document.getElementById('view-step-4').classList.remove('hidden');
         selectSlot('season');
-        speakGameText("第四題：現在是什麼季節？");
+        speakPracticeText("第四題：現在是什麼季節？");
       }
+
+      renderDeckOptions();
     }
 
-    function readCurrentQuestionSpeech() {
-      if (gamePracticeState.currentStep === 1) {
-        speakGameText("第一題：現在是幾月？");
-      } else if (gamePracticeState.currentStep === 2) {
-        speakGameText("第二題：現在是幾日？");
-      } else if (gamePracticeState.currentStep === 3) {
-        speakGameText("第三題：現在是星期幾？");
-      } else if (gamePracticeState.currentStep === 4) {
-        speakGameText("第四題：現在是什麼季節？");
-      }
-    }
-
-    function renderAllDecks() {
-      const monthDeck = document.getElementById('deck-months');
-      monthDeck.innerHTML = '';
-      for (let m = 1; m <= 12; m++) {
-        const card = document.createElement('div');
-        card.className = `card-shadow bg-amber-50 border-3 border-amber-300 hover:border-blue-500 rounded-2xl p-3 flex flex-col items-center justify-center cursor-pointer transition transform active:scale-95 select-none`;
-        card.draggable = true;
-        card.setAttribute('ondragstart', `handleDragStart(event, 'month', ${m})`);
-        card.onclick = () => onCardPicked('month', m);
-        card.innerHTML = `
-          <span class="text-3xl sm:text-4xl font-black text-blue-900 tracking-tight">${m}</span>
-          <span class="text-xs sm:text-sm font-bold text-amber-800">月</span>
-        `;
-        monthDeck.appendChild(card);
-      }
-
-      const digitDeck = document.getElementById('deck-digits');
-      digitDeck.innerHTML = '';
-      for (let d = 0; d <= 9; d++) {
-        const card = document.createElement('div');
-        card.className = `card-shadow bg-emerald-50 border-3 border-emerald-300 hover:border-blue-500 rounded-2xl p-2 sm:p-3 flex flex-col items-center justify-center cursor-pointer transition transform active:scale-95 select-none`;
-        card.draggable = true;
-        card.setAttribute('ondragstart', `handleDragStart(event, 'digit', ${d})`);
-        card.onclick = () => onCardPicked('digit', d);
-        card.innerHTML = `
-          <span class="text-4xl sm:text-5xl font-black text-emerald-900 tracking-tight">${d}</span>
-        `;
-        digitDeck.appendChild(card);
-      }
-
-      const weekdayDeck = document.getElementById('deck-weekdays');
-      weekdayDeck.innerHTML = '';
-      WEEKDAYS_ZH.forEach((wkStr, idx) => {
-        const card = document.createElement('div');
-        card.className = `card-shadow bg-purple-50 border-3 border-purple-300 hover:border-blue-500 rounded-2xl p-3 flex flex-col items-center justify-center cursor-pointer transition transform active:scale-95 select-none`;
-        card.draggable = true;
-        card.setAttribute('ondragstart', `handleDragStart(event, 'weekday', ${idx})`);
-        card.onclick = () => onCardPicked('weekday', idx);
-        card.innerHTML = `
-          <span class="text-xl sm:text-2xl font-black text-purple-900 tracking-tight">${wkStr}</span>
-        `;
-        weekdayDeck.appendChild(card);
+    function selectSlot(slotType) {
+      practiceState.selectedSlot = slotType;
+      document.querySelectorAll('[id^="slot-"]').forEach(el => {
+        el.classList.remove('slot-highlight');
       });
-
-      const seasonDeck = document.getElementById('deck-seasons');
-      seasonDeck.innerHTML = '';
-      SEASONS_DATA.forEach((sData, idx) => {
-        const card = document.createElement('div');
-        card.className = `card-shadow ${sData.color} border-3 hover:border-blue-500 rounded-2xl p-3 flex flex-col items-center justify-center cursor-pointer transition transform active:scale-95 select-none`;
-        card.draggable = true;
-        card.setAttribute('ondragstart', `handleDragStart(event, 'season', ${idx})`);
-        card.onclick = () => onCardPicked('season', idx);
-        card.innerHTML = `
-          <span class="text-3xl sm:text-4xl mb-1">${sData.icon}</span>
-          <span class="text-xl sm:text-2xl font-black tracking-tight">${sData.name}</span>
-        `;
-        seasonDeck.appendChild(card);
-      });
+      const targetSlot = document.getElementById(`slot-${slotType}`);
+      if (targetSlot) targetSlot.classList.add('slot-highlight');
     }
 
-    function selectSlot(slotName) {
-      gamePracticeState.selectedSlot = slotName;
-      ['month', 'day-tens', 'day-units', 'weekday', 'season'].forEach(s => {
-        const el = document.getElementById(`slot-${s}`);
-        if (el) {
-          if (s === slotName) el.classList.add('slot-highlight');
-          else el.classList.remove('slot-highlight');
+    function generateThreeOptions(correctVal, min, max, suffix = '') {
+      let options = [correctVal];
+      while (options.length < 3) {
+        let rand = Math.floor(Math.random() * (max - min + 1)) + min;
+        if (!options.includes(rand)) {
+          options.push(rand);
         }
-      });
-      playPopSound();
-    }
-
-    function onCardPicked(type, value) {
-      playPopSound();
-
-      if (type === 'month') {
-        gamePracticeState.userAnswers.month = value;
-        renderSlotContent('month', `${value}`, '月', 'bg-blue-600 text-white');
-        speakGameText(`${value}月`);
-      } else if (type === 'digit') {
-        let targetSlot = gamePracticeState.selectedSlot;
-        if (targetSlot !== 'day-tens' && targetSlot !== 'day-units') {
-          targetSlot = 'day-tens';
-        }
-
-        if (targetSlot === 'day-tens') {
-          gamePracticeState.userAnswers.dayTens = value;
-          renderSlotContent('day-tens', `${value}`, '', 'bg-emerald-600 text-white');
-          speakGameText(`十位：${value}`);
-          selectSlot('day-units');
-        } else {
-          gamePracticeState.userAnswers.dayUnits = value;
-          renderSlotContent('day-units', `${value}`, '', 'bg-emerald-600 text-white');
-          speakGameText(`個位：${value}`);
-        }
-      } else if (type === 'weekday') {
-        gamePracticeState.userAnswers.weekday = value;
-        renderSlotContent('weekday', WEEKDAYS_ZH[value], '', 'bg-purple-700 text-white');
-        speakGameText(`${WEEKDAYS_ZH[value]}`);
-      } else if (type === 'season') {
-        gamePracticeState.userAnswers.season = value;
-        const sData = SEASONS_DATA[value];
-        renderSlotContent('season', `${sData.icon} ${sData.name}`, '', 'bg-orange-600 text-white');
-        speakGameText(`${sData.name}`);
       }
+      options.sort(() => Math.random() - 0.5);
+      return options.map(v => ({ value: v, label: `${v}${suffix}` }));
     }
 
-    function renderSlotContent(slotKey, mainText, subText = '', colorClass = '') {
-      const container = document.getElementById(`slot-${slotKey}-content`);
+    function renderDeckOptions() {
+      const container = document.getElementById('deck-options');
       if (!container) return;
-      container.innerHTML = `
-        <div class="w-full h-full p-1 flex flex-col items-center justify-center">
-          <div class="w-full h-full ${colorClass} rounded-xl flex flex-col items-center justify-center shadow-md relative group">
-            <span class="text-2xl sm:text-3xl font-black">${mainText}</span>
-            ${subText ? `<span class="text-xs font-bold">${subText}</span>` : ''}
-            <button onclick="clearSlot(event, '${slotKey}')" title="移除" class="absolute -top-2 -right-2 bg-red-600 text-white text-xs w-6 h-6 rounded-full flex items-center justify-center font-bold shadow hover:bg-red-700">✕</button>
-          </div>
-        </div>
-      `;
+      container.innerHTML = '';
+
+      let options = [];
+      const step = practiceState.currentStep;
+
+      if (step === 1) {
+        options = generateThreeOptions(practiceState.target.month, 1, 12, '月');
+      } else if (step === 2) {
+        options = generateThreeOptions(practiceState.target.day, 1, 31, '日');
+      } else if (step === 3) {
+        let correctW = practiceState.target.weekday;
+        let pool = [0, 1, 2, 3, 4, 5, 6].filter(w => w !== correctW);
+        pool.sort(() => Math.random() - 0.5);
+        let selected = [correctW, pool[0], pool[1]].sort(() => Math.random() - 0.5);
+        options = selected.map(w => ({ value: w, label: WEEKDAYS_ZH[w] }));
+      } else if (step === 4) {
+        let correctS = practiceState.target.season;
+        let pool = [0, 1, 2, 3].filter(s => s !== correctS);
+        pool.sort(() => Math.random() - 0.5);
+        let selected = [correctS, pool[0], pool[1]].sort(() => Math.random() - 0.5);
+        options = selected.map(s => ({ value: s, label: `${SEASONS_DATA[s].icon} ${SEASONS_DATA[s].name}` }));
+      }
+
+      practiceState.currentStepOptions = options;
+
+      options.forEach(opt => {
+        const card = document.createElement('div');
+        card.className = "bg-amber-100 border-4 border-amber-300 hover:border-amber-500 rounded-2xl p-4 flex items-center justify-center text-center cursor-pointer card-shadow transition active:scale-95 min-h-[90px]";
+        card.setAttribute('draggable', 'true');
+        card.onclick = () => selectCardOption(opt);
+        card.ondragstart = (e) => handleDragStart(e, JSON.stringify(opt));
+
+        card.innerHTML = `<span class="text-2xl sm:text-3xl font-black text-amber-950">${opt.label}</span>`;
+        container.appendChild(card);
+      });
     }
 
-    function clearSlot(e, slotKey) {
-      e.stopPropagation();
-      if (slotKey === 'month') gamePracticeState.userAnswers.month = null;
-      if (slotKey === 'day-tens') gamePracticeState.userAnswers.dayTens = null;
-      if (slotKey === 'day-units') gamePracticeState.userAnswers.dayUnits = null;
-      if (slotKey === 'weekday') gamePracticeState.userAnswers.weekday = null;
-      if (slotKey === 'season') gamePracticeState.userAnswers.season = null;
-
-      document.getElementById(`slot-${slotKey}-content`).innerHTML = '';
-      selectSlot(slotKey);
+    function selectCardOption(opt) {
       playPopSound();
+      const step = practiceState.currentStep;
+      let slotType = step === 1 ? 'month' : step === 2 ? 'day' : step === 3 ? 'weekday' : 'season';
+      
+      practiceState.userAnswers[slotType] = opt;
+      
+      const contentEl = document.getElementById(`slot-${slotType}-content`);
+      if (contentEl) {
+        contentEl.innerHTML = `<span class="text-2xl sm:text-3xl font-black text-amber-200">${opt.label}</span>`;
+      }
+    }
+
+    function allowDrop(ev) { ev.preventDefault(); }
+    function handleDragStart(ev, dataStr) { ev.dataTransfer.setData("text/plain", dataStr); }
+    function handleDrop(ev, slotType) {
+      ev.preventDefault();
+      const dataStr = ev.dataTransfer.getData("text/plain");
+      if (dataStr) {
+        try {
+          const opt = JSON.parse(dataStr);
+          practiceState.currentStep = slotType === 'month' ? 1 : slotType === 'day' ? 2 : slotType === 'weekday' ? 3 : 4;
+          selectCardOption(opt);
+        } catch(e) {}
+      }
     }
 
     function resetCurrentStep() {
-      if (gamePracticeState.currentStep === 1) {
-        clearSlot(new Event('click'), 'month');
-      } else if (gamePracticeState.currentStep === 2) {
-        clearSlot(new Event('click'), 'day-tens');
-        clearSlot(new Event('click'), 'day-units');
-      } else if (gamePracticeState.currentStep === 3) {
-        clearSlot(new Event('click'), 'weekday');
-      } else if (gamePracticeState.currentStep === 4) {
-        clearSlot(new Event('click'), 'season');
-      }
+      const step = practiceState.currentStep;
+      let slotType = step === 1 ? 'month' : step === 2 ? 'day' : step === 3 ? 'weekday' : 'season';
+      practiceState.userAnswers[slotType] = null;
+      const contentEl = document.getElementById(`slot-${slotType}-content`);
+      if (contentEl) contentEl.innerHTML = '';
+      speakPracticeText("已重置答案");
     }
 
-    function resetAllAnswers() {
-      gamePracticeState.userAnswers = { month: null, dayTens: null, dayUnits: null, weekday: null, season: null };
-      ['month', 'day-tens', 'day-units', 'weekday', 'season'].forEach(s => {
-        const el = document.getElementById(`slot-${s}-content`);
-        if (el) el.innerHTML = '';
-      });
-    }
-
-    function handleDragStart(e, type, value) {
-      e.dataTransfer.setData('text/plain', JSON.stringify({ type, value }));
-      playPopSound();
-    }
-
-    function allowDrop(e) {
-      e.preventDefault();
-    }
-
-    function handleDrop(e, targetSlot) {
-      e.preventDefault();
-      try {
-        const data = JSON.parse(e.dataTransfer.getData('text/plain'));
-        if (!data) return;
-        if (targetSlot === 'month' && data.type === 'month') {
-          onCardPicked('month', data.value);
-        } else if ((targetSlot === 'day-tens' || targetSlot === 'day-units') && data.type === 'digit') {
-          selectSlot(targetSlot);
-          onCardPicked('digit', data.value);
-        } else if (targetSlot === 'weekday' && data.type === 'weekday') {
-          onCardPicked('weekday', data.value);
-        } else if (targetSlot === 'season' && data.type === 'season') {
-          onCardPicked('season', data.value);
-        }
-      } catch (err) {}
+    function readCurrentQuestionSpeech() {
+      const step = practiceState.currentStep;
+      if (step === 1) speakPracticeText("第一題：現在是幾月？");
+      else if (step === 2) speakPracticeText("第二題：現在是幾日？");
+      else if (step === 3) speakPracticeText("第三題：今天是星期幾？");
+      else if (step === 4) speakPracticeText("第四題：現在是什麼季節？");
     }
 
     function checkCurrentStepAnswer() {
-      if (gamePracticeState.currentStep === 1) {
-        if (gamePracticeState.userAnswers.month === null) {
-          speakGameText("請先選擇月份卡");
-          return;
-        }
+      const step = practiceState.currentStep;
+      let slotType = step === 1 ? 'month' : step === 2 ? 'day' : step === 3 ? 'weekday' : 'season';
+      let userAns = practiceState.userAnswers[slotType];
 
-        if (gamePracticeState.userAnswers.month === gamePracticeState.target.month) {
-          playSuccessFanfare();
-          showModal(true, `答對了！現在是 ${gamePracticeState.target.month} 月`, "🌟 自動進入第二題");
-          speakGameText(`太棒了！答對了！現在是 ${gamePracticeState.target.month} 月。我們接著做第二題！`);
-        } else {
-          playErrorSound();
-          speakGameText(`再試一次喔！您選的是 ${gamePracticeState.userAnswers.month}月`);
-        }
+      if (!userAns) {
+        playErrorSound();
+        speakPracticeText("請先點選卡片填入答案喔！");
+        return;
+      }
 
-      } else if (gamePracticeState.currentStep === 2) {
-        if (gamePracticeState.userAnswers.dayTens === null || gamePracticeState.userAnswers.dayUnits === null) {
-          speakGameText("請完成日期的十位與個位數字");
-          return;
-        }
+      let isCorrect = false;
+      let targetText = "";
 
-        const userDay = gamePracticeState.userAnswers.dayTens * 10 + gamePracticeState.userAnswers.dayUnits;
-        if (userDay === gamePracticeState.target.day) {
-          playSuccessFanfare();
-          showModal(true, `答對了！現在是 ${gamePracticeState.target.day} 日`, "🌟 自動進入第三題");
-          speakGameText(`真厲害！答對了！現在是 ${gamePracticeState.target.day} 日。我們接著做第三題！`);
-        } else {
-          playErrorSound();
-          speakGameText(`再試一次喔！您組合的是 ${userDay}日`);
-        }
+      if (step === 1) {
+        isCorrect = (userAns.value === practiceState.target.month);
+        targetText = `${practiceState.target.month}月`;
+      } else if (step === 2) {
+        isCorrect = (userAns.value === practiceState.target.day);
+        targetText = `${practiceState.target.day}日`;
+      } else if (step === 3) {
+        isCorrect = (userAns.value === practiceState.target.weekday);
+        targetText = WEEKDAYS_ZH[practiceState.target.weekday];
+      } else if (step === 4) {
+        isCorrect = (userAns.value === practiceState.target.season);
+        targetText = SEASONS_DATA[practiceState.target.season].name;
+      }
 
-      } else if (gamePracticeState.currentStep === 3) {
-        if (gamePracticeState.userAnswers.weekday === null) {
-          speakGameText("請選擇星期卡");
-          return;
-        }
-
-        if (gamePracticeState.userAnswers.weekday === gamePracticeState.target.weekday) {
-          playSuccessFanfare();
-          showModal(true, `答對了！今天是 ${WEEKDAYS_ZH[gamePracticeState.target.weekday]}`, "🌟 自動進入第四題");
-          speakGameText(`答對了！今天是 ${WEEKDAYS_ZH[gamePracticeState.target.weekday]}。我們接著做第四題！`);
-        } else {
-          playErrorSound();
-          speakGameText(`再試一次喔！您選的是 ${WEEKDAYS_ZH[gamePracticeState.userAnswers.weekday]}`);
-        }
-
-      } else if (gamePracticeState.currentStep === 4) {
-        if (gamePracticeState.userAnswers.season === null) {
-          speakGameText("請選擇季節卡");
-          return;
-        }
-
-        if (gamePracticeState.userAnswers.season === gamePracticeState.target.season) {
-          playSuccessFanfare();
-          triggerConfetti();
-
-          const targetSeasonObj = SEASONS_DATA[gamePracticeState.target.season];
-          const fullDateStr = `${gamePracticeState.target.month}月${gamePracticeState.target.day}日 ${WEEKDAYS_ZH[gamePracticeState.target.weekday]} (${targetSeasonObj.name})`;
-          showModal(true, `🎉 太厲害了！全對了！<br>今天是 ${fullDateStr}`, "🌟 完成練習 / 再玩一次");
-          speakGameText(`恭喜您！四題全部答對！今天是 ${fullDateStr}！`);
-        } else {
-          playErrorSound();
-          const pickedSeasonName = SEASONS_DATA[gamePracticeState.userAnswers.season].name;
-          speakGameText(`再試一次喔！您選的是 ${pickedSeasonName}`);
-        }
+      if (isCorrect) {
+        playSuccessFanfare();
+        triggerConfetti();
+        showModal(true, targetText);
+      } else {
+        playErrorSound();
+        showModal(false, targetText);
       }
     }
 
-    function showModal(isSuccess, resultText, btnLabel) {
+    function showModal(isCorrect, targetText) {
       const modal = document.getElementById('result-modal');
-      const modalContent = document.getElementById('modal-content');
-      const resultStr = document.getElementById('modal-result-str');
-      const nextBtn = document.getElementById('modal-next-btn');
+      const content = document.getElementById('modal-content');
+      const icon = document.getElementById('modal-icon');
+      const title = document.getElementById('modal-title');
+      const body = document.getElementById('modal-body');
 
-      resultStr.innerHTML = resultText;
-      nextBtn.textContent = btnLabel;
+      if (isCorrect) {
+        icon.textContent = "🎉";
+        title.textContent = "太棒了！答對了！";
+        body.innerHTML = `正確答案就是：<span id="modal-result-str" class="text-emerald-700 underline font-black">${targetText}</span>`;
+        speakPracticeText(`恭喜答對！答案就是 ${targetText}`);
+      } else {
+        icon.textContent = "💪";
+        title.textContent = "再試一次喔！";
+        body.innerHTML = `正確答案應該是：<span id="modal-result-str" class="text-amber-700 underline font-black">${targetText}</span>`;
+        speakPracticeText(`加油，正確答案是 ${targetText}，再試看看！`);
+      }
 
       modal.classList.remove('hidden');
       setTimeout(() => {
-        modalContent.classList.remove('scale-95', 'opacity-0');
-        modalContent.classList.add('scale-100', 'opacity-100');
-      }, 20);
+        content.classList.remove('scale-95', 'opacity-0');
+        content.classList.add('scale-100', 'opacity-100');
+      }, 10);
     }
 
     function closeModalAndContinue() {
       const modal = document.getElementById('result-modal');
-      const modalContent = document.getElementById('modal-content');
-
-      modalContent.classList.remove('scale-100', 'opacity-100');
-      modalContent.classList.add('scale-95', 'opacity-0');
+      const content = document.getElementById('modal-content');
+      content.classList.remove('scale-100', 'opacity-100');
+      content.classList.add('scale-95', 'opacity-0');
 
       setTimeout(() => {
         modal.classList.add('hidden');
-        if (gamePracticeState.currentStep === 1) {
-          goToStep(2);
-        } else if (gamePracticeState.currentStep === 2) {
-          goToStep(3);
-        } else if (gamePracticeState.currentStep === 3) {
-          goToStep(4);
-        } else if (gamePracticeState.currentStep === 4) {
-          setMode(gamePracticeState.mode, false);
+        if (practiceState.currentStep < 4) {
+          goToStep(practiceState.currentStep + 1);
+        } else {
+          speakPracticeText("太厲害了！你完成所有練習關卡囉！");
         }
       }, 200);
     }
 
     function triggerConfetti() {
       const canvas = document.getElementById('confetti-canvas');
+      if (!canvas) return;
       const ctx = canvas.getContext('2d');
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
 
-      const particles = [];
-      const colors = ['#FBBF24', '#3B82F6', '#10B981', '#EC4899', '#8B5CF6'];
+      let particles = [];
+      const colors = ['#f59e0b', '#10b981', '#3b82f6', '#ec4899', '#8b5cf6'];
 
-      for (let i = 0; i < 90; i++) {
+      for (let i = 0; i < 60; i++) {
         particles.push({
-          x: canvas.width / 2,
-          y: canvas.height / 2,
-          vx: (Math.random() - 0.5) * 14,
-          vy: (Math.random() - 0.7) * 16,
-          size: Math.random() * 10 + 6,
-          color: colors[Math.floor(Math.random() * colors.length)],
-          gravity: 0.2,
-          alpha: 1
+          x: Math.random() * canvas.width,
+          y: Math.random() * canvas.height * 0.5,
+          r: Math.random() * 8 + 4,
+          vx: (Math.random() - 0.5) * 6,
+          vy: Math.random() * 4 + 2,
+          color: colors[Math.floor(Math.random() * colors.length)]
         });
       }
 
-      function animate() {
+      let frame = 0;
+      function render() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
-        let alive = false;
-
         particles.forEach(p => {
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+          ctx.fillStyle = p.color;
+          ctx.fill();
           p.x += p.vx;
           p.y += p.vy;
-          p.vy += p.gravity;
-          p.alpha -= 0.015;
-
-          if (p.alpha > 0) {
-            alive = true;
-            ctx.globalAlpha = p.alpha;
-            ctx.fillStyle = p.color;
-            ctx.fillRect(p.x, p.y, p.size, p.size);
-          }
         });
 
-        if (alive) {
-          requestAnimationFrame(animate);
+        frame++;
+        if (frame < 60) {
+          requestAnimationFrame(render);
         } else {
           ctx.clearRect(0, 0, canvas.width, canvas.height);
         }
       }
-
-      animate();
+      render();
     }
 
-    /* 初始化 */
-    window.onload = function() {
-      // 1. 初始化天氣與時鐘
-      updateClockAndDate();
-      fetchHKOData();
-      setInterval(updateClockAndDate, 1000);
+    /* =========================================================
+       3. 打地鼠專注力遊戲 (Whack-a-Mole Game)
+       ========================================================= */
 
-      // 2. 初始化現實導向練習區
-      setMode('today', false);
-      renderAllDecks();
-      goToStep(1);
+    let moleState = {
+      score: 0,
+      timeLeft: 30,
+      gameTimer: null,
+      countdownTimer: null,
+      isPlaying: false,
+      activeHole: -1,
+      currentMode: 'classic',
+      currentSpeed: 'slow',
+      soundEnabled: true,
+      musicEnabled: true,
+      voiceEnabled: true,
+      currentRealityTarget: null
     };
+
+    const MOLE_THEMES = {
+      classic: {
+        name: '經典打地鼠',
+        items: ['🐹', '🐭', '🐰', '🦔']
+      },
+      fruit: {
+        name: '開心水果派對',
+        items: ['🍎', '🍌', '🍊', '🍇', '🍓', '🍉']
+      },
+      reality: {
+        name: '現實導向認知',
+        dataset: [
+          { icon: '☀️', label: '晴天大太陽' },
+          { icon: '🌧️', label: '落雨天' },
+          { icon: '🌸', label: '春天花花' },
+          { icon: '🍁', label: '秋天紅葉' },
+          { icon: '❄️', label: '冬天雪花' },
+          { icon: '🌙', label: '夜晚月亮' }
+        ]
+      }
+    };
+
+    const MOLE_PRAISES = [
+      "好厲害！好有專注力！",
+      "打得好！手快眼快！",
+      "真係精靈！繼續加油！",
+      "好嘢！眼手協調一級棒！",
+      "好有精神！真係好叻！"
+    ];
+
+    let moleAudioCtx = null;
+    let moleBgmInterval = null;
+    let moleBgmStep = 0;
+    const moleBgmNotes = [
+      261.63, 329.63, 392.00, 523.25, 392.00, 329.63,
+      293.66, 349.23, 440.00, 523.25, 440.00, 349.23,
+      261.63, 329.63, 392.00, 440.00, 523.25, 392.00,
+      349.23, 329.63, 293.66, 261.63
+    ];
+
+    function initMoleAudioContext() {
+      if (!moleAudioCtx) {
+        moleAudioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      }
+      if (moleAudioCtx.state === 'suspended') {
+        moleAudioCtx.resume();
+      }
+    }
+
+    function playMoleBgmNote() {
+      if (!moleState.musicEnabled || !moleState.isPlaying) return;
+      try {
+        initMoleAudioContext();
+        const osc = moleAudioCtx.createOscillator();
+        const gain = moleAudioCtx.createGain();
+        
+        const freq = moleBgmNotes[moleBgmStep % moleBgmNotes.length];
+        moleBgmStep++;
+
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(freq, moleAudioCtx.currentTime);
+        
+        gain.gain.setValueAtTime(0.04, moleAudioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, moleAudioCtx.currentTime + 0.28);
+        
+        osc.connect(gain);
+        gain.connect(moleAudioCtx.destination);
+        
+        osc.start();
+        osc.stop(moleAudioCtx.currentTime + 0.28);
+      } catch(e) {}
+    }
+
+    function startMoleBgm() {
+      stopMoleBgm();
+      if (!moleState.musicEnabled) return;
+      moleBgmStep = 0;
+      moleBgmInterval = setInterval(playMoleBgmNote, 320);
+    }
+
+    function stopMoleBgm() {
+      if (moleBgmInterval) {
+        clearInterval(moleBgmInterval);
+        moleBgmInterval = null;
+      }
+    }
+
+    function playMoleHitSound() {
+      if (!moleState.soundEnabled) return;
+      try {
+        initMoleAudioContext();
+        const osc = moleAudioCtx.createOscillator();
+        const gain = moleAudioCtx.createGain();
+        
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(400, moleAudioCtx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(800, moleAudioCtx.currentTime + 0.15);
+        
+        gain.gain.setValueAtTime(0.3, moleAudioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, moleAudioCtx.currentTime + 0.15);
+        
+        osc.connect(gain);
+        gain.connect(moleAudioCtx.destination);
+        
+        osc.start();
+        osc.stop(moleAudioCtx.currentTime + 0.15);
+      } catch(e) {}
+    }
+
+    function playMoleSuccessSound() {
+      if (!moleState.soundEnabled) return;
+      try {
+        initMoleAudioContext();
+        const now = moleAudioCtx.currentTime;
+        [523.25, 659.25, 783.99, 1046.50].forEach((freq, idx) => {
+          const osc = moleAudioCtx.createOscillator();
+          const gain = moleAudioCtx.createGain();
+          osc.frequency.value = freq;
+          gain.gain.setValueAtTime(0.2, now + idx * 0.08);
+          gain.gain.exponentialRampToValueAtTime(0.01, now + idx * 0.08 + 0.2);
+          osc.connect(gain);
+          gain.connect(moleAudioCtx.destination);
+          osc.start(now + idx * 0.08);
+          osc.stop(now + idx * 0.08 + 0.2);
+        });
+      } catch(e) {}
+    }
+
+    function speakMoleText(text) {
+      if (!moleState.voiceEnabled || !('speechSynthesis' in window)) return;
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = 'zh-HK';
+      utterance.rate = 0.85;
+      utterance.pitch = 1.0;
+      window.speechSynthesis.speak(utterance);
+    }
+
+    function getMoleSpeedDuration() {
+      switch(moleState.currentSpeed) {
+        case 'fast': return 1000;
+        case 'normal': return 1600;
+        case 'slow': default: return 2400;
+      }
+    }
+
+    function updateMoleTargetBanner() {
+      const targetText = document.getElementById('mole-targetText');
+      if (!targetText) return;
+
+      if (moleState.currentMode === 'reality') {
+        const data = MOLE_THEMES.reality.dataset;
+        moleState.currentRealityTarget = data[Math.floor(Math.random() * data.length)];
+        targetText.innerHTML = `搵出 <span class="text-amber-600 font-extrabold underline">${moleState.currentRealityTarget.icon} ${moleState.currentRealityTarget.label}</span>`;
+      } else if (moleState.currentMode === 'fruit') {
+        targetText.innerHTML = `點擊 <span class="text-rose-600 font-extrabold">新鮮水果 🍎</span>`;
+      } else {
+        targetText.innerHTML = `打中 <span class="text-amber-600 font-extrabold">放大地鼠 🐹</span>`;
+      }
+    }
+
+    function popMole() {
+      if (!moleState.isPlaying) return;
+
+      if (moleState.activeHole !== -1) {
+        const prevMole = document.getElementById(`mole-${moleState.activeHole}`);
+        if (prevMole) prevMole.classList.remove('up');
+      }
+
+      let nextHole;
+      do {
+        nextHole = Math.floor(Math.random() * 8);
+      } while (nextHole === moleState.activeHole);
+
+      moleState.activeHole = nextHole;
+      const moleEl = document.getElementById(`mole-${moleState.activeHole}`);
+      if (!moleEl) return;
+
+      let displayEmoji = '🐹';
+      if (moleState.currentMode === 'classic') {
+        const items = MOLE_THEMES.classic.items;
+        displayEmoji = items[Math.floor(Math.random() * items.length)];
+      } else if (moleState.currentMode === 'fruit') {
+        const items = MOLE_THEMES.fruit.items;
+        displayEmoji = items[Math.floor(Math.random() * items.length)];
+      } else if (moleState.currentMode === 'reality') {
+        const data = MOLE_THEMES.reality.dataset;
+        if (Math.random() < 0.6 && moleState.currentRealityTarget) {
+          displayEmoji = moleState.currentRealityTarget.icon;
+        } else {
+          const randObj = data[Math.floor(Math.random() * data.length)];
+          displayEmoji = randObj.icon;
+        }
+      }
+
+      moleEl.textContent = displayEmoji;
+      moleEl.dataset.emoji = displayEmoji;
+      moleEl.classList.add('up');
+
+      const duration = getMoleSpeedDuration();
+      setTimeout(() => {
+        if (moleEl.classList.contains('up')) {
+          moleEl.classList.remove('up');
+        }
+      }, duration);
+    }
+
+    function handleMoleHit(index, event) {
+      if (event) event.preventDefault();
+      if (!moleState.isPlaying) return;
+      const moleEl = document.getElementById(`mole-${index}`);
+      if (!moleEl || !moleEl.classList.contains('up')) return;
+
+      moleEl.classList.remove('up');
+
+      const hitEmoji = moleEl.dataset.emoji;
+      let pointsGained = 10;
+      let isCorrectHit = true;
+
+      if (moleState.currentMode === 'reality' && moleState.currentRealityTarget) {
+        if (hitEmoji === moleState.currentRealityTarget.icon) {
+          pointsGained = 20;
+          updateMoleTargetBanner();
+        } else {
+          isCorrectHit = false;
+          pointsGained = -5;
+        }
+      }
+
+      moleState.score += pointsGained;
+      if (moleState.score < 0) moleState.score = 0;
+      document.getElementById('mole-scoreDisplay').textContent = moleState.score;
+
+      if (isCorrectHit) {
+        playMoleHitSound();
+        showFloatScore(moleEl, `+${pointsGained}`);
+        if (moleState.score > 0 && moleState.score % 50 === 0) {
+          const praise = MOLE_PRAISES[Math.floor(Math.random() * MOLE_PRAISES.length)];
+          document.getElementById('mole-feedbackBanner').innerHTML = `<span>🌟 ${praise}</span>`;
+          speakMoleText(praise);
+        }
+      } else {
+        playErrorSound();
+        showFloatScore(moleEl, `${pointsGained}`);
+      }
+    }
+
+    function showFloatScore(element, text) {
+      const parent = element.parentElement;
+      if (!parent) return;
+      const floatEl = document.createElement('div');
+      floatEl.className = 'score-float';
+      floatEl.textContent = text;
+      parent.appendChild(floatEl);
+      setTimeout(() => {
+        if (floatEl.parentNode) floatEl.parentNode.removeChild(floatEl);
+      }, 800);
+    }
+
+    function toggleStartMoleGame() {
+      if (moleState.isPlaying) {
+        stopMoleGame();
+      } else {
+        startMoleGame();
+      }
+    }
+
+    function startMoleGame() {
+      initMoleAudioContext();
+      moleState.isPlaying = true;
+      moleState.score = 0;
+      moleState.timeLeft = 30;
+      
+      document.getElementById('mole-scoreDisplay').textContent = '0';
+      document.getElementById('mole-timerDisplay').textContent = '30s';
+      
+      const startBtn = document.getElementById('mole-startBtn');
+      startBtn.innerHTML = `<span>⏹️ 停止遊戲</span>`;
+      startBtn.className = startBtn.className.replace('bg-emerald-500 hover:bg-emerald-600 border-emerald-700', 'bg-rose-500 hover:bg-rose-600 border-rose-700');
+
+      updateMoleTargetBanner();
+      document.getElementById('mole-feedbackBanner').innerHTML = `<span>🔥 遊戲開始！加油！</span>`;
+      
+      speakMoleText("遊戲開始！加油！");
+
+      startMoleBgm();
+
+      const speedInterval = getMoleSpeedDuration();
+      moleState.gameTimer = setInterval(popMole, speedInterval);
+
+      moleState.countdownTimer = setInterval(() => {
+        moleState.timeLeft--;
+        document.getElementById('mole-timerDisplay').textContent = `${moleState.timeLeft}s`;
+
+        if (moleState.timeLeft <= 0) {
+          stopMoleGame();
+          playMoleSuccessSound();
+          triggerConfetti();
+          document.getElementById('mole-feedbackBanner').innerHTML = `<span>🎉 時間到！您獲得了 ${moleState.score} 分！精靈活潑！</span>`;
+          speakMoleText(`時間到！您獲得了 ${moleState.score} 分！太棒了！`);
+        }
+      }, 1000);
+    }
+
+    function stopMoleGame() {
+      moleState.isPlaying = false;
+      clearInterval(moleState.gameTimer);
+      clearInterval(moleState.countdownTimer);
+      stopMoleBgm();
+
+      for (let i = 0; i < 8; i++) {
+        const moleEl = document.getElementById(`mole-${i}`);
+        if (moleEl) moleEl.classList.remove('up');
+      }
+
+      const startBtn = document.getElementById('mole-startBtn');
+      startBtn.innerHTML = `<span>▶️ 開始遊戲</span>`;
+      startBtn.className = startBtn.className.replace('bg-rose-500 hover:bg-rose-600 border-rose-700', 'bg-emerald-500 hover:bg-emerald-600 border-emerald-700');
+    }
+
+    function speakMolePrompt() {
+      if (moleState.currentMode === 'reality' && moleState.currentRealityTarget) {
+        speakMoleText(`請搵出 ${moleState.currentRealityTarget.label}`);
+      } else if (moleState.currentMode === 'fruit') {
+        speakMoleText("請點擊新鮮水果");
+      } else {
+        speakMoleText("請打地鼠，練吓手快眼快");
+      }
+    }
+
+    function openMoleSettings() {
+      document.getElementById('moleSettingsModal').classList.remove('hidden');
+    }
+
+    function closeMoleSettings() {
+      document.getElementById('moleSettingsModal').classList.add('hidden');
+    }
+
+    function selectMoleMode(mode) {
+      moleState.currentMode = mode;
+      document.querySelectorAll('.mode-select-btn').forEach(btn => {
+        if (btn.dataset.mode === mode) {
+          btn.className = "mode-select-btn p-3 rounded-xl border-2 border-amber-400 bg-amber-50 font-bold text-left text-amber-900 flex items-center gap-3 transition";
+        } else {
+          btn.className = "mode-select-btn p-3 rounded-xl border-2 border-slate-200 bg-white font-bold text-left text-slate-700 flex items-center gap-3 transition";
+        }
+      });
+    }
+
+    function selectMoleSpeed(speed) {
+      moleState.currentSpeed = speed;
+      document.querySelectorAll('.speed-btn').forEach(btn => {
+        if (btn.dataset.speed === speed) {
+          btn.className = "speed-btn p-2.5 rounded-xl border-2 border-amber-400 bg-amber-100 font-bold text-amber-900 text-center";
+        } else {
+          btn.className = "speed-btn p-2.5 rounded-xl border-2 border-slate-200 bg-white font-bold text-slate-700 text-center";
+        }
+      });
+    }
+
+    function saveMoleSettings() {
+      moleState.musicEnabled = document.getElementById('mole-musicToggle').checked;
+      moleState.soundEnabled = document.getElementById('mole-soundToggle').checked;
+      moleState.voiceEnabled = document.getElementById('mole-voiceToggle').checked;
+
+      closeMoleSettings();
+      updateMoleTargetBanner();
+      
+      if (moleState.isPlaying) {
+        stopMoleGame();
+      }
+    }
+
+    /* =========================================================
+       4. 頁面初始化 (DOM Initialization)
+       ========================================================= */
+
+    window.addEventListener('DOMContentLoaded', () => {
+      // 1. 初始化時間與天文台天氣
+      updateClockAndDate();
+      setInterval(updateClockAndDate, 10000); // 每10秒更新時鐘
+      fetchHKOData();
+
+      // 2. 初始化練習區
+      initTodayTarget();
+      goToStep(1);
+
+      // 3. 全局用戶第一次觸控/點擊解鎖音效
+      window.addEventListener('click', () => {
+        initPracticeAudioContext();
+        initMoleAudioContext();
+      }, { once: true });
+    });
   </script>
 </body>
 </html>
