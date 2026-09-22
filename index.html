@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
-  <title>職業治療關懷 — 每日天氣生活板與活力打地鼠</title>
+  <title>職業治療關懷 — 每日天氣生活板</title>
 
   <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -150,7 +150,7 @@
       background-color: #ffffff;
     }
 
-    /* 現實導向區 (Reality Orientation) */
+    /* 一、黃色部份：現實導向區 (Reality Orientation) */
     .ro-card {
       background-color: var(--card-time-bg);
       border-color: var(--card-time-border);
@@ -508,6 +508,7 @@
       animation: pulse 1.2s infinite;
     }
 
+    /* 現實導向練習版專用樣式 */
     .practice-card {
       background-color: var(--card-practice-bg);
       border-color: var(--card-practice-border);
@@ -537,68 +538,6 @@
     .slot-highlight {
       animation: slotPulse 1.5s infinite;
       background-color: #EFF6FF !important;
-    }
-
-    /* 打地鼠遊戲專用樣式 */
-    .hole-container {
-      position: relative;
-      overflow: hidden;
-      border-radius: 9999px;
-      background: linear-gradient(180deg, #3d2314 0%, #653819 70%, #854d27 100%);
-      box-shadow: inset 0 10px 15px rgba(0,0,0,0.6), 0 8px 0 #27150b;
-    }
-
-    .mole {
-      position: absolute;
-      left: 50%;
-      bottom: -130%;
-      transform: translateX(-50%) scale(0.9);
-      transition: bottom 0.22s cubic-bezier(0.175, 0.885, 0.32, 1.275), transform 0.22s ease;
-      cursor: pointer;
-      width: 100%;
-      height: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: clamp(4.5rem, 14vw, 8.5rem);
-      line-height: 1;
-      filter: drop-shadow(0 6px 8px rgba(0,0,0,0.45));
-      user-select: none;
-      -webkit-user-select: none;
-      touch-action: manipulation;
-    }
-
-    .mole.up {
-      bottom: 0%;
-      transform: translateX(-50%) scale(1.18);
-    }
-
-    .btn-3d {
-      transition: all 0.1s ease;
-      box-shadow: 0 6px 0 rgba(0,0,0,0.2);
-    }
-    .btn-3d:active {
-      transform: translateY(4px);
-      box-shadow: 0 2px 0 rgba(0,0,0,0.2);
-    }
-
-    @keyframes floatUp {
-      0% { opacity: 1; transform: translate(-50%, 0) scale(0.8); }
-      50% { transform: translate(-50%, -30px) scale(1.3); }
-      100% { opacity: 0; transform: translate(-50%, -60px) scale(1); }
-    }
-
-    .score-float {
-      position: absolute;
-      top: 20%;
-      left: 50%;
-      color: #f59e0b;
-      font-weight: 900;
-      font-size: 2.5rem;
-      text-shadow: 2px 2px 0 #ffffff, -2px -2px 0 #ffffff, 2px -2px 0 #ffffff, -2px 2px 0 #ffffff;
-      pointer-events: none;
-      animation: floatUp 0.8s ease-out forwards;
-      z-index: 50;
     }
 
     #confetti-canvas {
@@ -677,12 +616,32 @@
 
   <canvas id="confetti-canvas"></canvas>
 
+<!-- Gemini Debug Panel -->
+<div id="gemini-debug-panel"
+     style="
+       margin-top:12px;
+       padding:14px;
+       background:#f8f9fa;
+       border:2px solid #6c757d;
+       border-radius:12px;
+       font-family:monospace;
+       font-size:14px;
+       line-height:1.5;
+       white-space:pre-wrap;
+       word-break:break-word;
+       color:#212529;
+     ">
+  Gemini Debug:
+  尚未開始
+</div>
+<br>
+
   <div class="container">
     <header>
       <h1>職業治療關懷 — 每日天氣生活板</h1>
       <div class="action-bar">
         <button class="action-btn" id="refresh-btn" onclick="refreshData()">
-          <span id="refresh-icon" style="display:inline-flex;align-items:center;justify-content:center;">🔄</span> <span>開始/更新數據</span>
+          <span id="refresh-icon" style="display:inline-flex;align-items:center;justify-content:center;">🔄</span> <span>立即更新</span>
         </button>
         <button class="action-btn" id="zoom-btn" onclick="toggleFontSize()">
           <span style="display:inline-flex;align-items:center;justify-content:center;">🔍</span> <span id="zoom-text">特大字體</span>
@@ -690,7 +649,7 @@
       </div>
     </header>
 
-    <!-- 現實導向資訊區 -->
+    <!-- 一、黃色部份：現實導向區 (Reality Orientation) -->
     <section class="card ro-card" aria-label="現實導向資訊">
       <div class="ro-header-bar">
         <div class="ro-title">
@@ -700,7 +659,7 @@
         <div class="location-setting-box">
           <div class="loc-field-group">
             <label>📍 地區：</label>
-            <span class="fixed-district-badge" id="fixed-district-label">深水埗</span>
+            <span class="fixed-district-badge">深水埗</span>
           </div>
           <div class="loc-field-group" style="flex: 1; min-width: 240px;">
             <label for="location-detail-input">🏢 地點：</label>
@@ -768,12 +727,12 @@
       </div>
     </section>
 
-    <!-- 即時天氣區 -->
+    <!-- 二、香港天文台即時天氣與預測區 -->
     <section class="card weather-card" aria-label="即時天氣">
       <div class="weather-header">
         <div class="district-select-container">
           <label for="district-select"><span>📍</span><span>選擇天氣分區：</span></label>
-          <select id="district-select" class="district-select" onchange="onDistrictChange()">
+          <select id="district-select" class="district-select" onchange="updateDistrictTemperature()">
             <option value="深水埗" selected>深水埗</option>
             <option value="沙田">沙田</option>
             <option value="香港天文台">尖沙咀 (天文台)</option>
@@ -844,7 +803,7 @@
       </div>
     </section>
 
-    <!-- 關懷提示區 -->
+    <!-- 三、長者關懷提示與語音朗讀 -->
     <section class="card care-card" aria-label="長者關懷提示">
       <div class="care-header">
         <div class="care-title">
@@ -860,7 +819,7 @@
       </div>
     </section>
 
-    <!-- 現實導向練習區 -->
+    <!-- 四、現實導向練習版 (互動練習區) -->
     <section class="card practice-card" aria-label="現實導向練習區">
       <header class="bg-board-darkwood text-white rounded-2xl p-3 sm:p-4 shadow-md">
         <div class="flex flex-wrap items-center justify-between gap-2">
@@ -872,6 +831,7 @@
             </div>
           </div>
 
+          <!-- Controls: Mode Switch & Speech Toggle -->
           <div class="flex items-center space-x-2 sm:space-x-3 text-sm">
             <div class="bg-amber-700/80 text-amber-100 font-bold px-3 py-2 rounded-xl text-sm sm:text-base flex items-center space-x-1 shadow">
               <span>📅 今日真實日期</span>
@@ -886,7 +846,9 @@
 
       <div class="w-full flex-grow flex flex-col gap-4 mt-2">
 
+        <!-- Progress Step Indicators -->
         <div class="bg-white rounded-2xl p-3 shadow-md border-2 border-amber-200 flex flex-wrap sm:flex-nowrap justify-between items-center text-center gap-1.5 sm:gap-2">
+          <!-- Step 1 Indicator -->
           <div id="step-tab-1" onclick="goToStep(1)" class="flex-1 py-2 px-1 rounded-xl cursor-pointer transition border-2 border-blue-500 bg-blue-50 min-w-[70px]">
             <span class="text-xs font-bold text-blue-700 block">第一關</span>
             <span class="text-sm sm:text-lg font-black text-blue-900">1. 月份</span>
@@ -894,6 +856,7 @@
 
           <div class="text-gray-300 font-bold hidden sm:block">➔</div>
 
+          <!-- Step 2 Indicator -->
           <div id="step-tab-2" onclick="goToStep(2)" class="flex-1 py-2 px-1 rounded-xl cursor-pointer transition border-2 border-gray-200 bg-gray-50 opacity-60 min-w-[70px]">
             <span class="text-xs font-bold text-gray-500 block">第二關</span>
             <span class="text-sm sm:text-lg font-black text-gray-700">2. 日期</span>
@@ -901,6 +864,7 @@
 
           <div class="text-gray-300 font-bold hidden sm:block">➔</div>
 
+          <!-- Step 3 Indicator -->
           <div id="step-tab-3" onclick="goToStep(3)" class="flex-1 py-2 px-1 rounded-xl cursor-pointer transition border-2 border-gray-200 bg-gray-50 opacity-60 min-w-[70px]">
             <span class="text-xs font-bold text-gray-500 block">第三關</span>
             <span class="text-sm sm:text-lg font-black text-gray-700">3. 星期</span>
@@ -908,12 +872,14 @@
 
           <div class="text-gray-300 font-bold hidden sm:block">➔</div>
 
+          <!-- Step 4 Indicator -->
           <div id="step-tab-4" onclick="goToStep(4)" class="flex-1 py-2 px-1 rounded-xl cursor-pointer transition border-2 border-gray-200 bg-gray-50 opacity-60 min-w-[70px]">
             <span class="text-xs font-bold text-gray-500 block">第四關</span>
             <span class="text-sm sm:text-lg font-black text-gray-700">4. 季節</span>
           </div>
         </div>
 
+        <!-- Current Question Announcement Box -->
         <div class="bg-amber-100 border-3 border-amber-300 rounded-2xl p-4 shadow-sm flex flex-col sm:flex-row items-center justify-between gap-3 text-center sm:text-left">
           <div>
             <span id="question-badge" class="bg-blue-600 text-white text-xs font-bold px-2.5 py-1 rounded-full uppercase tracking-wider inline-block mb-1">
@@ -930,11 +896,13 @@
           </div>
         </div>
 
+        <!-- REALITY BOARD (Interactive Slots Area) -->
         <div class="bg-board-felt border-8 border-board-wood rounded-3xl p-4 sm:p-6 shadow-2xl relative">
           <div class="text-center mb-3">
             <h3 id="board-instruction" class="text-amber-100 text-lg sm:text-xl font-bold tracking-wider">點選或拖曳卡片放到框框內</h3>
           </div>
 
+          <!-- STEP 1: MONTH SLOT -->
           <div id="view-step-1" class="flex flex-col items-center justify-center py-4">
             <div class="flex items-center gap-4 bg-board-darkwood/40 p-5 rounded-2xl border border-emerald-600/50 justify-center">
               <div id="slot-month" 
@@ -949,6 +917,7 @@
             </div>
           </div>
 
+          <!-- STEP 2: DAY SLOT -->
           <div id="view-step-2" class="hidden flex flex-col items-center justify-center py-4">
             <div class="flex items-center gap-4 bg-board-darkwood/40 p-5 rounded-2xl border border-emerald-600/50 justify-center">
               <div id="slot-day" 
@@ -963,6 +932,7 @@
             </div>
           </div>
 
+          <!-- STEP 3: WEEKDAY SLOT -->
           <div id="view-step-3" class="hidden flex flex-col items-center justify-center py-4">
             <div class="flex items-center gap-4 bg-board-darkwood/40 p-5 rounded-2xl border border-emerald-600/50 justify-center">
               <div id="slot-weekday" 
@@ -976,6 +946,7 @@
             </div>
           </div>
 
+          <!-- STEP 4: SEASON SLOT -->
           <div id="view-step-4" class="hidden flex flex-col items-center justify-center py-4">
             <div class="flex items-center gap-4 bg-board-darkwood/40 p-5 rounded-2xl border border-emerald-600/50 justify-center">
               <div id="slot-season" 
@@ -989,6 +960,7 @@
             </div>
           </div>
 
+          <!-- Control Buttons -->
           <div class="mt-6 flex flex-wrap items-center justify-center gap-3">
             <button onclick="checkCurrentStepAnswer()" class="bg-amber-400 hover:bg-amber-300 active:scale-95 text-amber-950 font-black text-xl sm:text-2xl px-8 py-3 rounded-2xl shadow-lg border-2 border-amber-200 flex items-center gap-2 transition">
               <span>✅ 確認答案</span>
@@ -999,114 +971,30 @@
           </div>
         </div>
 
+        <!-- CARDS DECK SELECTION AREA (3 OPTIONS PER QUESTION) -->
         <div class="bg-board-cardBg border-2 border-amber-200 rounded-3xl p-4 sm:p-5 shadow-lg">
           <div id="deck-header-title" class="text-lg sm:text-xl font-black text-gray-800 mb-3 flex items-center justify-between border-b border-amber-200 pb-2">
             <span>請點選正確答案（三選一）：</span>
             <span class="text-xs font-bold text-gray-500 hidden sm:inline">大字體適老簡化設計</span>
           </div>
 
+          <!-- 3 Choice Cards Display Grid -->
           <div id="deck-options" class="grid grid-cols-3 gap-3 sm:gap-6 min-h-[120px]">
+            <!-- Generated by JS: 3 Options -->
           </div>
         </div>
 
-      </div>
-    </section>
-
-    <!-- 老友記活力打地鼠區 -->
-    <section class="card mole-card bg-amber-50/60 border-amber-400" aria-label="老友記活力打地鼠">
-      <header class="bg-gradient-to-r from-amber-600 to-orange-600 text-white rounded-2xl p-3 sm:p-4 shadow-md flex items-center justify-between gap-2 mb-4">
-        <div class="flex items-center gap-2">
-          <span class="text-3xl sm:text-4xl">🌻</span>
-          <div>
-            <h2 class="text-2xl sm:text-3xl font-black text-amber-100 leading-tight">老友記活力打地鼠</h2>
-            <p class="text-xs sm:text-sm font-bold text-amber-200">放大版圖示，反應與專注力手眼協調訓練</p>
-          </div>
-        </div>
-        <button id="openSettingsBtn" onclick="openMoleSettings()" class="bg-amber-100 hover:bg-amber-200 text-amber-900 px-3 py-2 rounded-xl border-2 border-amber-300 flex items-center gap-1.5 font-extrabold text-sm sm:text-base shadow transition">
-          <span>⚙️</span>
-          <span>遊戲設定</span>
-        </button>
-      </header>
-
-      <div class="grid grid-cols-3 gap-2 sm:gap-4 mb-3">
-        <div class="bg-gradient-to-br from-amber-400 to-orange-400 rounded-2xl p-2.5 sm:p-3 text-white text-center shadow-md border-b-4 border-orange-600">
-          <div class="text-xs sm:text-sm font-extrabold opacity-90">得分</div>
-          <div id="mole-scoreDisplay" class="text-3xl sm:text-4xl font-black tracking-wider drop-shadow">0</div>
-        </div>
-
-        <div id="mole-targetCard" class="bg-white rounded-2xl p-2.5 sm:p-3 text-center shadow-md border-2 border-emerald-400 flex flex-col justify-center items-center">
-          <div class="text-xs sm:text-sm font-extrabold text-emerald-700">目標任務</div>
-          <div id="mole-targetText" class="text-base sm:text-xl font-black text-emerald-900 leading-tight">請打地鼠</div>
-        </div>
-
-        <div class="bg-gradient-to-br from-sky-400 to-blue-500 rounded-2xl p-2.5 sm:p-3 text-white text-center shadow-md border-b-4 border-blue-700">
-          <div class="text-xs sm:text-sm font-extrabold opacity-90">倒數時間</div>
-          <div id="mole-timerDisplay" class="text-3xl sm:text-4xl font-black tracking-wider drop-shadow">30s</div>
-        </div>
-      </div>
-
-      <div id="mole-feedbackBanner" class="bg-emerald-100 border-2 border-emerald-400 text-emerald-800 font-black text-center py-2 px-4 rounded-xl mb-4 text-sm sm:text-lg shadow-sm flex items-center justify-center gap-2 transition-all">
-        <span>✨ 動物圖示已放大填滿圓形，點擊「開始遊戲」即可開玩！</span>
-      </div>
-
-      <!-- 8個洞口佈局 3 - 2 - 3 -->
-      <div class="bg-emerald-700/20 backdrop-blur-sm p-3 sm:p-6 rounded-3xl border-4 border-emerald-500 shadow-inner my-auto flex flex-col gap-3 sm:gap-6 justify-center">
-        <!-- Row 1: 3 Holes -->
-        <div class="grid grid-cols-3 gap-2 sm:gap-6">
-          <div class="hole-container aspect-square relative">
-            <div class="mole" id="mole-0" onclick="handleMoleHit(0, event)" ontouchstart="handleMoleHit(0, event)">🐹</div>
-          </div>
-          <div class="hole-container aspect-square relative">
-            <div class="mole" id="mole-1" onclick="handleMoleHit(1, event)" ontouchstart="handleMoleHit(1, event)">🐹</div>
-          </div>
-          <div class="hole-container aspect-square relative">
-            <div class="mole" id="mole-2" onclick="handleMoleHit(2, event)" ontouchstart="handleMoleHit(2, event)">🐹</div>
-          </div>
-        </div>
-
-        <!-- Row 2: 2 Holes -->
-        <div class="flex justify-center gap-3 sm:gap-8 px-6 sm:px-16">
-          <div class="hole-container aspect-square w-1/3 relative">
-            <div class="mole" id="mole-3" onclick="handleMoleHit(3, event)" ontouchstart="handleMoleHit(3, event)">🐹</div>
-          </div>
-          <div class="hole-container aspect-square w-1/3 relative">
-            <div class="mole" id="mole-4" onclick="handleMoleHit(4, event)" ontouchstart="handleMoleHit(4, event)">🐹</div>
-          </div>
-        </div>
-
-        <!-- Row 3: 3 Holes -->
-        <div class="grid grid-cols-3 gap-2 sm:gap-6">
-          <div class="hole-container aspect-square relative">
-            <div class="mole" id="mole-5" onclick="handleMoleHit(5, event)" ontouchstart="handleMoleHit(5, event)">🐹</div>
-          </div>
-          <div class="hole-container aspect-square relative">
-            <div class="mole" id="mole-6" onclick="handleMoleHit(6, event)" ontouchstart="handleMoleHit(6, event)">🐹</div>
-          </div>
-          <div class="hole-container aspect-square relative">
-            <div class="mole" id="mole-7" onclick="handleMoleHit(7, event)" ontouchstart="handleMoleHit(7, event)">🐹</div>
-          </div>
-        </div>
-      </div>
-
-      <div class="mt-4 flex gap-3 justify-center">
-        <button id="mole-startBtn" onclick="toggleStartMoleGame()" class="btn-3d bg-emerald-500 hover:bg-emerald-600 text-white font-black text-xl sm:text-2xl py-3.5 px-8 rounded-2xl border-b-4 border-emerald-700 flex items-center gap-2 shadow-lg w-full sm:w-auto justify-center">
-          <span>▶️ 開始遊戲</span>
-        </button>
-        <button id="mole-speakPromptBtn" onclick="speakMolePrompt()" class="btn-3d bg-sky-500 hover:bg-sky-600 text-white font-black text-xl py-3.5 px-5 rounded-2xl border-b-4 border-sky-700 flex items-center justify-center gap-2 shadow-lg">
-          <span>🔊</span>
-          <span class="text-base hidden sm:inline">讀出提示</span>
-        </button>
       </div>
     </section>
 
   </div>
 
-  <!-- 練習結果 Modal -->
+  <!-- MODAL FOR SUCCESS / FEEDBACK (Practice Game) -->
   <div id="result-modal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
     <div class="bg-white border-4 border-amber-400 rounded-3xl max-w-md w-full p-6 text-center shadow-2xl transform transition-all scale-95 opacity-0" id="modal-content">
       <div id="modal-icon" class="text-6xl mb-2">🎉</div>
       <h3 id="modal-title" class="text-3xl font-black text-gray-800 mb-2">好棒！答對了！</h3>
-      <p id="modal-body" class="text-xl font-bold text-gray-600 mb-6">您答對了：<span id="modal-result-str" class="text-blue-700 underline">--</span></p>
+      <p id="modal-body" class="text-xl font-bold text-gray-600 mb-6">您答對了：<span id="modal-result-str" class="text-blue-700 underline">9月</span></p>
       
       <div class="flex flex-col gap-3">
         <button id="modal-next-btn" onclick="closeModalAndContinue()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-black text-xl py-3.5 rounded-2xl shadow-lg transition">
@@ -1116,89 +1004,14 @@
     </div>
   </div>
 
-  <!-- 打地鼠遊戲設定 Modal -->
-  <div id="moleSettingsModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
-    <div class="bg-white rounded-3xl p-6 max-w-md w-full shadow-2xl border-4 border-amber-400 space-y-5">
-      <div class="flex justify-between items-center border-b pb-3 border-slate-200">
-        <h2 class="text-2xl font-black text-amber-800 flex items-center gap-2">
-          <span>⚙️</span> 打地鼠遊戲設定
-        </h2>
-        <button id="closeSettingsBtn" onclick="closeMoleSettings()" class="text-slate-400 hover:text-slate-600 text-2xl font-bold p-1">
-          ✕
-        </button>
-      </div>
-
-      <div>
-        <label class="block font-black text-slate-700 text-base mb-2">🎮 選擇主題：</label>
-        <div class="grid grid-cols-1 gap-2">
-          <button class="mode-select-btn p-3 rounded-xl border-2 border-amber-400 bg-amber-50 font-bold text-left text-amber-900 flex items-center gap-3 transition" data-mode="classic" onclick="selectMoleMode('classic')">
-            <span class="text-2xl">🐹</span>
-            <div>
-              <div>經典打地鼠</div>
-              <div class="text-xs text-slate-500 font-normal">練吓反應同眼手協調</div>
-            </div>
-          </button>
-          <button class="mode-select-btn p-3 rounded-xl border-2 border-slate-200 bg-white font-bold text-left text-slate-700 flex items-center gap-3 transition" data-mode="reality" onclick="selectMoleMode('reality')">
-            <span class="text-2xl">☀️</span>
-            <div>
-              <div>現實導向 (天氣與季節)</div>
-              <div class="text-xs text-slate-500 font-normal">跟指令搵出相應嘅天氣同季節</div>
-            </div>
-          </button>
-          <button class="mode-select-btn p-3 rounded-xl border-2 border-slate-200 bg-white font-bold text-left text-slate-700 flex items-center gap-3 transition" data-mode="fruit" onclick="selectMoleMode('fruit')">
-            <span class="text-2xl">🍎</span>
-            <div>
-              <div>開心水果派對</div>
-              <div class="text-xs text-slate-500 font-normal">認吓同點擊新鮮好食嘅水果</div>
-            </div>
-          </button>
-        </div>
-      </div>
-
-      <div>
-        <label class="block font-black text-slate-700 text-base mb-2">⚡ 速度 (地鼠停留時間)：</label>
-        <div class="grid grid-cols-3 gap-2">
-          <button class="speed-btn p-2.5 rounded-xl border-2 border-amber-400 bg-amber-100 font-bold text-amber-900 text-center" data-speed="slow" onclick="selectMoleSpeed('slow')">
-            慢速（輕鬆）
-          </button>
-          <button class="speed-btn p-2.5 rounded-xl border-2 border-slate-200 bg-white font-bold text-slate-700 text-center" data-speed="normal" onclick="selectMoleSpeed('normal')">
-            普通
-          </button>
-          <button class="speed-btn p-2.5 rounded-xl border-2 border-slate-200 bg-white font-bold text-slate-700 text-center" data-speed="fast" onclick="selectMoleSpeed('fast')">
-            快速
-          </button>
-        </div>
-      </div>
-
-      <div class="space-y-3 pt-2 border-t border-slate-200">
-        <div class="flex items-center justify-between">
-          <span class="font-bold text-slate-700">🎵 歡樂背景音樂：</span>
-          <input type="checkbox" id="mole-musicToggle" checked class="w-6 h-6 accent-amber-500 cursor-pointer">
-        </div>
-        <div class="flex items-center justify-between">
-          <span class="font-bold text-slate-700">🔊 遊戲點擊音效：</span>
-          <input type="checkbox" id="mole-soundToggle" checked class="w-6 h-6 accent-amber-500 cursor-pointer">
-        </div>
-        <div class="flex items-center justify-between">
-          <span class="font-bold text-slate-700">💬 廣東話朗讀同鼓勵：</span>
-          <input type="checkbox" id="mole-voiceToggle" checked class="w-6 h-6 accent-amber-500 cursor-pointer">
-        </div>
-      </div>
-
-      <button id="saveSettingsBtn" onclick="saveMoleSettings()" class="w-full bg-amber-500 hover:bg-amber-600 text-white font-black text-lg py-3 rounded-2xl border-b-4 border-amber-700 mt-2">
-        儲存並套用
-      </button>
-    </div>
-  </div>
-
   <script>
-    /* =========================================================
-       1. 現實導向與天文台數據 (Reality Orientation & HKO API)
-       ========================================================= */
-
+    /* ========================================================
+       一、現實導向與天氣生活板 (Main Application Logic)
+       ======================================================== */
     function updateClockAndDate() {
       const now = new Date();
       
+      // 時鐘數據 (只顯示時與分，顏色黑色)
       let hoursInt = now.getHours();
       const ampm = hoursInt >= 12 ? '下午' : '上午';
       const hoursStr = String(hoursInt).padStart(2, '0');
@@ -1207,6 +1020,7 @@
       document.getElementById('clock-time').textContent = `${hoursStr}:${minutesStr}`;
       document.getElementById('clock-ampm').textContent = `${ampm}`;
 
+      // 日期數據 - 分開顯示：年、月、日、星期
       const year = now.getFullYear();
       const month = now.getMonth() + 1;
       const date = now.getDate();
@@ -1218,6 +1032,7 @@
       document.getElementById('ro-date-num').textContent = `${date}日`;
       document.getElementById('ro-day-of-week').textContent = dayName;
 
+      // 季節判斷
       let season = '';
       let seasonIcon = '';
       if (month >= 3 && month <= 5) {
@@ -1232,6 +1047,7 @@
       document.getElementById('season-icon').textContent = seasonIcon;
       document.getElementById('season-text').textContent = season;
 
+      // 農曆與節氣 (每日更新一次)
       if (!window.lunarUpdatedDate || window.lunarUpdatedDate !== date) {
         updateLunarAndSolarTerm(now);
         updateUpcomingFestivals(now);
@@ -1239,15 +1055,8 @@
       }
     }
 
-    function onDistrictChange() {
-      const selectedDistrict = document.getElementById('district-select').value;
-      document.getElementById('fixed-district-label').textContent = selectedDistrict;
-      document.getElementById('ro-display-district').textContent = selectedDistrict;
-      updateDistrictTemperature();
-    }
-
     function updateCurrentLocationDisplay() {
-      const districtVal = document.getElementById('district-select').value;
+      const districtVal = "深水埗";
       const detailVal = document.getElementById('location-detail-input').value.trim();
       
       document.getElementById('ro-display-district').textContent = districtVal;
@@ -1304,6 +1113,7 @@
           lunarStr = `農曆 ${formattedMonth}${formattedDay}`;
         }
       } catch (err) {
+        console.warn('Intl 農曆計算異常:', err);
         lunarStr = '農曆 日期獲取中';
       }
 
@@ -1324,7 +1134,8 @@
       const m = dateObj.getMonth();
       const d = dateObj.getDate();
       let termIndex = m * 2;
-      if (d >= 20) termIndex += 1;
+      if (d >= 5 && d < 20) termIndex += 0;
+      else if (d >= 20) termIndex += 1;
       
       return solarTerms[termIndex % 24];
     }
@@ -1422,6 +1233,7 @@
         renderWeatherUI();
         renderForecastUI();
       } catch (err) {
+        console.warn('天文台 API 連線失敗，啟動備援 (Mock) 資料:', err);
         loadMockData();
       }
     }
@@ -1458,8 +1270,8 @@
         mockForecast.push({
           forecastDate: `${yyyy}${mm}${dd}`,
           week: daysOfWeek[nextDay.getDay()],
-          forecastmintemp: { value: 24 + (i % 3) },
-          forecastmaxtemp: { value: 29 + (i % 3) },
+          forecastMintemp: { value: 24 + (i % 3) },
+          forecastMaxtemp: { value: 29 + (i % 3) },
           ForecastIcon: 50 + (i % 5)
         });
       }
@@ -1525,7 +1337,7 @@
         alertContainer.classList.remove('active');
       }
 
-      generateCareMessage();
+      generateCareMessage(true);
     }
 
     function updateDistrictTemperature() {
@@ -1566,8 +1378,8 @@
       list.forEach(item => {
         const rawDate = item.forecastDate;
         const formattedDate = `${parseInt(rawDate.substring(4,6))}月${parseInt(rawDate.substring(6,8))}日`;
-        const minTemp = item.forecastmintemp.value;
-        const maxTemp = item.forecastmaxtemp.value;
+        const minTemp = item.forecastMintemp.value;
+        const maxTemp = item.forecastMaxtemp.value;
         const icon = item.ForecastIcon;
         const forecastEmoji = getWeatherEmojiByIcon(icon);
 
@@ -1602,47 +1414,767 @@
       return iconMap[icon] || "多雲有時有陽光";
     }
 
-    function generateCareMessage() {
-      const temp = parseInt(document.getElementById('district-temp').textContent) || 25;
-      const humidity = parseInt(document.getElementById('humidity').textContent) || 70;
-      const warnings = currentWeatherData?.warningMessage || [];
-      const districtName = document.getElementById('district-select').value;
-      
-      const districtStr = document.getElementById('ro-display-district').textContent;
-      const detailStr = document.getElementById('ro-display-detail').textContent;
-      const fullLocation = (detailStr && detailStr !== "未輸入地點") ? `${districtStr} ${detailStr}` : districtStr;
-      
-      const festivalName = document.getElementById('ro-festival-name').textContent;
+    //function generateCareMessage() {
+      /* ========================================================
+   每日溫馨提示 — Gemini AI 動態生成
+   ======================================================== */
 
-      let tips = [];
+// ========================================================
+// 1. Gemini 設定
+// ========================================================
 
-      tips.push(`老人家好，歡迎來到 ${fullLocation}！`);
 
-      if (temp >= 30) {
-        tips.push(`今日 ${districtName} 天氣酷熱，氣溫達到 ${temp} 度！記得留在室內，定時補充水分，避免戶外劇烈運動。`);
-      } else if (temp <= 16) {
-        tips.push(`今日天氣較為寒冷，${districtName} 氣溫只有 ${temp} 度。外出請穿著足夠保暖衣物，注意頭部與頸部保暖。`);
-      } else {
-        tips.push(`今日 ${districtName} 氣溫約 ${temp} 度，體感舒適宜人。`);
-      }
 
-      if (humidity > 85) {
-        tips.push(`相對濕度高達 ${humidity}%，地板可能較為濕滑，行走請穿著防滑鞋，格外注意安全。`);
-      } else if (humidity < 50) {
-        tips.push(`天氣較為乾燥，記得多喝溫水保持滋潤。`);
-      }
+const GEMINI_MODEL = 'qwen/qwen3.8-flash';
 
-      if (warnings.some(w => w.includes('暴雨') || w.includes('雷暴'))) {
-        tips.push(`目前有雷暴或雨勢警告，外出請務必帶傘，盡量留在安全室內。`);
-      }
+//const GEMINI_MODEL = 'qwen/qwen3.8-27b:free';
 
-      if (festivalName && festivalName !== '--' && festivalName !== '平安健康') {
-        tips.push(`臨近 ${festivalName}，祝您身體健康，保持愉快心情！`);
-      }
+const GEMINI_API_URL =
+  `https://openrouter.ai/api/v1/chat/completions`;
 
-      const finalMsg = tips.join(' ');
-      document.getElementById('care-message').textContent = finalMsg;
+// ========================================================
+// ⚠️ 把你自己的新 Gemini API Key 放在這裡
+// ========================================================
+
+const GEMINI_API_KEY = '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';
+
+// ========================================================
+// 2. Gemini API Key
+// ========================================================
+
+function getGeminiApiKey() {
+  return GEMINI_API_KEY.trim();
+}
+
+// ========================================================
+// 3. 收集目前頁面的資料
+// ========================================================
+
+function getCareContext() {
+  const now = new Date();
+
+  const tempText =
+    document.getElementById('district-temp')?.textContent.trim() || '';
+
+  const humidityText =
+    document.getElementById('humidity')?.textContent.trim() || '';
+
+  const uvText =
+    document.getElementById('uv-index')?.textContent.trim() || '';
+
+  const districtName =
+    document.getElementById('district-select')?.value || '深水埗';
+
+  const districtStr =
+    document.getElementById('ro-display-district')?.textContent.trim() || districtName;
+
+  const detailStr =
+    document.getElementById('ro-display-detail')?.textContent.trim() || '';
+
+  const fullLocation =
+    detailStr && detailStr !== '未輸入地點'
+      ? `${districtStr} ${detailStr}`
+      : districtStr;
+
+  // 香港天文台警告
+  const warningList = Array.isArray(currentWeatherData?.warningMessage)
+    ? currentWeatherData.warningMessage
+        .map(w => String(w).trim())
+        .filter(Boolean)
+    : [];
+
+  return {
+    date:
+      `${now.getFullYear()}年${now.getMonth() + 1}月${now.getDate()}日`,
+
+    weekday:
+      document.getElementById('ro-day-of-week')?.textContent.trim() || '',
+
+    timeOfDay:
+      now.getHours() >= 12 ? '下午' : '上午',
+
+    location:
+      fullLocation,
+
+    weatherDistrict:
+      districtName,
+
+    weatherDescription:
+      document.getElementById('weather-desc')?.textContent.trim() ||
+      '天氣資料載入中',
+
+    temperatureC:
+      Number.isFinite(parseInt(tempText, 10))
+        ? parseInt(tempText, 10)
+        : null,
+
+    humidityPercent:
+      Number.isFinite(parseInt(humidityText, 10))
+        ? parseInt(humidityText, 10)
+        : null,
+
+    uvIndex:
+      Number.isFinite(parseFloat(uvText))
+        ? parseFloat(uvText)
+        : null,
+
+    uvDescription:
+      document.getElementById('uv-desc')?.textContent.trim() || '',
+
+    humidityDescription:
+      document.getElementById('humidity-desc')?.textContent.trim() || '',
+
+    weatherWarnings:
+      warningList,
+
+    season:
+      document.getElementById('season-text')?.textContent.trim() || '',
+
+    lunar:
+      document.getElementById('ro-lunar')?.textContent.trim() || '',
+
+    solarTerm:
+      document.getElementById('ro-solar-term')?.textContent.trim() || '',
+
+    upcomingFestival:
+      document.getElementById('ro-festival-name')?.textContent.trim() || '',
+
+    festivalCountdown:
+      document.getElementById('ro-festival-countdown')?.textContent.trim() || ''
+  };
+}
+
+
+// ========================================================
+// 4. 建立 Context Signature
+//    避免每分鐘更新時都呼叫 Gemini
+// ========================================================
+
+function getCareContextSignature(context) {
+
+  return JSON.stringify({
+    date: context.date,
+    weekday: context.weekday,
+    location: context.location,
+
+    weatherDistrict:
+      context.weatherDistrict,
+
+    weatherDescription:
+      context.weatherDescription,
+
+    temperatureC:
+      context.temperatureC,
+
+    humidityPercent:
+      context.humidityPercent,
+
+    uvIndex:
+      context.uvIndex,
+
+    uvDescription:
+      context.uvDescription,
+
+    humidityDescription:
+      context.humidityDescription,
+
+    weatherWarnings:
+      context.weatherWarnings,
+
+    season:
+      context.season,
+
+    lunar:
+      context.lunar,
+
+    solarTerm:
+      context.solarTerm,
+
+    upcomingFestival:
+      context.upcomingFestival,
+
+    festivalCountdown:
+      context.festivalCountdown
+  });
+}
+
+
+// ========================================================
+// 5. Gemini 失敗時的後備訊息
+// ========================================================
+
+function buildFallbackCareMessage(context) {
+
+  // 天氣警告優先
+  if (context.weatherWarnings.length > 0) {
+
+    return `目前有「${context.weatherWarnings.join('、')}」，外出請小心，按需要留在安全地方。`;
+  }
+
+  // 炎熱
+  if (
+    typeof context.temperatureC === 'number' &&
+    context.temperatureC >= 30
+  ) {
+
+    return '今日較炎熱，記得多喝水，避免長時間在戶外。';
+  }
+
+  // 寒冷
+  if (
+    typeof context.temperatureC === 'number' &&
+    context.temperatureC <= 16
+  ) {
+
+    return '今日較寒冷，外出記得穿暖一點。';
+  }
+
+  // UV
+  if (
+    typeof context.uvIndex === 'number' &&
+    context.uvIndex >= 6
+  ) {
+
+    return '今日紫外線較高TEST，外出可選擇有遮蔭地方，避免長時間暴曬。';
+  }
+
+  // 高濕度
+  if (
+    typeof context.humidityPercent === 'number' &&
+    context.humidityPercent >= 85
+  ) {
+
+    return '今日天氣較潮濕，行路時記得慢慢走，小心地面濕滑。';
+  }
+
+  // 一般情況
+  if (
+    typeof context.temperatureC === 'number'
+  ) {
+
+    return `今日${context.weatherDistrict}約${context.temperatureC}°C，外出活動可按自己的步伐適量進行。`;
+  }
+
+  return '今日記得按自己的步伐生活，適量活動，保持心情輕鬆。';
+}
+
+
+// ========================================================
+// 6. 清理 Gemini 回覆
+// ========================================================
+
+function cleanGeminiCareMessage(text) {
+
+  return String(text || '')
+    .replace(/```[\s\S]*?```/g, '')
+    .replace(/^[「"]|[」"]$/g, '')
+    .replace(/\*\*/g, '')
+    .replace(/\n+/g, ' ')
+    .replace(/\s{2,}/g, ' ')
+    .trim();
+}
+
+
+// ========================================================
+// 7. 真正呼叫 Gemini API
+// ========================================================
+
+function geminiDebug(message) {
+
+  const debugBox =
+    document.getElementById('gemini-debug-panel');
+
+  if (!debugBox) return;
+
+  const time =
+    new Date().toLocaleTimeString('zh-HK');
+
+  debugBox.textContent +=
+    `\n[${time}] ${message}`;
+}
+
+
+
+async function generateCareMessageWithGemini(context) {
+
+  geminiDebug('========== Gemini 開始 ==========');
+
+  const apiKey = getGeminiApiKey();
+
+
+  geminiDebug(
+    `API Key: ${apiKey ? '已設定' : '沒有 API Key'}`
+  );
+
+  if (!apiKey) {
+    throw new Error('Gemini API Key 未設定。');
+  }
+
+  geminiDebug(
+    `Model: ${GEMINI_MODEL}`
+  );
+
+  geminiDebug(
+    `Location: ${context.location}`
+  );
+
+  geminiDebug(
+    `Weather: ${context.weatherDescription}`
+  );
+
+  geminiDebug(
+    `Temperature: ${context.temperatureC}°C`
+  );
+
+  geminiDebug(
+    `Humidity: ${context.humidityPercent}%`
+  );
+
+  geminiDebug(
+    '正在發送 Gemini API request...'
+  );
+  
+  
+  
+  
+  
+  
+
+  if (!apiKey) {
+
+    throw new Error('Gemini API Key 未設定。');
+  }
+
+  // 用隨機 seed 讓每次重新生成時，
+  // 即使天氣資料沒有改變，措辭也可以不同。
+
+  const variationSeed =
+    `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+
+
+  // ======================================================
+  // Gemini Prompt
+  // ======================================================
+
+                  const prompt = `
+                你是香港長者服務中心的「每日溫馨提示」助手。
+
+                請根據以下即時資料，為長者寫一段簡短、自然、實用的每日生活提醒。
+
+                【今日資料】
+
+                日期：
+                ${context.date}
+
+                星期：
+                ${context.weekday}
+
+                時段：
+                ${context.timeOfDay}
+
+                地點：
+                ${context.location}
+
+                天氣分區：
+                ${context.weatherDistrict}
+
+                天氣：
+                ${context.weatherDescription}
+
+                氣溫：
+                ${context.temperatureC ?? '未知'}°C
+
+                濕度：
+                ${context.humidityPercent ?? '未知'}%
+
+                濕度描述：
+                ${context.humidityDescription || '未知'}
+
+                紫外線：
+                ${context.uvIndex ?? '未知'}
+
+                紫外線描述：
+                ${context.uvDescription || '未知'}
+
+                天氣警告：
+                ${context.weatherWarnings.length > 0
+                  ? context.weatherWarnings.join('、')
+                  : '目前沒有天氣警告'}
+
+                季節：
+                ${context.season || '未知'}
+
+                農曆：
+                ${context.lunar || '未知'}
+
+                節氣：
+                ${context.solarTerm || '未知'}
+
+                將到節日：
+                ${context.upcomingFestival || '沒有特別節日'}
+
+                節日倒數：
+                ${context.festivalCountdown || ''}
+
+
+                  【寫作要求】
+
+                  1. 只輸出每日溫馨提示正文。
+                  2. 不要輸出標題。
+                  3. 不要解釋你如何生成。
+                  4. 不要列點。
+                  5. 最多 2 句。
+                  6. 約 30–50 個繁體中文字。
+                  7. 要非常簡潔。
+                  8. 只選擇今天最值得提醒的 1–2 個重點。
+                  9. 優先考慮：
+                    - 天氣警告
+                    - 酷熱
+                    - 寒冷
+                    - 大雨
+                    - 雷暴
+                    - 高濕度
+                    - 紫外線
+                    - 外出安全
+                  10. 如果有特別天氣警告必須提示，例如颱風警告、暴雨警告、酷熱天氣警告等。
+                      如果沒有特別天氣風險，可以提供簡單的日常生活提醒。
+                  11. 使用香港長者容易理解的繁體中文。
+                  12. 語氣親切、自然、尊重。
+                  13. 不要過度說教。
+                  14. 不要虛構不存在的天氣警告。
+                  15. 不要虛構醫療診斷、病情或個人資料。
+                  16. 不要每次都使用相同句式。
+                  17. 可以自然使用「今日」、「外出」、「行路」、「飲水」等生活用語。
+                  18. 不需要把所有天氣資料全部重複一次。
+
+
+                  【變化要求】
+
+                  這次生成可以使用不同的句式和措辭，
+                  但資訊必須與今日的實際情況相關。
+
+                  變化參考：
+                  ${variationSeed}
+
+                  只返回最終給長者看的提示文字。
+                  `.trim();
+
+
+  // ======================================================
+  // Gemini REST API request
+  // ======================================================
+
+  const response = await fetch(GEMINI_API_URL, {
+
+    method: 'POST',
+
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${apiKey}`
+    },
+
+body: JSON.stringify({
+  model: GEMINI_MODEL,
+  messages: [
+    {
+      role: 'user',
+      content: prompt
     }
+  ],
+  temperature: 0.65,
+  top_p: 0.9,
+  max_tokens: 150,
+  reasoning: {
+    enabled: false
+  },
+  stream: false
+})
+
+    });
+
+geminiDebug(
+  `HTTP Status: ${response.status}`
+);
+
+geminiDebug(
+  `HTTP OK: ${response.ok}`
+);
+
+
+  // ======================================================
+  // API Error handling
+  // ======================================================
+
+  if (!response.ok) {
+
+    const errorText =
+      await response.text().catch(() => '');
+
+    throw new Error(
+      `Gemini API ${response.status}: ${errorText.slice(0, 500)}`
+    );
+  }
+
+
+  // ======================================================
+  // 讀取 Gemini response
+  // ======================================================
+
+  const data =
+    await response.json();
+
+
+    geminiDebug(
+  'Gemini JSON response received.'
+);
+
+geminiDebug(
+  `Response finish_reason: ${data?.choices?.[0]?.finish_reason || 'unknown'}`
+);
+
+geminiDebug(
+  `Response content: ${data?.choices?.[0]?.message?.content ? '有文字' : '空白'}`
+);
+
+const generatedText =
+  data?.choices?.[0]?.message?.content?.trim();
+
+
+  const cleaned =
+    cleanGeminiCareMessage(generatedText);
+
+    geminiDebug(
+  `Generated message: ${cleaned}`
+);
+
+  if (!cleaned) {
+
+    throw new Error(
+      'Gemini 沒有返回有效的文字。'
+    );
+  }
+
+
+  return cleaned;
+}
+
+
+// ========================================================
+// 8. 生成中的 UI
+// ========================================================
+
+function setCareGeneratingState(isGenerating) {
+
+  const el =
+    document.getElementById('care-message');
+
+  if (!el) return;
+
+
+  if (isGenerating) {
+
+    el.textContent =
+      '正在為你準備今日的溫馨提示…';
+
+    el.style.opacity = '0.7';
+
+  } else {
+
+    el.style.opacity = '1';
+  }
+}
+
+
+// ========================================================
+// 9. 防止短時間內重複呼叫 Gemini
+// ========================================================
+
+let careGenerationTimer = null;
+
+let lastCareContextSignature = '';
+
+let careGenerationRequestId = 0;
+
+let isCareGenerating = false;
+
+
+// ========================================================
+// 10. Schedule Gemini generation
+// ========================================================
+
+function scheduleCareMessageGeneration({
+  force = false,
+  delay = 700
+} = {}) {
+
+  clearTimeout(careGenerationTimer);
+
+
+  careGenerationTimer = setTimeout(async () => {
+
+    const context =
+      getCareContext();
+
+
+    const signature =
+      getCareContextSignature(context);
+
+
+    // 如果不是強制重新生成，
+    // 而且資料完全沒有改變，就不用重新 call API。
+
+    if (
+      !force &&
+      signature === lastCareContextSignature &&
+      !isCareGenerating
+    ) {
+
+      return;
+    }
+
+
+    lastCareContextSignature =
+      signature;
+
+
+    careGenerationRequestId++;
+
+    const requestId =
+      careGenerationRequestId;
+
+
+    const messageElement =
+      document.getElementById('care-message');
+
+
+    // 沒有 API key
+if (!getGeminiApiKey()) {
+
+  const fallbackMessage =
+    buildFallbackCareMessage(context);
+
+  messageElement.textContent =
+    fallbackMessage;
+
+  const todayKey =
+    new Date().toISOString().slice(0, 10);
+
+  const cacheKey =
+    'ro_care_message_' + todayKey;
+
+  localStorage.setItem(
+    cacheKey,
+    fallbackMessage
+  );
+
+  return;
+}
+
+
+    isCareGenerating = true;
+
+    setCareGeneratingState(true);
+
+
+    try {
+
+      const aiMessage =
+        await generateCareMessageWithGemini(context);
+
+
+      // 防止舊 API request 回來後，
+      // 覆蓋較新的結果。
+
+      if (
+        requestId !== careGenerationRequestId
+      ) {
+
+        return;
+      }
+
+
+        const finalMessage =
+          aiMessage ||
+          buildFallbackCareMessage(context);
+
+        messageElement.textContent = finalMessage;
+
+        // 保存今天的 Gemini 結果
+        const todayKey = new Date().toISOString().slice(0, 10);
+        const cacheKey = 'ro_care_message_' + todayKey;
+
+        localStorage.setItem(cacheKey, finalMessage);
+
+
+    } catch (error) {
+
+      console.warn(
+        ' AI 溫馨提示生成失敗，使用後備提示:',
+        error
+      );
+
+
+      if (
+        requestId !== careGenerationRequestId
+      ) {
+
+        return;
+      }
+
+
+      messageElement.textContent =
+        buildFallbackCareMessage(context);
+
+
+    } finally {
+
+      if (
+        requestId === careGenerationRequestId
+      ) {
+
+        isCareGenerating = false;
+
+        setCareGeneratingState(false);
+      }
+
+    }
+
+  }, delay);
+}
+
+
+// ========================================================
+// 11. 保留原本函數名稱
+// ========================================================
+//
+function generateCareMessage(force = false) {
+
+  const todayKey = new Date().toISOString().slice(0, 10);
+  const cacheKey = 'ro_care_message_' + todayKey;
+
+  // 如果今天已經生成過，而且不是強制重新生成
+  if (!force) {
+    const cachedMessage = localStorage.getItem(cacheKey);
+
+    if (cachedMessage) {
+      document.getElementById('care-message').textContent =
+        cachedMessage;
+      return;
+    }
+  }
+
+  // 今日第一次才真正呼叫 Gemini
+  scheduleCareMessageGeneration({
+    force: force,
+    delay: 700
+  });
+}
+
+
+
+
+
+    //}
 
     function speakROAndWeather() {
       if (!('speechSynthesis' in window)) {
@@ -1704,23 +2236,23 @@
       }
     }
 
-    function refreshData() {
-      const icon = document.getElementById('refresh-icon');
-      icon.style.transition = 'transform 0.5s';
-      icon.style.transform = 'rotate(360deg)';
-      
-      updateClockAndDate();
-      fetchHKOData();
 
-      setTimeout(() => {
-        icon.style.transform = 'rotate(0deg)';
-      }, 500);
-    }
+function refreshData() {
+  const icon = document.getElementById('refresh-icon');
 
-    /* =========================================================
-       2. 現實導向練習區 (Reality Orientation Practice)
-       ========================================================= */
+  icon.style.transition = 'transform 0.5s';
+  icon.style.transform = 'rotate(360deg)';
 
+  fetchHKOData();
+
+  setTimeout(() => {
+    icon.style.transform = 'rotate(0deg)';
+  }, 500);
+}
+
+    /* ========================================================
+       二、現實導向練習版 (Practice Game Logic)
+       ======================================================== */
     const WEEKDAYS_ZH = ["星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六"];
     const SEASONS_DATA = [
       { name: "春天", icon: "🌸", color: "bg-pink-100 border-pink-400 text-pink-900" },
@@ -1730,19 +2262,19 @@
     ];
 
     function getSeasonIndexByMonth(month) {
-      if (month >= 3 && month <= 5) return 0;
-      if (month >= 6 && month <= 8) return 1;
-      if (month >= 9 && month <= 11) return 2;
-      return 3;
+      if (month >= 3 && month <= 5) return 0; // 春天
+      if (month >= 6 && month <= 8) return 1; // 夏天
+      if (month >= 9 && month <= 11) return 2; // 秋天
+      return 3; // 冬天
     }
 
     let practiceState = {
-      currentStep: 1,
+      currentStep: 1, // 1: Month, 2: Day, 3: Weekday, 4: Season
       target: {
-        month: 1,
-        day: 1,
-        weekday: 0,
-        season: 0
+        month: 9,      // 1-12
+        day: 17,       // 1-31
+        weekday: 4,    // 0-6
+        season: 2      // 0-3
       },
       currentStepOptions: [],
       selectedSlot: 'month',
@@ -1761,9 +2293,6 @@
     function initPracticeAudioContext() {
       if (!practiceAudioCtx) {
         practiceAudioCtx = new (window.AudioContext || window.webkitAudioContext)();
-      }
-      if (practiceAudioCtx.state === 'suspended') {
-        practiceAudioCtx.resume();
       }
     }
 
@@ -1859,6 +2388,7 @@
     function goToStep(stepNum) {
       practiceState.currentStep = stepNum;
 
+      // Update Step Indicators
       for (let i = 1; i <= 4; i++) {
         const tab = document.getElementById(`step-tab-${i}`);
         if (tab) {
@@ -1870,6 +2400,7 @@
         }
       }
 
+      // Hide all slot views
       document.getElementById('view-step-1').classList.add('hidden');
       document.getElementById('view-step-2').classList.add('hidden');
       document.getElementById('view-step-3').classList.add('hidden');
@@ -1892,10 +2423,10 @@
         speakPracticeText("第二題：現在是幾日？");
       } else if (stepNum === 3) {
         badge.textContent = "第三題";
-        qText.textContent = "今天是星期幾？";
+        qText.textContent = "現在是星期幾？";
         document.getElementById('view-step-3').classList.remove('hidden');
         selectSlot('weekday');
-        speakPracticeText("第三題：今天是星期幾？");
+        speakPracticeText("第三題：現在是星期幾？");
       } else if (stepNum === 4) {
         badge.textContent = "第四題";
         qText.textContent = "現在是什麼季節？";
@@ -1904,648 +2435,357 @@
         speakPracticeText("第四題：現在是什麼季節？");
       }
 
-      renderDeckOptions();
-    }
-
-    function selectSlot(slotType) {
-      practiceState.selectedSlot = slotType;
-      document.querySelectorAll('[id^="slot-"]').forEach(el => {
-        el.classList.remove('slot-highlight');
-      });
-      const targetSlot = document.getElementById(`slot-${slotType}`);
-      if (targetSlot) targetSlot.classList.add('slot-highlight');
-    }
-
-    function generateThreeOptions(correctVal, min, max, suffix = '') {
-      let options = [correctVal];
-      while (options.length < 3) {
-        let rand = Math.floor(Math.random() * (max - min + 1)) + min;
-        if (!options.includes(rand)) {
-          options.push(rand);
-        }
-      }
-      options.sort(() => Math.random() - 0.5);
-      return options.map(v => ({ value: v, label: `${v}${suffix}` }));
-    }
-
-    function renderDeckOptions() {
-      const container = document.getElementById('deck-options');
-      if (!container) return;
-      container.innerHTML = '';
-
-      let options = [];
-      const step = practiceState.currentStep;
-
-      if (step === 1) {
-        options = generateThreeOptions(practiceState.target.month, 1, 12, '月');
-      } else if (step === 2) {
-        options = generateThreeOptions(practiceState.target.day, 1, 31, '日');
-      } else if (step === 3) {
-        let correctW = practiceState.target.weekday;
-        let pool = [0, 1, 2, 3, 4, 5, 6].filter(w => w !== correctW);
-        pool.sort(() => Math.random() - 0.5);
-        let selected = [correctW, pool[0], pool[1]].sort(() => Math.random() - 0.5);
-        options = selected.map(w => ({ value: w, label: WEEKDAYS_ZH[w] }));
-      } else if (step === 4) {
-        let correctS = practiceState.target.season;
-        let pool = [0, 1, 2, 3].filter(s => s !== correctS);
-        pool.sort(() => Math.random() - 0.5);
-        let selected = [correctS, pool[0], pool[1]].sort(() => Math.random() - 0.5);
-        options = selected.map(s => ({ value: s, label: `${SEASONS_DATA[s].icon} ${SEASONS_DATA[s].name}` }));
-      }
-
-      practiceState.currentStepOptions = options;
-
-      options.forEach(opt => {
-        const card = document.createElement('div');
-        card.className = "bg-amber-100 border-4 border-amber-300 hover:border-amber-500 rounded-2xl p-4 flex items-center justify-center text-center cursor-pointer card-shadow transition active:scale-95 min-h-[90px]";
-        card.setAttribute('draggable', 'true');
-        card.onclick = () => selectCardOption(opt);
-        card.ondragstart = (e) => handleDragStart(e, JSON.stringify(opt));
-
-        card.innerHTML = `<span class="text-2xl sm:text-3xl font-black text-amber-950">${opt.label}</span>`;
-        container.appendChild(card);
-      });
-    }
-
-    function selectCardOption(opt) {
-      playPopSound();
-      const step = practiceState.currentStep;
-      let slotType = step === 1 ? 'month' : step === 2 ? 'day' : step === 3 ? 'weekday' : 'season';
-      
-      practiceState.userAnswers[slotType] = opt;
-      
-      const contentEl = document.getElementById(`slot-${slotType}-content`);
-      if (contentEl) {
-        contentEl.innerHTML = `<span class="text-2xl sm:text-3xl font-black text-amber-200">${opt.label}</span>`;
-      }
-    }
-
-    function allowDrop(ev) { ev.preventDefault(); }
-    function handleDragStart(ev, dataStr) { ev.dataTransfer.setData("text/plain", dataStr); }
-    function handleDrop(ev, slotType) {
-      ev.preventDefault();
-      const dataStr = ev.dataTransfer.getData("text/plain");
-      if (dataStr) {
-        try {
-          const opt = JSON.parse(dataStr);
-          practiceState.currentStep = slotType === 'month' ? 1 : slotType === 'day' ? 2 : slotType === 'weekday' ? 3 : 4;
-          selectCardOption(opt);
-        } catch(e) {}
-      }
-    }
-
-    function resetCurrentStep() {
-      const step = practiceState.currentStep;
-      let slotType = step === 1 ? 'month' : step === 2 ? 'day' : step === 3 ? 'weekday' : 'season';
-      practiceState.userAnswers[slotType] = null;
-      const contentEl = document.getElementById(`slot-${slotType}-content`);
-      if (contentEl) contentEl.innerHTML = '';
-      speakPracticeText("已重置答案");
+      // Generate & Render 3 options for current step
+      generateThreeOptions(stepNum);
+      renderCurrentDeck();
     }
 
     function readCurrentQuestionSpeech() {
-      const step = practiceState.currentStep;
-      if (step === 1) speakPracticeText("第一題：現在是幾月？");
-      else if (step === 2) speakPracticeText("第二題：現在是幾日？");
-      else if (step === 3) speakPracticeText("第三題：今天是星期幾？");
-      else if (step === 4) speakPracticeText("第四題：現在是什麼季節？");
+      const qText = document.getElementById('question-text').textContent.trim();
+      speakPracticeText(qText);
+    }
+
+    function generateThreeOptions(stepNum) {
+      let options = [];
+      if (stepNum === 1) {
+        const targetVal = practiceState.target.month;
+        let d1 = (targetVal + 3) % 12 || 12;
+        let d2 = (targetVal + 7) % 12 || 12;
+        if (d1 === targetVal) d1 = (targetVal % 12) + 1;
+        if (d2 === targetVal || d2 === d1) d2 = ((d1 + 2) % 12) || 12;
+        options = [targetVal, d1, d2];
+      } else if (stepNum === 2) {
+        const targetVal = practiceState.target.day;
+        let d1 = targetVal - 4 > 0 ? targetVal - 4 : targetVal + 5;
+        let d2 = targetVal + 4 <= 31 ? targetVal + 4 : targetVal - 5;
+        if (d1 === targetVal) d1 = targetVal === 1 ? 2 : 1;
+        if (d2 === targetVal || d2 === d1) d2 = targetVal === 31 ? 30 : 28;
+        options = [targetVal, d1, d2];
+      } else if (stepNum === 3) {
+        const targetVal = practiceState.target.weekday; // 0-6
+        let d1 = (targetVal + 2) % 7;
+        let d2 = (targetVal + 4) % 7;
+        options = [targetVal, d1, d2];
+      } else if (stepNum === 4) {
+        const targetVal = practiceState.target.season; // 0-3
+        let d1 = (targetVal + 1) % 4;
+        let d2 = (targetVal + 2) % 4;
+        options = [targetVal, d1, d2];
+      }
+
+      options.sort(() => Math.random() - 0.5);
+      practiceState.currentStepOptions = options;
+    }
+
+    function renderCurrentDeck() {
+      const deckContainer = document.getElementById('deck-options');
+      deckContainer.innerHTML = '';
+
+      practiceState.currentStepOptions.forEach(val => {
+        const card = document.createElement('div');
+        card.className = `card-shadow bg-amber-50 border-4 border-amber-300 hover:border-blue-500 rounded-3xl p-4 sm:p-6 flex flex-col items-center justify-center cursor-pointer transition transform active:scale-95 select-none min-h-[110px]`;
+        card.draggable = true;
+
+        if (practiceState.currentStep === 1) {
+          card.setAttribute('ondragstart', `handleDragStart(event, 'month', ${val})`);
+          card.onclick = () => onCardPicked('month', val);
+          card.innerHTML = `
+            <span class="text-4xl sm:text-5xl font-black text-blue-900 tracking-tight">${val}</span>
+            <span class="text-base sm:text-lg font-bold text-amber-800">月</span>
+          `;
+        } else if (practiceState.currentStep === 2) {
+          card.setAttribute('ondragstart', `handleDragStart(event, 'day', ${val})`);
+          card.onclick = () => onCardPicked('day', val);
+          card.innerHTML = `
+            <span class="text-4xl sm:text-5xl font-black text-emerald-900 tracking-tight">${val}</span>
+            <span class="text-base sm:text-lg font-bold text-emerald-800">日</span>
+          `;
+        } else if (practiceState.currentStep === 3) {
+          card.setAttribute('ondragstart', `handleDragStart(event, 'weekday', ${val})`);
+          card.onclick = () => onCardPicked('weekday', val);
+          card.innerHTML = `
+            <span class="text-2xl sm:text-3xl font-black text-purple-900 tracking-tight">${WEEKDAYS_ZH[val]}</span>
+          `;
+        } else if (practiceState.currentStep === 4) {
+          const sData = SEASONS_DATA[val];
+          card.setAttribute('ondragstart', `handleDragStart(event, 'season', ${val})`);
+          card.onclick = () => onCardPicked('season', val);
+          card.innerHTML = `
+            <span class="text-4xl sm:text-5xl mb-1">${sData.icon}</span>
+            <span class="text-2xl sm:text-3xl font-black text-amber-950 tracking-tight">${sData.name}</span>
+          `;
+        }
+
+        deckContainer.appendChild(card);
+      });
+    }
+
+    function selectSlot(slotName) {
+      practiceState.selectedSlot = slotName;
+      ['month', 'day', 'weekday', 'season'].forEach(s => {
+        const el = document.getElementById(`slot-${s}`);
+        if (el) {
+          if (s === slotName) el.classList.add('slot-highlight');
+          else el.classList.remove('slot-highlight');
+        }
+      });
+      playPopSound();
+    }
+
+    function onCardPicked(type, value) {
+      playPopSound();
+
+      if (type === 'month') {
+        practiceState.userAnswers.month = value;
+        renderSlotContent('month', `${value}`, '月', 'bg-blue-600 text-white');
+        speakPracticeText(`${value}月`);
+      } else if (type === 'day') {
+        practiceState.userAnswers.day = value;
+        renderSlotContent('day', `${value}`, '日', 'bg-emerald-600 text-white');
+        speakPracticeText(`${value}日`);
+      } else if (type === 'weekday') {
+        practiceState.userAnswers.weekday = value;
+        renderSlotContent('weekday', WEEKDAYS_ZH[value], '', 'bg-purple-700 text-white');
+        speakPracticeText(`${WEEKDAYS_ZH[value]}`);
+      } else if (type === 'season') {
+        practiceState.userAnswers.season = value;
+        const sData = SEASONS_DATA[value];
+        renderSlotContent('season', `${sData.icon} ${sData.name}`, '', 'bg-orange-600 text-white');
+        speakPracticeText(`${sData.name}`);
+      }
+    }
+
+    function renderSlotContent(slotKey, mainText, subText = '', colorClass = '') {
+      const container = document.getElementById(`slot-${slotKey}-content`);
+      if (!container) return;
+      container.innerHTML = `
+        <div class="w-full h-full p-1 flex flex-col items-center justify-center">
+          <div class="w-full h-full ${colorClass} rounded-xl flex flex-col items-center justify-center shadow-md relative group">
+            <span class="text-2xl sm:text-3xl font-black">${mainText}</span>
+            ${subText ? `<span class="text-xs font-bold">${subText}</span>` : ''}
+            <button onclick="clearSlot(event, '${slotKey}')" title="移除" class="absolute -top-2 -right-2 bg-red-600 text-white text-xs w-6 h-6 rounded-full flex items-center justify-center font-bold shadow hover:bg-red-700">✕</button>
+          </div>
+        </div>
+      `;
+    }
+
+    function clearSlot(e, slotKey) {
+      if (e) e.stopPropagation();
+      if (slotKey === 'month') practiceState.userAnswers.month = null;
+      if (slotKey === 'day') practiceState.userAnswers.day = null;
+      if (slotKey === 'weekday') practiceState.userAnswers.weekday = null;
+      if (slotKey === 'season') practiceState.userAnswers.season = null;
+
+      const container = document.getElementById(`slot-${slotKey}-content`);
+      if (container) container.innerHTML = '';
+      selectSlot(slotKey);
+      playPopSound();
+    }
+
+    function resetCurrentStep() {
+      if (practiceState.currentStep === 1) clearSlot(null, 'month');
+      else if (practiceState.currentStep === 2) clearSlot(null, 'day');
+      else if (practiceState.currentStep === 3) clearSlot(null, 'weekday');
+      else if (practiceState.currentStep === 4) clearSlot(null, 'season');
+    }
+
+    function handleDragStart(e, type, value) {
+      e.dataTransfer.setData('text/plain', JSON.stringify({ type, value }));
+      playPopSound();
+    }
+
+    function allowDrop(e) {
+      e.preventDefault();
+    }
+
+    function handleDrop(e, targetSlot) {
+      e.preventDefault();
+      try {
+        const data = JSON.parse(e.dataTransfer.getData('text/plain'));
+        if (!data) return;
+        if (targetSlot === 'month' && data.type === 'month') {
+          onCardPicked('month', data.value);
+        } else if (targetSlot === 'day' && data.type === 'day') {
+          onCardPicked('day', data.value);
+        } else if (targetSlot === 'weekday' && data.type === 'weekday') {
+          onCardPicked('weekday', data.value);
+        } else if (targetSlot === 'season' && data.type === 'season') {
+          onCardPicked('season', data.value);
+        }
+      } catch (err) {}
     }
 
     function checkCurrentStepAnswer() {
-      const step = practiceState.currentStep;
-      let slotType = step === 1 ? 'month' : step === 2 ? 'day' : step === 3 ? 'weekday' : 'season';
-      let userAns = practiceState.userAnswers[slotType];
+      if (practiceState.currentStep === 1) {
+        if (practiceState.userAnswers.month === null) {
+          speakPracticeText("請先選擇月份卡");
+          return;
+        }
 
-      if (!userAns) {
-        playErrorSound();
-        speakPracticeText("請先點選卡片填入答案喔！");
-        return;
-      }
+        if (practiceState.userAnswers.month === practiceState.target.month) {
+          playSuccessFanfare();
+          showModal(true, `答對了！現在是 ${practiceState.target.month} 月`, "🌟 自動進入第二題");
+          speakPracticeText(`太棒了！答對了！現在是 ${practiceState.target.month} 月。我們接著做第二題！`);
+        } else {
+          playErrorSound();
+          speakPracticeText(`再試一次喔！您選的是 ${practiceState.userAnswers.month}月`);
+        }
 
-      let isCorrect = false;
-      let targetText = "";
+      } else if (practiceState.currentStep === 2) {
+        if (practiceState.userAnswers.day === null) {
+          speakPracticeText("請先選擇日期卡");
+          return;
+        }
 
-      if (step === 1) {
-        isCorrect = (userAns.value === practiceState.target.month);
-        targetText = `${practiceState.target.month}月`;
-      } else if (step === 2) {
-        isCorrect = (userAns.value === practiceState.target.day);
-        targetText = `${practiceState.target.day}日`;
-      } else if (step === 3) {
-        isCorrect = (userAns.value === practiceState.target.weekday);
-        targetText = WEEKDAYS_ZH[practiceState.target.weekday];
-      } else if (step === 4) {
-        isCorrect = (userAns.value === practiceState.target.season);
-        targetText = SEASONS_DATA[practiceState.target.season].name;
-      }
+        if (practiceState.userAnswers.day === practiceState.target.day) {
+          playSuccessFanfare();
+          showModal(true, `答對了！現在是 ${practiceState.target.day} 日`, "🌟 自動進入第三題");
+          speakPracticeText(`真厲害！答對了！現在是 ${practiceState.target.day} 日。我們接著做第三題！`);
+        } else {
+          playErrorSound();
+          speakPracticeText(`再試一次喔！您選的是 ${practiceState.userAnswers.day}日`);
+        }
 
-      if (isCorrect) {
-        playSuccessFanfare();
-        triggerConfetti();
-        showModal(true, targetText);
-      } else {
-        playErrorSound();
-        showModal(false, targetText);
+      } else if (practiceState.currentStep === 3) {
+        if (practiceState.userAnswers.weekday === null) {
+          speakPracticeText("請先選擇星期卡");
+          return;
+        }
+
+        if (practiceState.userAnswers.weekday === practiceState.target.weekday) {
+          playSuccessFanfare();
+          showModal(true, `答對了！今天是 ${WEEKDAYS_ZH[practiceState.target.weekday]}`, "🌟 自動進入第四題");
+          speakPracticeText(`答對了！今天是 ${WEEKDAYS_ZH[practiceState.target.weekday]}。我們接著做第四題！`);
+        } else {
+          playErrorSound();
+          speakPracticeText(`再試一次喔！您選的是 ${WEEKDAYS_ZH[practiceState.userAnswers.weekday]}`);
+        }
+
+      } else if (practiceState.currentStep === 4) {
+        if (practiceState.userAnswers.season === null) {
+          speakPracticeText("請先選擇季節卡");
+          return;
+        }
+
+        if (practiceState.userAnswers.season === practiceState.target.season) {
+          playSuccessFanfare();
+          triggerConfetti();
+
+          const targetSeasonObj = SEASONS_DATA[practiceState.target.season];
+          const fullDateStr = `${practiceState.target.month}月${practiceState.target.day}日 ${WEEKDAYS_ZH[practiceState.target.weekday]} (${targetSeasonObj.name})`;
+          showModal(true, `🎉 太厲害了！全對了！<br>今天是 ${fullDateStr}`, "🌟 完成練習 / 再玩一次");
+          speakPracticeText(`恭喜您！四題全部答對！今天是 ${fullDateStr}！`);
+        } else {
+          playErrorSound();
+          const pickedSeasonName = SEASONS_DATA[practiceState.userAnswers.season].name;
+          speakPracticeText(`再試一次喔！您選的是 ${pickedSeasonName}`);
+        }
       }
     }
 
-    function showModal(isCorrect, targetText) {
+    function showModal(isSuccess, resultText, btnLabel) {
       const modal = document.getElementById('result-modal');
-      const content = document.getElementById('modal-content');
-      const icon = document.getElementById('modal-icon');
-      const title = document.getElementById('modal-title');
-      const body = document.getElementById('modal-body');
+      const modalContent = document.getElementById('modal-content');
+      const resultStr = document.getElementById('modal-result-str');
+      const nextBtn = document.getElementById('modal-next-btn');
 
-      if (isCorrect) {
-        icon.textContent = "🎉";
-        title.textContent = "太棒了！答對了！";
-        body.innerHTML = `正確答案就是：<span id="modal-result-str" class="text-emerald-700 underline font-black">${targetText}</span>`;
-        speakPracticeText(`恭喜答對！答案就是 ${targetText}`);
-      } else {
-        icon.textContent = "💪";
-        title.textContent = "再試一次喔！";
-        body.innerHTML = `正確答案應該是：<span id="modal-result-str" class="text-amber-700 underline font-black">${targetText}</span>`;
-        speakPracticeText(`加油，正確答案是 ${targetText}，再試看看！`);
-      }
+      resultStr.innerHTML = resultText;
+      nextBtn.textContent = btnLabel;
 
       modal.classList.remove('hidden');
       setTimeout(() => {
-        content.classList.remove('scale-95', 'opacity-0');
-        content.classList.add('scale-100', 'opacity-100');
-      }, 10);
+        modalContent.classList.remove('scale-95', 'opacity-0');
+        modalContent.classList.add('scale-100', 'opacity-100');
+      }, 20);
     }
 
     function closeModalAndContinue() {
       const modal = document.getElementById('result-modal');
-      const content = document.getElementById('modal-content');
-      content.classList.remove('scale-100', 'opacity-100');
-      content.classList.add('scale-95', 'opacity-0');
+      const modalContent = document.getElementById('modal-content');
+
+      modalContent.classList.remove('scale-100', 'opacity-100');
+      modalContent.classList.add('scale-95', 'opacity-0');
 
       setTimeout(() => {
         modal.classList.add('hidden');
-        if (practiceState.currentStep < 4) {
-          goToStep(practiceState.currentStep + 1);
-        } else {
-          speakPracticeText("太厲害了！你完成所有練習關卡囉！");
+        if (practiceState.currentStep === 1) {
+          goToStep(2);
+        } else if (practiceState.currentStep === 2) {
+          goToStep(3);
+        } else if (practiceState.currentStep === 3) {
+          goToStep(4);
+        } else if (practiceState.currentStep === 4) {
+          initTodayTarget();
+          practiceState.userAnswers = { month: null, day: null, weekday: null, season: null };
+          ['month', 'day', 'weekday', 'season'].forEach(s => clearSlot(null, s));
+          goToStep(1);
         }
       }, 200);
     }
 
     function triggerConfetti() {
       const canvas = document.getElementById('confetti-canvas');
-      if (!canvas) return;
       const ctx = canvas.getContext('2d');
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
 
-      let particles = [];
-      const colors = ['#f59e0b', '#10b981', '#3b82f6', '#ec4899', '#8b5cf6'];
+      const particles = [];
+      const colors = ['#FBBF24', '#3B82F6', '#10B981', '#EC4899', '#8B5CF6'];
 
-      for (let i = 0; i < 60; i++) {
+      for (let i = 0; i < 90; i++) {
         particles.push({
-          x: Math.random() * canvas.width,
-          y: Math.random() * canvas.height * 0.5,
-          r: Math.random() * 8 + 4,
-          vx: (Math.random() - 0.5) * 6,
-          vy: Math.random() * 4 + 2,
-          color: colors[Math.floor(Math.random() * colors.length)]
+          x: canvas.width / 2,
+          y: canvas.height / 2,
+          vx: (Math.random() - 0.5) * 14,
+          vy: (Math.random() - 0.7) * 16,
+          size: Math.random() * 10 + 6,
+          color: colors[Math.floor(Math.random() * colors.length)],
+          gravity: 0.2,
+          alpha: 1
         });
       }
 
-      let frame = 0;
-      function render() {
+      function animate() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
+        let alive = false;
+
         particles.forEach(p => {
-          ctx.beginPath();
-          ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-          ctx.fillStyle = p.color;
-          ctx.fill();
           p.x += p.vx;
           p.y += p.vy;
+          p.vy += p.gravity;
+          p.alpha -= 0.015;
+
+          if (p.alpha > 0) {
+            alive = true;
+            ctx.globalAlpha = p.alpha;
+            ctx.fillStyle = p.color;
+            ctx.fillRect(p.x, p.y, p.size, p.size);
+          }
         });
 
-        frame++;
-        if (frame < 60) {
-          requestAnimationFrame(render);
+        if (alive) {
+          requestAnimationFrame(animate);
         } else {
           ctx.clearRect(0, 0, canvas.width, canvas.height);
         }
       }
-      render();
+
+      animate();
     }
 
-    /* =========================================================
-       3. 打地鼠專注力遊戲 (Whack-a-Mole Game)
-       ========================================================= */
-
-    let moleState = {
-      score: 0,
-      timeLeft: 30,
-      gameTimer: null,
-      countdownTimer: null,
-      isPlaying: false,
-      activeHole: -1,
-      currentMode: 'classic',
-      currentSpeed: 'slow',
-      soundEnabled: true,
-      musicEnabled: true,
-      voiceEnabled: true,
-      currentRealityTarget: null
-    };
-
-    const MOLE_THEMES = {
-      classic: {
-        name: '經典打地鼠',
-        items: ['🐹', '🐭', '🐰', '🦔']
-      },
-      fruit: {
-        name: '開心水果派對',
-        items: ['🍎', '🍌', '🍊', '🍇', '🍓', '🍉']
-      },
-      reality: {
-        name: '現實導向認知',
-        dataset: [
-          { icon: '☀️', label: '晴天大太陽' },
-          { icon: '🌧️', label: '落雨天' },
-          { icon: '🌸', label: '春天花花' },
-          { icon: '🍁', label: '秋天紅葉' },
-          { icon: '❄️', label: '冬天雪花' },
-          { icon: '🌙', label: '夜晚月亮' }
-        ]
-      }
-    };
-
-    const MOLE_PRAISES = [
-      "好厲害！好有專注力！",
-      "打得好！手快眼快！",
-      "真係精靈！繼續加油！",
-      "好嘢！眼手協調一級棒！",
-      "好有精神！真係好叻！"
-    ];
-
-    let moleAudioCtx = null;
-    let moleBgmInterval = null;
-    let moleBgmStep = 0;
-    const moleBgmNotes = [
-      261.63, 329.63, 392.00, 523.25, 392.00, 329.63,
-      293.66, 349.23, 440.00, 523.25, 440.00, 349.23,
-      261.63, 329.63, 392.00, 440.00, 523.25, 392.00,
-      349.23, 329.63, 293.66, 261.63
-    ];
-
-    function initMoleAudioContext() {
-      if (!moleAudioCtx) {
-        moleAudioCtx = new (window.AudioContext || window.webkitAudioContext)();
-      }
-      if (moleAudioCtx.state === 'suspended') {
-        moleAudioCtx.resume();
-      }
-    }
-
-    function playMoleBgmNote() {
-      if (!moleState.musicEnabled || !moleState.isPlaying) return;
-      try {
-        initMoleAudioContext();
-        const osc = moleAudioCtx.createOscillator();
-        const gain = moleAudioCtx.createGain();
-        
-        const freq = moleBgmNotes[moleBgmStep % moleBgmNotes.length];
-        moleBgmStep++;
-
-        osc.type = 'triangle';
-        osc.frequency.setValueAtTime(freq, moleAudioCtx.currentTime);
-        
-        gain.gain.setValueAtTime(0.04, moleAudioCtx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.001, moleAudioCtx.currentTime + 0.28);
-        
-        osc.connect(gain);
-        gain.connect(moleAudioCtx.destination);
-        
-        osc.start();
-        osc.stop(moleAudioCtx.currentTime + 0.28);
-      } catch(e) {}
-    }
-
-    function startMoleBgm() {
-      stopMoleBgm();
-      if (!moleState.musicEnabled) return;
-      moleBgmStep = 0;
-      moleBgmInterval = setInterval(playMoleBgmNote, 320);
-    }
-
-    function stopMoleBgm() {
-      if (moleBgmInterval) {
-        clearInterval(moleBgmInterval);
-        moleBgmInterval = null;
-      }
-    }
-
-    function playMoleHitSound() {
-      if (!moleState.soundEnabled) return;
-      try {
-        initMoleAudioContext();
-        const osc = moleAudioCtx.createOscillator();
-        const gain = moleAudioCtx.createGain();
-        
-        osc.type = 'triangle';
-        osc.frequency.setValueAtTime(400, moleAudioCtx.currentTime);
-        osc.frequency.exponentialRampToValueAtTime(800, moleAudioCtx.currentTime + 0.15);
-        
-        gain.gain.setValueAtTime(0.3, moleAudioCtx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.01, moleAudioCtx.currentTime + 0.15);
-        
-        osc.connect(gain);
-        gain.connect(moleAudioCtx.destination);
-        
-        osc.start();
-        osc.stop(moleAudioCtx.currentTime + 0.15);
-      } catch(e) {}
-    }
-
-    function playMoleSuccessSound() {
-      if (!moleState.soundEnabled) return;
-      try {
-        initMoleAudioContext();
-        const now = moleAudioCtx.currentTime;
-        [523.25, 659.25, 783.99, 1046.50].forEach((freq, idx) => {
-          const osc = moleAudioCtx.createOscillator();
-          const gain = moleAudioCtx.createGain();
-          osc.frequency.value = freq;
-          gain.gain.setValueAtTime(0.2, now + idx * 0.08);
-          gain.gain.exponentialRampToValueAtTime(0.01, now + idx * 0.08 + 0.2);
-          osc.connect(gain);
-          gain.connect(moleAudioCtx.destination);
-          osc.start(now + idx * 0.08);
-          osc.stop(now + idx * 0.08 + 0.2);
-        });
-      } catch(e) {}
-    }
-
-    function speakMoleText(text) {
-      if (!moleState.voiceEnabled || !('speechSynthesis' in window)) return;
-      window.speechSynthesis.cancel();
-      const utterance = new SpeechSynthesisUtterance(text);
-      utterance.lang = 'zh-HK';
-      utterance.rate = 0.85;
-      utterance.pitch = 1.0;
-      window.speechSynthesis.speak(utterance);
-    }
-
-    function getMoleSpeedDuration() {
-      switch(moleState.currentSpeed) {
-        case 'fast': return 1000;
-        case 'normal': return 1600;
-        case 'slow': default: return 2400;
-      }
-    }
-
-    function updateMoleTargetBanner() {
-      const targetText = document.getElementById('mole-targetText');
-      if (!targetText) return;
-
-      if (moleState.currentMode === 'reality') {
-        const data = MOLE_THEMES.reality.dataset;
-        moleState.currentRealityTarget = data[Math.floor(Math.random() * data.length)];
-        targetText.innerHTML = `搵出 <span class="text-amber-600 font-extrabold underline">${moleState.currentRealityTarget.icon} ${moleState.currentRealityTarget.label}</span>`;
-      } else if (moleState.currentMode === 'fruit') {
-        targetText.innerHTML = `點擊 <span class="text-rose-600 font-extrabold">新鮮水果 🍎</span>`;
-      } else {
-        targetText.innerHTML = `打中 <span class="text-amber-600 font-extrabold">放大地鼠 🐹</span>`;
-      }
-    }
-
-    function popMole() {
-      if (!moleState.isPlaying) return;
-
-      if (moleState.activeHole !== -1) {
-        const prevMole = document.getElementById(`mole-${moleState.activeHole}`);
-        if (prevMole) prevMole.classList.remove('up');
-      }
-
-      let nextHole;
-      do {
-        nextHole = Math.floor(Math.random() * 8);
-      } while (nextHole === moleState.activeHole);
-
-      moleState.activeHole = nextHole;
-      const moleEl = document.getElementById(`mole-${moleState.activeHole}`);
-      if (!moleEl) return;
-
-      let displayEmoji = '🐹';
-      if (moleState.currentMode === 'classic') {
-        const items = MOLE_THEMES.classic.items;
-        displayEmoji = items[Math.floor(Math.random() * items.length)];
-      } else if (moleState.currentMode === 'fruit') {
-        const items = MOLE_THEMES.fruit.items;
-        displayEmoji = items[Math.floor(Math.random() * items.length)];
-      } else if (moleState.currentMode === 'reality') {
-        const data = MOLE_THEMES.reality.dataset;
-        if (Math.random() < 0.6 && moleState.currentRealityTarget) {
-          displayEmoji = moleState.currentRealityTarget.icon;
-        } else {
-          const randObj = data[Math.floor(Math.random() * data.length)];
-          displayEmoji = randObj.icon;
-        }
-      }
-
-      moleEl.textContent = displayEmoji;
-      moleEl.dataset.emoji = displayEmoji;
-      moleEl.classList.add('up');
-
-      const duration = getMoleSpeedDuration();
-      setTimeout(() => {
-        if (moleEl.classList.contains('up')) {
-          moleEl.classList.remove('up');
-        }
-      }, duration);
-    }
-
-    function handleMoleHit(index, event) {
-      if (event) event.preventDefault();
-      if (!moleState.isPlaying) return;
-      const moleEl = document.getElementById(`mole-${index}`);
-      if (!moleEl || !moleEl.classList.contains('up')) return;
-
-      moleEl.classList.remove('up');
-
-      const hitEmoji = moleEl.dataset.emoji;
-      let pointsGained = 10;
-      let isCorrectHit = true;
-
-      if (moleState.currentMode === 'reality' && moleState.currentRealityTarget) {
-        if (hitEmoji === moleState.currentRealityTarget.icon) {
-          pointsGained = 20;
-          updateMoleTargetBanner();
-        } else {
-          isCorrectHit = false;
-          pointsGained = -5;
-        }
-      }
-
-      moleState.score += pointsGained;
-      if (moleState.score < 0) moleState.score = 0;
-      document.getElementById('mole-scoreDisplay').textContent = moleState.score;
-
-      if (isCorrectHit) {
-        playMoleHitSound();
-        showFloatScore(moleEl, `+${pointsGained}`);
-        if (moleState.score > 0 && moleState.score % 50 === 0) {
-          const praise = MOLE_PRAISES[Math.floor(Math.random() * MOLE_PRAISES.length)];
-          document.getElementById('mole-feedbackBanner').innerHTML = `<span>🌟 ${praise}</span>`;
-          speakMoleText(praise);
-        }
-      } else {
-        playErrorSound();
-        showFloatScore(moleEl, `${pointsGained}`);
-      }
-    }
-
-    function showFloatScore(element, text) {
-      const parent = element.parentElement;
-      if (!parent) return;
-      const floatEl = document.createElement('div');
-      floatEl.className = 'score-float';
-      floatEl.textContent = text;
-      parent.appendChild(floatEl);
-      setTimeout(() => {
-        if (floatEl.parentNode) floatEl.parentNode.removeChild(floatEl);
-      }, 800);
-    }
-
-    function toggleStartMoleGame() {
-      if (moleState.isPlaying) {
-        stopMoleGame();
-      } else {
-        startMoleGame();
-      }
-    }
-
-    function startMoleGame() {
-      initMoleAudioContext();
-      moleState.isPlaying = true;
-      moleState.score = 0;
-      moleState.timeLeft = 30;
-      
-      document.getElementById('mole-scoreDisplay').textContent = '0';
-      document.getElementById('mole-timerDisplay').textContent = '30s';
-      
-      const startBtn = document.getElementById('mole-startBtn');
-      startBtn.innerHTML = `<span>⏹️ 停止遊戲</span>`;
-      startBtn.className = startBtn.className.replace('bg-emerald-500 hover:bg-emerald-600 border-emerald-700', 'bg-rose-500 hover:bg-rose-600 border-rose-700');
-
-      updateMoleTargetBanner();
-      document.getElementById('mole-feedbackBanner').innerHTML = `<span>🔥 遊戲開始！加油！</span>`;
-      
-      speakMoleText("遊戲開始！加油！");
-
-      startMoleBgm();
-
-      const speedInterval = getMoleSpeedDuration();
-      moleState.gameTimer = setInterval(popMole, speedInterval);
-
-      moleState.countdownTimer = setInterval(() => {
-        moleState.timeLeft--;
-        document.getElementById('mole-timerDisplay').textContent = `${moleState.timeLeft}s`;
-
-        if (moleState.timeLeft <= 0) {
-          stopMoleGame();
-          playMoleSuccessSound();
-          triggerConfetti();
-          document.getElementById('mole-feedbackBanner').innerHTML = `<span>🎉 時間到！您獲得了 ${moleState.score} 分！精靈活潑！</span>`;
-          speakMoleText(`時間到！您獲得了 ${moleState.score} 分！太棒了！`);
-        }
-      }, 1000);
-    }
-
-    function stopMoleGame() {
-      moleState.isPlaying = false;
-      clearInterval(moleState.gameTimer);
-      clearInterval(moleState.countdownTimer);
-      stopMoleBgm();
-
-      for (let i = 0; i < 8; i++) {
-        const moleEl = document.getElementById(`mole-${i}`);
-        if (moleEl) moleEl.classList.remove('up');
-      }
-
-      const startBtn = document.getElementById('mole-startBtn');
-      startBtn.innerHTML = `<span>▶️ 開始遊戲</span>`;
-      startBtn.className = startBtn.className.replace('bg-rose-500 hover:bg-rose-600 border-rose-700', 'bg-emerald-500 hover:bg-emerald-600 border-emerald-700');
-    }
-
-    function speakMolePrompt() {
-      if (moleState.currentMode === 'reality' && moleState.currentRealityTarget) {
-        speakMoleText(`請搵出 ${moleState.currentRealityTarget.label}`);
-      } else if (moleState.currentMode === 'fruit') {
-        speakMoleText("請點擊新鮮水果");
-      } else {
-        speakMoleText("請打地鼠，練吓手快眼快");
-      }
-    }
-
-    function openMoleSettings() {
-      document.getElementById('moleSettingsModal').classList.remove('hidden');
-    }
-
-    function closeMoleSettings() {
-      document.getElementById('moleSettingsModal').classList.add('hidden');
-    }
-
-    function selectMoleMode(mode) {
-      moleState.currentMode = mode;
-      document.querySelectorAll('.mode-select-btn').forEach(btn => {
-        if (btn.dataset.mode === mode) {
-          btn.className = "mode-select-btn p-3 rounded-xl border-2 border-amber-400 bg-amber-50 font-bold text-left text-amber-900 flex items-center gap-3 transition";
-        } else {
-          btn.className = "mode-select-btn p-3 rounded-xl border-2 border-slate-200 bg-white font-bold text-left text-slate-700 flex items-center gap-3 transition";
-        }
-      });
-    }
-
-    function selectMoleSpeed(speed) {
-      moleState.currentSpeed = speed;
-      document.querySelectorAll('.speed-btn').forEach(btn => {
-        if (btn.dataset.speed === speed) {
-          btn.className = "speed-btn p-2.5 rounded-xl border-2 border-amber-400 bg-amber-100 font-bold text-amber-900 text-center";
-        } else {
-          btn.className = "speed-btn p-2.5 rounded-xl border-2 border-slate-200 bg-white font-bold text-slate-700 text-center";
-        }
-      });
-    }
-
-    function saveMoleSettings() {
-      moleState.musicEnabled = document.getElementById('mole-musicToggle').checked;
-      moleState.soundEnabled = document.getElementById('mole-soundToggle').checked;
-      moleState.voiceEnabled = document.getElementById('mole-voiceToggle').checked;
-
-      closeMoleSettings();
-      updateMoleTargetBanner();
-      
-      if (moleState.isPlaying) {
-        stopMoleGame();
-      }
-    }
-
-    /* =========================================================
-       4. 頁面初始化 (DOM Initialization)
-       ========================================================= */
-
+    /* ========================================================
+       DOMContentLoaded Initialization
+       ======================================================== */
     window.addEventListener('DOMContentLoaded', () => {
-      // 1. 初始化時間與天文台天氣
+      // 初始化現實導向與天氣生活板
       updateClockAndDate();
-      setInterval(updateClockAndDate, 10000); // 每10秒更新時鐘
+      setInterval(updateClockAndDate, 1000);
+      updateCurrentLocationDisplay();
       fetchHKOData();
 
-      // 2. 初始化練習區
+      // 初始化現實導向練習版
       initTodayTarget();
       goToStep(1);
-
-      // 3. 全局用戶第一次觸控/點擊解鎖音效
-      window.addEventListener('click', () => {
-        initPracticeAudioContext();
-        initMoleAudioContext();
-      }, { once: true });
     });
   </script>
 </body>
